@@ -2,6 +2,7 @@
 #include "GameEngine_Ver3_7.h"
 #include <fstream>
 #include <sstream>
+#include "ObjManeger.h"
 
 //ゲーム内全域で使用する構造体などを定義する
 //-----------------------------------------------------------------------------------------------
@@ -80,6 +81,7 @@ namespace  MyPG
 		D3D10_VIEWPORT			vp3D_BF;
 		D3D10_VIEWPORT			vp3D_AF;
 		
+		ObjManeger OM;
 		//shared_ptr<BEffect::SP> effmaneger;
 
 	//----------------------------------------------

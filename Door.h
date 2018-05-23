@@ -6,7 +6,7 @@
 //ドアが開かれる方向
 enum LR
 {
-	clear = -1,//不定(クリア)
+	CLEAR_LR = -1,//不定(クリア)
 	Left = 0,
 	Right = 1,
 };
@@ -34,6 +34,8 @@ public:
 	bool Player_Hit_the_Door(const ML::Box3D& hit);
 	//状態を返す関数、trueを返したらその後当たり判定と開ける処理はしない
 	bool Get_State();
+	//位置をもらう関数
+	ML::Vec3 Get_Pos();
 
 	//コンストラクタ・デストラクタ
 	//ゼロクリア

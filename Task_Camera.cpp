@@ -1,19 +1,17 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//カメラマン
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Door.h"
+#include  "Task_Camera.h"
+#include  "Task_Player.h"
 
-namespace Task_Door
+namespace  Camera
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{
-		this->meshName = "Door_mesh";
-		//仮のメッシュ
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
+	{		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -24,7 +22,7 @@ namespace Task_Door
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(Door* d)
+	bool  Object::Initialize()
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -32,7 +30,9 @@ namespace Task_Door
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->circuit = d;
+		this->angle = ML::Vec3(0, 0, 0);
+		this->dist = ML::Vec3(100, 0, 0);
+		
 		//★タスクの生成
 
 		return  true;
@@ -47,7 +47,7 @@ namespace Task_Door
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
+			
 		}
 
 		return  true;
@@ -56,12 +56,20 @@ namespace Task_Door
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//回路でオープン状態でない時のみ開ける判定と		
-		if (!this->circuit->Get_State())
-		{
-			//つながっているブレーカーを確認して開くかどうかを確認
-			this->circuit->Door_Open();
-		}
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
+		//注視点の距離
+		//カメラマンの座標にプレイヤ座標を代入
+		this->pos = pl->Get_Pos();
+		//カメラマンのアングルにプレイヤのアングルを代入
+		this->angle = pl->Get_Angle();
+		//注視点
+		ML::Mat4x4 matR;
+		matR.RotationY(this->angle.y);
+		ML::Vec3 vec = ML::Vec3(800, 0, 0);
+		vec = matR.TransformCoord(vec);
+
+		ge->camera[0]->target = this->pos + vec;
+		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -69,36 +77,19 @@ namespace Task_Door
 	{
 		
 	}
-
+	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		ML::Mat4x4 matT;
-		matT.Translation(this->circuit->Get_Pos());
-
-		DG::EffectState().param.matWorld = matT;
-
-		DG::Mesh_Draw(this->res->meshName);
+		
 	}
-
-	//-----------------------------------------------------------------------
-	//追加メソッド
-	//プレイヤとのあたり判定
-	bool Object::Hit_Check(const ML::Box3D& hit)
-	{
-		//開いている状態なら当たらなかったことにして返す
-		if (this->circuit->Get_State())
-		{
-			return false;
-		}
-		this->circuit->Player_Hit_the_Door(hit);
-	}
-
+	//-------------------------------------------------------------------
+	
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Door* d)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -106,7 +97,7 @@ namespace Task_Door
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(d)) {
+			if (!ob->B_Initialize()) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -114,9 +105,9 @@ namespace Task_Door
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(Door* d)
+	bool  Object::B_Initialize()
 	{
-		return  this->Initialize(d);
+		return  this->Initialize();
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

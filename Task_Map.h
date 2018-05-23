@@ -1,16 +1,16 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//ブレーカー
+//タイトル画面
 //-------------------------------------------------------------------
-#include "GameEngine_Ver3_7.h"
-#include "Breaker.h"
+#include "MyPG.h"
+#include "MapBox.h"
 
-namespace Task_Breaker
+namespace Map
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("ブレーカー");	//グループ名
-	const  string  defName("NoName");	//タスク名
+	const  string  defGroupName("フィールド");	//グループ名
+	const  string  defName("マップ");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
 	{
@@ -23,8 +23,8 @@ namespace Task_Breaker
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する	
-		string meshName;
+		//共有する変数はここに追加する
+		string imageName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -35,30 +35,31 @@ namespace Task_Breaker
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_, Breaker*);
+		static  Object::SP  Create(bool flagGameEnginePushBack_);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize(Breaker*);
+		bool  B_Initialize();
 		bool  B_Finalize();
-		bool  Initialize(Breaker*);	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize();	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	
-		//追加したい変数・メソッドはここに追加する
-		//変数
-		//ブレーカー回路
-		Breaker* circuit;
-		//
-
 	public:
-		//メソッド
-		//プレイヤとのあたり判定
-		bool Hit_Check(const ML::Box3D& hit);
-		//ブレーカー起動
-		void ActivateBreaker();
+		//追加したい変数・メソッドはここに追加する
+		string		chipName;			//マップチップ名
+		int			sizeX, sizeZ;		//マップtxt毎の範囲サイズ
+		int			maxSizeX, maxSizeZ;	//マップのX・Zの最大サイズ
+		int			tmpX, tmpZ;			//マップを設定するときの基準値
+		Box			arr[100][100];		//マップ全体のarr[z][x]
+		Box			floor, ceiling;		//天井と床
+		string		fileName;			//読み取るマップの名前
+		string		filePath;			//マップファイル読み取り時のパス
+
+		//メソッド------------------------------------------------------
+		//マップの読み込み
+		bool  Load();
 	};
 }

@@ -41,23 +41,38 @@
     <Filter Include="Game">
       <UniqueIdentifier>{8d64114e-801c-48b8-a839-7e124c05d6ac}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\door">
-      <UniqueIdentifier>{8e25cd5a-9635-4bb6-b92f-cd6fba0cb319}</UniqueIdentifier>
+    <Filter Include="MyPG\Game">
+      <UniqueIdentifier>{9139f6fd-4b99-48c6-8663-b9c17919bb01}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\breaker">
-      <UniqueIdentifier>{1abd2154-6f47-42b2-8b2b-ca8ab059210f}</UniqueIdentifier>
+    <Filter Include="MyPG\Title">
+      <UniqueIdentifier>{fc775d71-b42a-4d27-9350-9a7a6af67946}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\ObjManager">
-      <UniqueIdentifier>{03cd3ffa-8259-4f82-9899-4e1d6e3bad99}</UniqueIdentifier>
+    <Filter Include="MyPG\Game\Player">
+      <UniqueIdentifier>{4e7bd76a-9c5e-4f46-b127-b9c134130869}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks">
-      <UniqueIdentifier>{9adc3b99-624e-46ad-a29b-19864fe175ef}</UniqueIdentifier>
+    <Filter Include="MyPG\Game\Map">
+      <UniqueIdentifier>{aaba4863-8eeb-437e-8da4-e257b5889b6e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks\Breaker">
-      <UniqueIdentifier>{0ee8bbf0-4ed8-42e9-b43a-d7f69b0b325b}</UniqueIdentifier>
+    <Filter Include="MyPG\Class">
+      <UniqueIdentifier>{d7979511-f01a-48c4-bac0-e7f3cf47a0b5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Tasks\Door">
-      <UniqueIdentifier>{116a50ef-8fad-4ee4-befc-9954ad022d96}</UniqueIdentifier>
+    <Filter Include="MyPG\Class\MapBox">
+      <UniqueIdentifier>{7efcb5cc-2c38-4086-a8d5-4e88eaef8b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Door">
+      <UniqueIdentifier>{68d76f0b-df54-40e3-b448-e32170f2eede}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Breaker">
+      <UniqueIdentifier>{75f866e2-be60-4f33-bc7e-e8cb1a794d41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\ObjManejer">
+      <UniqueIdentifier>{7c4191da-1e58-4b33-95eb-566537f43a00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Game\Door">
+      <UniqueIdentifier>{e7bc6a6d-a485-4371-a2d2-6747be1351a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Game\Breaker">
+      <UniqueIdentifier>{e24c0abe-4bc3-4755-9839-ca339b84113f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -115,23 +130,38 @@
     <ClCompile Include="GameEngine_Ver3_7.cpp">
       <Filter>GE</Filter>
     </ClCompile>
-    <ClCompile Include="Task_Title.cpp">
+    <ClCompile Include="Task_Game.cpp">
       <Filter>MyPG</Filter>
     </ClCompile>
-    <ClCompile Include="Door.cpp">
-      <Filter>MyPG\door</Filter>
+    <ClCompile Include="MapBox.cpp">
+      <Filter>MyPG\Class\MapBox</Filter>
     </ClCompile>
-    <ClCompile Include="Breaker.cpp">
-      <Filter>MyPG\breaker</Filter>
+    <ClCompile Include="Task_Camera.cpp">
+      <Filter>MyPG\Game\Player</Filter>
     </ClCompile>
-    <ClCompile Include="ObjManeger.cpp">
-      <Filter>MyPG\ObjManager</Filter>
+    <ClCompile Include="Task_Player.cpp">
+      <Filter>MyPG\Game\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Task_Breaker.cpp">
-      <Filter>MyPG\Tasks\Breaker</Filter>
+    <ClCompile Include="Task_Title.cpp">
+      <Filter>MyPG\Title</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Map.cpp">
+      <Filter>MyPG\Game\Map</Filter>
     </ClCompile>
     <ClCompile Include="Task_Door.cpp">
-      <Filter>MyPG\Tasks\Door</Filter>
+      <Filter>MyPG\Game\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Breaker.cpp">
+      <Filter>MyPG\Game\Breaker</Filter>
+    </ClCompile>
+    <ClCompile Include="Door.cpp">
+      <Filter>MyPG\Class\Door</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjManeger.cpp">
+      <Filter>MyPG\Class\ObjManejer</Filter>
+    </ClCompile>
+    <ClCompile Include="Breaker.cpp">
+      <Filter>MyPG\Class\Breaker</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -186,23 +216,38 @@
     <ClInclude Include="GameEngine_Ver3_7.h">
       <Filter>GE</Filter>
     </ClInclude>
-    <ClInclude Include="Task_Title.h">
+    <ClInclude Include="Task_Game.h">
       <Filter>MyPG</Filter>
     </ClInclude>
-    <ClInclude Include="Door.h">
-      <Filter>MyPG\door</Filter>
+    <ClInclude Include="MapBox.h">
+      <Filter>MyPG\Class\MapBox</Filter>
     </ClInclude>
-    <ClInclude Include="Breaker.h">
-      <Filter>MyPG\breaker</Filter>
+    <ClInclude Include="Task_Camera.h">
+      <Filter>MyPG\Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="ObjManeger.h">
-      <Filter>MyPG\ObjManager</Filter>
+    <ClInclude Include="Task_Player.h">
+      <Filter>MyPG\Game\Player</Filter>
     </ClInclude>
-    <ClInclude Include="Task_Breaker.h">
-      <Filter>MyPG\Tasks\Breaker</Filter>
+    <ClInclude Include="Task_Map.h">
+      <Filter>MyPG\Game\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Title.h">
+      <Filter>MyPG\Title</Filter>
     </ClInclude>
     <ClInclude Include="Task_Door.h">
-      <Filter>MyPG\Tasks\Door</Filter>
+      <Filter>MyPG\Game\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Breaker.h">
+      <Filter>MyPG\Game\Breaker</Filter>
+    </ClInclude>
+    <ClInclude Include="Door.h">
+      <Filter>MyPG\Class\Door</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjManeger.h">
+      <Filter>MyPG\Class\ObjManejer</Filter>
+    </ClInclude>
+    <ClInclude Include="Breaker.h">
+      <Filter>MyPG\Class\Breaker</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -2,29 +2,33 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Door.h"
+#include  "Task_Item.h"
+#include  "Task_Enemy.h"
+#include  "Task_Effect_Manager.h"
+#include  "Task_OptionManager.h"
 
-namespace Task_Door
+namespace  ObjectItem
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->meshName = "Door_mesh";
-		//仮のメッシュ
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
+		this->meshName = "ItemMesh";
+
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box2.sob");//今のところ仮のモデル
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{		
+	{
+		DG::Mesh_Erase(this->meshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(Door* d)
+	bool  Object::Initialize(ML::Vec2 rm)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -32,8 +36,17 @@ namespace Task_Door
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->circuit = d;
+		this->pos.x = (rm.x * 100) + 50;
+		this->pos.y = 100;
+		this->pos.z = (rm.y * 100) + 50;
+		this->hitBase = ML::Box3D(-50, 0, -50, 100, 100, 100);
+		this->render3D_Priority[0] = 0.8f;
+
 		//★タスクの生成
+		//生成エフェクト
+		auto EfM = ge->GetTask_One_G<EffectManager::Object>("エフェクト");
+		EfM->Add_Effect(this->pos, ML::Vec3(0, 0, 0), BEffect::effType::CreateItem);
+			
 
 		return  true;
 	}
@@ -42,12 +55,11 @@ namespace Task_Door
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -56,49 +68,75 @@ namespace Task_Door
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//回路でオープン状態でない時のみ開ける判定と		
-		if (!this->circuit->Get_State())
+		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		auto enemys = ge->GetTask_Group_GN<ObjectEnemy::Object>("オブジェクト", "エネミー");
+
+		if (p == nullptr) { return; }
+		ML::Box3D playerhitbox = p->hitBase.OffsetCopy(p->pos);
+		
+		//プレイヤとのあたり判定
+		if (this->Hit_Check_toPlayer(playerhitbox,this->pos))
+		{		
+			//BChara::SP  tg = p;
+			/*auto  optList = ge->GetTask_Group_G<BChara>("オプション");
+			if (optList->size() > 0) {
+				tg = (*optList)[optList->size()-1];
+			}*/
+			auto  optList = ge->GetTask_Group_G<BChara>("オプション");
+			if (optList->size() < 99) {
+				auto  opt = OptionManager::Object::Create(true);
+				opt->target = p;
+				opt->num = optList->size()*10 + 14;
+				opt->pos = p->moveLog[opt->num];
+			}
+		/*	for (int i = 0; i < 10; ++i) {
+				opt->tglog.push_back(tg->pos);
+			}*/
+
+			//p->tailsize++;	
+			p->speed += 0.3f;
+			auto EfM = ge->GetTask_One_G<EffectManager::Object>("エフェクト");
+			EfM->Add_Effect(this->pos, ML::Vec3(0, 0, 0), BEffect::effType::DestroyItem);
+			this->Kill();
+			return;
+		}
+
+		//もしエネミーと重なってしまったら自分を殺す
+		for (auto it = enemys->begin(); it != enemys->end(); it++)
 		{
-			//つながっているブレーカーを確認して開くかどうかを確認
-			this->circuit->Door_Open();
+			ML::Box3D you, me;
+			you = (*it)->hitBase.OffsetCopy((*it)->pos);
+			me = this->hitBase.OffsetCopy(this->pos);
+			if (you.Hit(me))
+			{
+				this->Kill();
+				return;
+			}
 		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		
+
 	}
 
 	void  Object::Render3D_L0()
 	{
 		ML::Mat4x4 matT;
-		matT.Translation(this->circuit->Get_Pos());
+		matT.Translation(this->pos);
 
-		DG::EffectState().param.matWorld = matT;
+		ML::Mat4x4 matW = matT;
 
+		DG::EffectState().param.matWorld = matW;
 		DG::Mesh_Draw(this->res->meshName);
 	}
-
-	//-----------------------------------------------------------------------
-	//追加メソッド
-	//プレイヤとのあたり判定
-	bool Object::Hit_Check(const ML::Box3D& hit)
-	{
-		//開いている状態なら当たらなかったことにして返す
-		if (this->circuit->Get_State())
-		{
-			return false;
-		}
-		this->circuit->Player_Hit_the_Door(hit);
-	}
-
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Door* d)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, ML::Vec2 rm)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -106,7 +144,7 @@ namespace Task_Door
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(d)) {
+			if (!ob->B_Initialize(rm)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -114,9 +152,9 @@ namespace Task_Door
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(Door* d)
+	bool  Object::B_Initialize(ML::Vec2 rm)
 	{
-		return  this->Initialize(d);
+		return  this->Initialize(rm);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

@@ -16,7 +16,7 @@ private:
 	//ドアのアドレス値
 	std::vector<Door*> door;
 
-public:
+
 	//最初のブレーカーの初期化
 	void Init_First_Doors_Breaker(ML::Vec3);
 	//ブレーカーの初期化
@@ -26,8 +26,12 @@ public:
 	void Init_First_Door(ML::Vec3, LR);
 	//ドアの初期化
 	void Init_Door(ML::Vec3, LR);
-
-	//ファイナライズ本編が終了する時絶対呼び出すこと
+public:
+	//ブレーカーを作る
+	void Create_Breaker(ML::Vec3);
+	//ドアを作る
+	void Create_Door(ML::Vec3, LR);
+	//ファイナライズ,本編が終了する時絶対呼び出すこと
 	//ヒープから解放処理をやる
 	void Finalize();
 

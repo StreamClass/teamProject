@@ -6,7 +6,7 @@ Door::Door()
 	this->hitBase = ML::Box3D(0, 0, 0, 0, 0, 0);
 	this->openFlag = false;
 	this->cunnected_Breaker.clear();
-	this->open_Angle = LR::clear;
+	this->open_Angle = LR::CLEAR_LR;
 }
 
 Door::Door(ML::Vec3 pos, std::vector<Breaker*> b, LR a)
@@ -51,4 +51,9 @@ bool Door::Player_Hit_the_Door(const ML::Box3D& hit)
 bool Door::Get_State()
 {
 	return this->openFlag;
+}
+
+ML::Vec3 Door::Get_Pos()
+{
+	return this->pos;
 }

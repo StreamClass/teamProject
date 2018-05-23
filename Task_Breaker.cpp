@@ -11,6 +11,9 @@ namespace Task_Breaker
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		this->meshName = "Breaker_Mesh";
+		//仮のメッシュ
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box2.sob");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -64,7 +67,12 @@ namespace Task_Breaker
 
 	void  Object::Render3D_L0()
 	{
-		
+		ML::Mat4x4 matT;
+		matT.Translation(this->circuit->Get_Pos());
+
+		DG::EffectState().param.matWorld = matT;
+
+		DG::Mesh_Draw(this->res->meshName);
 	}
 	//-----------------------------------------------------------------------
 	//プレイヤとのあたり判定

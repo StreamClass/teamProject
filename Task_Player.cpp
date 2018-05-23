@@ -1,38 +1,48 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//プレイヤ
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Door.h"
+#include  "Task_Player.h" 
 
-namespace Task_Door
+namespace  Player
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->meshName = "Door_mesh";
-		//仮のメッシュ
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
+		//メッシュの読み込み
+		this->meshName = "playerImg";
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/char_Stand.sob");
+		//フォントの読み込み
+		DG::Font_Create("FontA", "ＭＳ ゴシック", 10, 20);
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{		
+	{
+		DG::Mesh_Erase(this->meshName);
+		DG::Font_Erase("FontA");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(Door* d)
+	bool  Object::Initialize()
 	{
-		//スーパークラス初期化
+		//スーパークラス初期化)
 		__super::Initialize(defGroupName, defName, true);
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->circuit = d;
+		this->controllerName = "P1";
+		//プレイヤの初期化
+		this->pos = ML::Vec3(0, 0, 0);
+		this->headHeight = 175;
+		this->angle = ML::Vec3(0, 0, 0);
+		this->moveVec = ML::Vec3(0, 0, 0);
+
 		//★タスクの生成
 
 		return  true;
@@ -47,7 +57,7 @@ namespace Task_Door
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
+
 		}
 
 		return  true;
@@ -56,49 +66,83 @@ namespace Task_Door
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//回路でオープン状態でない時のみ開ける判定と		
-		if (!this->circuit->Get_State())
+		auto in = DI::GPad_GetState("P1");
+		//volumeが0の時は使ってはダメ
+		if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
 		{
-			//つながっているブレーカーを確認して開くかどうかを確認
-			this->circuit->Door_Open();
+			ML::Mat4x4 matR;
+			matR.RotationY(this->angle.y);
+			this->moveVec.x = -10 * in.LStick.axis.y;
+			this->moveVec.z = -10 * in.LStick.axis.x;
+			//頂点を座標変換させる
+			this->moveVec = matR.TransformCoord(this->moveVec);
 		}
+		else
+		{
+			this->moveVec = ML::Vec3(0, 0, 0);
+		}
+		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
+
+		this->pos += this->moveVec;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		
+		ML::Box2D draw(0, 0, 300, 100);
+		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y));
+		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
-
+	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
 		ML::Mat4x4 matT;
-		matT.Translation(this->circuit->Get_Pos());
+		matT.Translation(this->pos);
+		//回転行列の生成
+		ML::Mat4x4 matR;
+		matR.RotationY(this->angle.y);
 
-		DG::EffectState().param.matWorld = matT;
-
-		DG::Mesh_Draw(this->res->meshName);
+		//モデル表示
+		//ML::Mat4x4 matW = matR * matT;
+		//DG::EffectState().param.matWorld = matW;
+		//DG::Mesh_Draw(this->res->meshName);
 	}
-
-	//-----------------------------------------------------------------------
-	//追加メソッド
-	//プレイヤとのあたり判定
-	bool Object::Hit_Check(const ML::Box3D& hit)
+	//-------------------------------------------------------------------
+	//プレイヤの座標をML::Vec3型で返す
+	ML::Vec3 Object::Get_Pos()
 	{
-		//開いている状態なら当たらなかったことにして返す
-		if (this->circuit->Get_State())
-		{
-			return false;
-		}
-		this->circuit->Player_Hit_the_Door(hit);
+		return this->pos;
 	}
+	//-------------------------------------------------------------------
+	//プレイヤの視点の高さをint型で返す
+	int Object::Get_PointView()
+	{
+		return this->headHeight;
+	}
+	//-------------------------------------------------------------------
+	ML::Vec3 Object::Get_Angle()
+	{
+		return this->angle;
+	}
+	//-------------------------------------------------------------------
+	//ギミックを動かす関数
+	void Object::Approach()
+	{
 
+	}
+	//-------------------------------------------------------------------
+	//
+	void Object::Ini_Pos(const ML::Vec3& pos)
+	{
+		this->pos = pos;
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Door* d)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -106,7 +150,7 @@ namespace Task_Door
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(d)) {
+			if (!ob->B_Initialize()) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -114,9 +158,9 @@ namespace Task_Door
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(Door* d)
+	bool  Object::B_Initialize()
 	{
-		return  this->Initialize(d);
+		return  this->Initialize();
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

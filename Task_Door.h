@@ -24,6 +24,8 @@ namespace Task_Door
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é		
+		//‰¼‚ÌƒƒbƒVƒ…–¼
+		string meshName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
