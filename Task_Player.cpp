@@ -2,7 +2,10 @@
 //プレイヤ
 //-------------------------------------------------------------------
 #include  "MyPG.h"
+#include  "Task_Map.h"
+#include  "MapBox.h"
 #include  "Task_Player.h" 
+#include  "Task_Breaker.h"
 
 namespace  Player
 {
@@ -39,6 +42,7 @@ namespace  Player
 		this->controllerName = "P1";
 		//プレイヤの初期化
 		this->pos = ML::Vec3(0, 0, 0);
+		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->headHeight = 175;
 		this->angle = ML::Vec3(0, 0, 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
@@ -84,6 +88,14 @@ namespace  Player
 		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
 
 		this->pos += this->moveVec;
+
+		this->Player_CheckMove();
+
+		if (in.B3.down)
+		{
+			this->Touch();
+		}
+		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -126,16 +138,138 @@ namespace  Player
 		return this->angle;
 	}
 	//-------------------------------------------------------------------
-	//ギミックを動かす関数
-	void Object::Approach()
-	{
-
-	}
-	//-------------------------------------------------------------------
-	//
+	//プレイヤの初期値指定
 	void Object::Ini_Pos(const ML::Vec3& pos)
 	{
 		this->pos = pos;
+	}
+	//-------------------------------------------------------------------
+	//チップサイズをML::Vec3型に変換
+	//引数：（チップサイズX, チップサイズY, チップサイズZ）
+	//ML::Vec3 Object::Chip_Size(/*const float& cSizeX, const float& cSizeY, const float& cSizeZ*/)
+	//{
+	//	ML::Vec3 cSize = ML::Vec3(cSizeX, cSizeY, cSizeZ);
+	//	return cSize;
+	//}
+	//-------------------------------------------------------------------
+	//マップとの接触判定
+	//引数：（マップの矩形, プレイヤの矩形, マップのチップサイズ）
+	bool Object::Map_CheckHit(/*const ML::Box3D& mHit,*/ const ML::Box3D& pHit/*, ML::Vec3& cSize*/)
+	{
+		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
+		//読み込んだ矩形の最大、最小頂点の座標
+		struct Box3D_2Point
+		{
+			int fx, fy, fz;//値が小さい側の点
+			int bx, by, bz;//値が大きい側の点
+		};
+		//プレイヤの判定用頂点を設定
+		Box3D_2Point r =
+		{
+			pHit.x,			pHit.y,			pHit.z,
+			pHit.x + pHit.w,pHit.y + pHit.h,pHit.z + pHit.d
+		};
+		//マップの判定用頂点を設定
+		ML::Box3D m(
+			mp->arr[0][0].Get_HitBase().x,
+			mp->arr[0][0].Get_HitBase().y, 
+			mp->arr[0][0].Get_HitBase().z, 
+			this->pos.x + mp->arr[0][0].Get_HitBase().w * 10, 
+			mp->arr[0][0].Get_HitBase().h, 
+			this->pos.z + mp->arr[0][0].Get_HitBase().d * 10 );
+
+		m.Offset(this->pos);
+		//キャラクタの矩形をマップ範囲内に丸め込む
+		if (r.fx < m.x) { r.fx = m.x; }
+		if (r.fz < m.z) { r.fz = m.z; }
+		if (r.bx > m.w) { r.bx = m.w; }
+		if (r.bz > m.d) { r.bz = m.d; }
+
+		//キャラクタがマップ範囲外にっ完全に出ていたら判定終了
+		if (r.bx <= r.fx) { return false; }
+		if (r.bz <= r.fz) { return false; }
+		//ループ範囲を特定
+		int sx, sy, sz, ex, ey, ez;
+		sx = r.fx / (int)mp->arr[0][0].Get_ChipSizeX();
+		sz = r.fz / (int)mp->arr[0][0].Get_ChipSizeZ();
+		ex = (r.bx - 1) / (int)mp->arr[0][0].Get_ChipSizeX();
+		ez = (r.bz - 1) / (int)mp->arr[0][0].Get_ChipSizeZ();
+		//接触判定開始
+		for (int z = sz; z <= ez; ++z) {
+			for (int x = sx; x <= ex; ++x) {
+				if (mp->arr[z][x].Get_Type() == Type::box) {
+					return true;
+				}
+			}
+		}
+		return false;//接触するものが検出されなかった
+	}
+	//-------------------------------------------------------------------
+	//めり込まない処理
+	//引数：（プレイヤの座標, プレイヤの矩形, プレイヤの移動量）
+	void Object::Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit, ML::Vec3& mVec*/)
+	{
+		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
+		//水平方向（x平面)に対する移動
+		while (this->moveVec.x != 0.0f) {//予定移動量が無くなるまで繰り返す
+			float preX = this->pos.x;//移動前の座標を保持
+
+								  //1cmもしくはそれ以下の残り分移動させる
+			if (this->moveVec.x >= 1.0f) {
+				this->pos.x += 1.0f;		this->moveVec.x -= 1.0f;
+			}//+方向
+			else if (this->moveVec.x <= -1.0f) {
+				this->pos.x -= 1.0f;		this->moveVec.x += 1.0f;
+			}//-方向
+			else {
+				this->pos.x += this->moveVec.x;		this->moveVec.x = 0.0f;
+			}
+
+			//接触判定を試みる
+			ML::Box3D hit = this->hitBase;
+			hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
+			if (true == this->Map_CheckHit(hit)) {
+				this->pos.x = preX;		//接触していたので、元に戻す
+				break;	//これ以上試しても無駄なのでループを抜ける
+			}
+		}
+		//-----------------------------------------------------------------------------
+		//水平方向（z平面)に対する移動
+		//水平方向（x平面)に対する移動
+		while (this->moveVec.z != 0.0f) {//予定移動量が無くなるまで繰り返す
+			float preZ = this->pos.z;//移動前の座標を保持
+
+									 //1cmもしくはそれ以下の残り分移動させる
+			if (this->moveVec.z >= 1.0f) {
+				this->pos.z += 1.0f;		this->moveVec.z -= 1.0f;
+			}//+方向
+			else if (this->moveVec.z <= -1.0f) {
+				this->pos.z -= 1.0f;		this->moveVec.z += 1.0f;
+			}//-方向
+			else {
+				this->pos.z += this->moveVec.z;		this->moveVec.z = 0.0f;
+			}
+
+			//接触判定を試みる
+			ML::Box3D hit = this->hitBase;
+			hit.Offset((int)this->pos.z, (int)this->pos.y, (int)this->pos.z);
+			if (true == this->Map_CheckHit(hit)) {
+				this->pos.z = preZ;		//接触していたので、元に戻す
+				break;	//これ以上試しても無駄なのでループを抜ける
+			}
+		}
+	}
+	void Object::Touch()
+	{
+		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
+		for (auto it = b->begin(); it != b->end(); it++)
+		{
+			if ((*it)->Hit_Check(this->hitBase.OffsetCopy(this->pos)))
+			{
+				(*it)->ActivateBreaker();
+				break;
+			}
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

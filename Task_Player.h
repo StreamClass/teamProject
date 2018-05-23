@@ -51,6 +51,8 @@ namespace Player
 		//追加変数
 		//プレイヤの座標
 		ML::Vec3 pos;
+		//プレイヤの矩形
+		ML::Box3D hitBase;
 		//プレイヤの頭の高さ
 		int headHeight;
 		//プレイやの向き
@@ -67,9 +69,18 @@ namespace Player
 		ML::Vec3 Get_Pos();
 		//プレイヤの向きをML::Vec3型で返す
 		ML::Vec3 Get_Angle();
-		//ギミックを動かす
-		void Approach();
-		//
+		//プレイヤの初期値指定
 		void Ini_Pos(const ML::Vec3& pos);
+		//チップサイズをML::Vec3型に変換
+		//引数：（チップサイズX, チップサイズY, チップサイズZ）
+		//ML::Vec3 Chip_Size(/*const float& cSizeX, const float& cSizeY, const float& cSizeZ*/);
+		//マップとの接触判定
+		//引数：（マップの矩形, プレイヤの矩形, マップのチップサイズ）
+		bool Map_CheckHit(/*const ML::Box3D& mHit, */const ML::Box3D& pHit/*, ML::Vec3& cSize*/);
+		//めり込まない処理
+		//引数：（プレイヤの座標, プレイヤの矩形, プレイヤの移動量）
+		void Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit, ML::Vec3& mVec*/);
+		//ギミックへの干渉
+		void Touch();
 	};
 }
