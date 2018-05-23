@@ -4,6 +4,7 @@
 //ƒ^ƒCƒgƒ‹‰æ–Ê
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include "Task_game.h"
 
 namespace Title
 {

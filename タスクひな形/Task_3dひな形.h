@@ -1,14 +1,14 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//タイトル画面
+//
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
 namespace Title
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("タイトル");	//グループ名
+	const  string  defGroupName("");	//グループ名
 	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
@@ -22,8 +22,7 @@ namespace Title
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する
-		string imageName;
+		//共有する変数はここに追加する		
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -46,8 +45,10 @@ namespace Title
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
+	
 		//追加したい変数・メソッドはここに追加する
-		int logoPosY; //タイトル画面スクロール用のカウンター
+		//変数
+	public:
+		//メソッド
 	};
 }

@@ -10,7 +10,10 @@ namespace Task_Door
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{		
+	{
+		this->meshName = "Door_mesh";
+		//仮のメッシュ
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -58,7 +61,7 @@ namespace Task_Door
 		{
 			//つながっているブレーカーを確認して開くかどうかを確認
 			this->circuit->Door_Open();
-		}
+		}		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -68,8 +71,13 @@ namespace Task_Door
 	}
 
 	void  Object::Render3D_L0()
-	{
-		
+	{		
+		ML::Mat4x4 matT;
+		matT.Translation(this->circuit->Get_Pos());
+
+		DG::EffectState().param.matWorld = matT;
+
+		DG::Mesh_Draw(this->res->meshName);
 	}
 
 	//-----------------------------------------------------------------------
@@ -108,7 +116,7 @@ namespace Task_Door
 	//-------------------------------------------------------------------
 	bool  Object::B_Initialize(Door* d)
 	{
-		return  this->Initialize(d,a);
+		return  this->Initialize(d);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

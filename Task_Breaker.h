@@ -23,7 +23,8 @@ namespace Task_Breaker
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é		
+		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é	
+		string meshName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

@@ -43,7 +43,7 @@ namespace  Title
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
 		DG::EffectState().param.bgColor = ML::Color(1, 1, 1, 1);
 		//★タスクの生成
-
+		
 		return  true;
 	}
 	//-------------------------------------------------------------------
@@ -56,7 +56,7 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			
+			auto player = Game::Object::Create(true);
 		}
 
 		return  true;

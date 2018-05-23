@@ -6,7 +6,7 @@
 //ドアが開かれる方向
 enum LR
 {
-	clear = -1,//不定(クリア)
+	CLEAR_LR = -1,//不定(クリア)
 	Left = 0,
 	Right = 1,
 };
@@ -23,6 +23,8 @@ private:
 	std::vector<Breaker*> cunnected_Breaker;
 	//ドアが開かれる方向
 	LR open_Angle;
+	//時間
+	int timeCnt;
 
 public:	
 	//ドアを開ける処理 引数 : (ブレーカのアドレス値0,ブレーカのアドレス値1,ブレーカのアドレス値2)
@@ -34,6 +36,12 @@ public:
 	bool Player_Hit_the_Door(const ML::Box3D& hit);
 	//状態を返す関数、trueを返したらその後当たり判定と開ける処理はしない
 	bool Get_State();
+	//位置をもらう関数
+	ML::Vec3 Get_Pos();
+	//開かれる方向をもらう
+	LR Get_Angle();
+	//ドアが完全に開かれたかを返す関数
+	bool Is_Opened_Over();
 
 	//コンストラクタ・デストラクタ
 	//ゼロクリア

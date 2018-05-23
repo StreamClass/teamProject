@@ -8,8 +8,8 @@ namespace MyPG
 	MyGameEngine::MyGameEngine( )
 	:GameEngine(
 	//	環境情報
-		960,							//	画面サイズX
-		540,							//	画面サイズY
+		1920,							//	画面サイズX
+		1080,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
 		false,							//	フルスクリーンモード
@@ -52,7 +52,7 @@ namespace MyPG
 			D3DXVECTOR3(0.0f, 1.0f, 0.0f),		//	カメラの上方向ベクトル
 			ML::ToRadian(60.0f), 10.0f, 300.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率
-		DG::EffectState( ).param.bgColor  = ML::Color(1,1,1,1);
+		DG::EffectState( ).param.bgColor  = ML::Color(1,0,0,0);
 		ge->camera[3] = ge->camera[2] = ge->camera[1] = ge->camera[0];
 
 		//デバッグ用情報の表示ON/OFF

@@ -1,27 +1,22 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Title.h"
+#include  
 
-namespace  Title
+namespace  
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{
-		this->imageName = "TitleLogoImg";
-		DG::Image_Create(this->imageName, "./data/image/Title.bmp");
-
-		DG::Mesh_CreateFromSOBFile("ArrowMesh", "./data/mesh/arrow.sob");
+	{		
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{
-		DG::Image_Erase(this->imageName);
+	{		
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -34,16 +29,7 @@ namespace  Title
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->logoPosY = -270;
-
-		//カメラの設定
-		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(1000.0f, 0.0f, 1000.0f),				//	ターゲット位置
-			ML::Vec3(1000.0f, 1400.0f, -1000.0f),			//	カメラ位置
-			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
-			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 1, 1, 1);
+		
 		//★タスクの生成
 
 		return  true;
@@ -58,7 +44,7 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
+			
 		}
 
 		return  true;
@@ -67,41 +53,18 @@ namespace  Title
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
-
-		this->logoPosY += 9;
-		if (this->logoPosY > 0)
-		{
-			this->logoPosY = 0;
-		}
-
-		if (this->logoPosY == 0)
-		{
-			if (in.ST.down)
-			{
-				//自身に消滅要請
-				this->Kill();
-			}
-		}
+		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(0, 0, 480, 270);
-		ML::Box2D src(0, 0, 240, 135);
-
-		draw.Offset(0, this->logoPosY);
-		DG::Image_Draw(this->res->imageName, draw, src);
+		
 	}
 
 	void  Object::Render3D_L0()
 	{
-		//平行移動行列を生成 //ワールド変換を適用する
-		ML::Mat4x4  matT;
-		matT.Translation(ML::Vec3(0, 0, 0));
-		DG::EffectState().param.matWorld = matT;
-		DG::Mesh_Draw("ArrowMesh");
+		
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
