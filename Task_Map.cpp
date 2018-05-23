@@ -181,20 +181,29 @@ namespace  Map
 					case Type::breaker:
 						ge->OM.Create_Breaker(pos);
 						break;
-					case Type::door:
-						if (this->arr[z][x - 1].Get_Type() == Type::door)
-						{
-							ge->OM.Create_Door(pos, LR::Right);
-						}
-						else
-						{
-							ge->OM.Create_Door(pos, LR::Left);
-						}
-						break;
 					case Type::player:
 						ge->GetTask_One_G<Player::Object>("プレイヤ")->Ini_Pos(pos-ML::Vec3(0,150,0));
 						break;
 					}					
+				}
+			}
+
+			//ドアの生成は完全に別のところで
+			for (int z = tmpZ + this->sizeZ - 1; z >= this->tmpZ; --z)
+			{
+				for (int x = this->tmpX; x < this->tmpX + this->sizeX; ++x)
+				{
+					if (this->arr[z][x].Get_Type() == Type::door)
+					{					
+						if (this->arr[z][x - 1].Get_Type() == Type::door)
+						{
+							ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Right);
+						}
+						else
+						{
+							ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Left);
+						}						
+					}
 				}
 			}
 			//X・Zの基準値更新

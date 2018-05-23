@@ -62,7 +62,7 @@ void ObjManeger::Create_Breaker(ML::Vec3 pos)
 
 void ObjManeger::Create_Door(ML::Vec3 pos, LR a)
 {
-	if (this->door.size() == 0)
+	if (this->door.size() <= 1)
 	{
 		this->Init_First_Door(pos, a);
 	}

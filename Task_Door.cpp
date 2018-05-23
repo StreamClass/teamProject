@@ -61,7 +61,7 @@ namespace Task_Door
 		{
 			//つながっているブレーカーを確認して開くかどうかを確認
 			this->circuit->Door_Open();
-		}
+		}		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -71,7 +71,7 @@ namespace Task_Door
 	}
 
 	void  Object::Render3D_L0()
-	{
+	{		
 		ML::Mat4x4 matT;
 		matT.Translation(this->circuit->Get_Pos());
 
