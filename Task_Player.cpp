@@ -76,8 +76,8 @@ namespace  Player
 		{
 			ML::Mat4x4 matR;
 			matR.RotationY(this->angle.y);
-			this->moveVec.x = -10 * in.LStick.axis.y;
-			this->moveVec.z = -10 * in.LStick.axis.x;
+			this->moveVec.x = -20 * in.LStick.axis.y;
+			this->moveVec.z = -20 * in.LStick.axis.x;
 			//頂点を座標変換させる
 			this->moveVec = matR.TransformCoord(this->moveVec);
 		}
@@ -87,9 +87,9 @@ namespace  Player
 		}
 		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
 
-		this->pos += this->moveVec;
+		//this->pos += this->moveVec;
 
-		this->Player_CheckMove();
+		this->Player_CheckMove(this->moveVec);
 
 		if (in.B3.down)
 		{
@@ -144,17 +144,9 @@ namespace  Player
 		this->pos = pos;
 	}
 	//-------------------------------------------------------------------
-	//チップサイズをML::Vec3型に変換
-	//引数：（チップサイズX, チップサイズY, チップサイズZ）
-	//ML::Vec3 Object::Chip_Size(/*const float& cSizeX, const float& cSizeY, const float& cSizeZ*/)
-	//{
-	//	ML::Vec3 cSize = ML::Vec3(cSizeX, cSizeY, cSizeZ);
-	//	return cSize;
-	//}
-	//-------------------------------------------------------------------
 	//マップとの接触判定
 	//引数：（マップの矩形, プレイヤの矩形, マップのチップサイズ）
-	bool Object::Map_CheckHit(/*const ML::Box3D& mHit,*/ const ML::Box3D& pHit/*, ML::Vec3& cSize*/)
+	bool Object::Map_CheckHit(const ML::Box3D& pHit)
 	{
 		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
 		//読み込んだ矩形の最大、最小頂点の座標
@@ -170,26 +162,27 @@ namespace  Player
 			pHit.x + pHit.w,pHit.y + pHit.h,pHit.z + pHit.d
 		};
 		//マップの判定用頂点を設定
-		ML::Box3D m(
+		Box3D_2Point m =
+		{
 			mp->arr[0][0].Get_HitBase().x,
-			mp->arr[0][0].Get_HitBase().y, 
-			mp->arr[0][0].Get_HitBase().z, 
-			this->pos.x + mp->arr[0][0].Get_HitBase().w * 10, 
-			mp->arr[0][0].Get_HitBase().h, 
-			this->pos.z + mp->arr[0][0].Get_HitBase().d * 10 );
+			mp->arr[0][0].Get_HitBase().y,
+			mp->arr[0][0].Get_HitBase().z,
+			mp->arr[0][0].Get_HitBase().x + mp->arr[0][0].Get_HitBase().w * mp->maxSizeX,
+			mp->arr[0][0].Get_HitBase().y + mp->arr[0][0].Get_HitBase().h,
+			mp->arr[0][0].Get_HitBase().z + mp->arr[0][0].Get_HitBase().d * mp->maxSizeZ
+		};
 
-		m.Offset(this->pos);
 		//キャラクタの矩形をマップ範囲内に丸め込む
-		if (r.fx < m.x) { r.fx = m.x; }
-		if (r.fz < m.z) { r.fz = m.z; }
-		if (r.bx > m.w) { r.bx = m.w; }
-		if (r.bz > m.d) { r.bz = m.d; }
+		if (r.fx < m.fx) { r.fx = m.fx; }
+		if (r.fz < m.fz) { r.fz = m.fz; }
+		if (r.bx > m.bx) { r.bx = m.bx; }
+		if (r.bz > m.bz) { r.bz = m.bz; }
 
 		//キャラクタがマップ範囲外にっ完全に出ていたら判定終了
 		if (r.bx <= r.fx) { return false; }
 		if (r.bz <= r.fz) { return false; }
 		//ループ範囲を特定
-		int sx, sy, sz, ex, ey, ez;
+		int sx, sz, ex, ez;
 		sx = r.fx / (int)mp->arr[0][0].Get_ChipSizeX();
 		sz = r.fz / (int)mp->arr[0][0].Get_ChipSizeZ();
 		ex = (r.bx - 1) / (int)mp->arr[0][0].Get_ChipSizeX();
@@ -206,23 +199,23 @@ namespace  Player
 	}
 	//-------------------------------------------------------------------
 	//めり込まない処理
-	//引数：（プレイヤの座標, プレイヤの矩形, プレイヤの移動量）
-	void Object::Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit, ML::Vec3& mVec*/)
+	//引数：（プレイヤの移動量）
+	void Object::Player_CheckMove(ML::Vec3& est_)
 	{
 		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
 		//水平方向（x平面)に対する移動
-		while (this->moveVec.x != 0.0f) {//予定移動量が無くなるまで繰り返す
+		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preX = this->pos.x;//移動前の座標を保持
 
 								  //1cmもしくはそれ以下の残り分移動させる
-			if (this->moveVec.x >= 1.0f) {
-				this->pos.x += 1.0f;		this->moveVec.x -= 1.0f;
+			if (est_.x >= 1.0f) {
+				this->pos.x += 1.0f;		est_.x -= 1.0f;
 			}//+方向
-			else if (this->moveVec.x <= -1.0f) {
-				this->pos.x -= 1.0f;		this->moveVec.x += 1.0f;
+			else if (est_.x <= -1.0f) {
+				this->pos.x -= 1.0f;		est_.x += 1.0f;
 			}//-方向
 			else {
-				this->pos.x += this->moveVec.x;		this->moveVec.x = 0.0f;
+				this->pos.x += est_.x;		est_.x = 0.0f;
 			}
 
 			//接触判定を試みる
@@ -236,18 +229,18 @@ namespace  Player
 		//-----------------------------------------------------------------------------
 		//水平方向（z平面)に対する移動
 		//水平方向（x平面)に対する移動
-		while (this->moveVec.z != 0.0f) {//予定移動量が無くなるまで繰り返す
+		while (est_.z != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preZ = this->pos.z;//移動前の座標を保持
 
 									 //1cmもしくはそれ以下の残り分移動させる
-			if (this->moveVec.z >= 1.0f) {
-				this->pos.z += 1.0f;		this->moveVec.z -= 1.0f;
+			if (est_.z >= 1.0f) {
+				this->pos.z += 1.0f;		est_.z -= 1.0f;
 			}//+方向
-			else if (this->moveVec.z <= -1.0f) {
-				this->pos.z -= 1.0f;		this->moveVec.z += 1.0f;
+			else if (est_.z <= -1.0f) {
+				this->pos.z -= 1.0f;		est_.z += 1.0f;
 			}//-方向
 			else {
-				this->pos.z += this->moveVec.z;		this->moveVec.z = 0.0f;
+				this->pos.z += est_.z;		est_.z = 0.0f;
 			}
 
 			//接触判定を試みる

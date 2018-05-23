@@ -79,7 +79,7 @@ namespace Player
 		bool Map_CheckHit(/*const ML::Box3D& mHit, */const ML::Box3D& pHit/*, ML::Vec3& cSize*/);
 		//めり込まない処理
 		//引数：（プレイヤの座標, プレイヤの矩形, プレイヤの移動量）
-		void Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit, ML::Vec3& mVec*/);
+		void Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit,*/ML::Vec3& est_);
 		//ギミックへの干渉
 		void Touch();
 	};

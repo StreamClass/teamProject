@@ -32,14 +32,16 @@ namespace  Map
 
 		//★データ初期化
 		this->render3D_Priority[1] = 1.0f;
+		//テキスト1つあたりのX・Z座標のサイズ
 		this->sizeX = 0;
 		this->sizeZ = 0;
+		//マップのサイズ
 		this->maxSizeX = 100;
 		this->maxSizeZ = 100;
+		//読み込み時にｘ・ｚの基準値として使用
 		this->tmpX = 0;
 		this->tmpZ = 0;
-		//マップのゼロクリア
-		//ZeroMemory(this->arr, sizeof(this->arr));
+		//マップをすべて初期化
 		for (int z = 0; z < this->maxSizeZ; ++z)
 		{
 			for (int x = 0; x < this->maxSizeX; ++x)
@@ -58,12 +60,11 @@ namespace  Map
 			-25.0f,
 			chipSize.z / 2
 		);
-		ML::Box3D hitBase(0, 0, 0, pos.x, pos.y, pos.z);
+		ML::Box3D hitBase(0, 0, 0, chipSize.x, 50.0f, chipSize.z);
 		this->floor = Box(chipSize, pos, hitBase);
 		//天井の数値の指定
 		//今は上に移動させるだけ
-		pos.y += 300.0f;
-		hitBase.h = pos.y;
+		pos.y += 350.0f;
 		this->ceiling = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
 		this->chipName = "box1.sob";
@@ -112,7 +113,7 @@ namespace  Map
 			for (int x = 0; x < this->maxSizeX; ++x)
 			{
 				int chipNum = this->arr[z][x].Get_Type();
-				if (chipNum != 1) { continue; }
+				if (chipNum != Type::box) { continue; }
 
 				matS.Scaling(this->arr[z][x].Get_Scaling());
 				matT.Translation(this->arr[z][x].Get_Pos());
@@ -170,9 +171,9 @@ namespace  Map
 					);
 					ML::Box3D hitBase(
 						0,0,0,
-						x * this->arr[z][x].Get_ChipSizeX() + this->arr[z][x].Get_ChipSizeX() / 2,
-						this->arr[z][x].Get_ChipSizeY() / 2,
-						z * this->arr[z][x].Get_ChipSizeZ() + this->arr[z][x].Get_ChipSizeZ() / 2
+						this->arr[z][x].Get_ChipSizeX(),
+						this->arr[z][x].Get_ChipSizeY(),
+						this->arr[z][x].Get_ChipSizeZ()
 					);
 					this->arr[z][x] = Box(pos, hitBase);
 					this->arr[z][x].Type_Read(in);
