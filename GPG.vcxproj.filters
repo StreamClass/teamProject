@@ -74,6 +74,9 @@
     <Filter Include="MyPG\Game\Breaker">
       <UniqueIdentifier>{e24c0abe-4bc3-4755-9839-ca339b84113f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Game\MiniMap">
+      <UniqueIdentifier>{6241e338-26b5-40b7-8f7c-12f6b12e9d40}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -130,9 +133,6 @@
     <ClCompile Include="GameEngine_Ver3_7.cpp">
       <Filter>GE</Filter>
     </ClCompile>
-    <ClCompile Include="Task_Game.cpp">
-      <Filter>MyPG</Filter>
-    </ClCompile>
     <ClCompile Include="MapBox.cpp">
       <Filter>MyPG\Class\MapBox</Filter>
     </ClCompile>
@@ -162,6 +162,12 @@
     </ClCompile>
     <ClCompile Include="Breaker.cpp">
       <Filter>MyPG\Class\Breaker</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Game.cpp">
+      <Filter>MyPG\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_MiniMap.cpp">
+      <Filter>MyPG\Game\MiniMap</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -216,9 +222,6 @@
     <ClInclude Include="GameEngine_Ver3_7.h">
       <Filter>GE</Filter>
     </ClInclude>
-    <ClInclude Include="Task_Game.h">
-      <Filter>MyPG</Filter>
-    </ClInclude>
     <ClInclude Include="MapBox.h">
       <Filter>MyPG\Class\MapBox</Filter>
     </ClInclude>
@@ -248,6 +251,12 @@
     </ClInclude>
     <ClInclude Include="Breaker.h">
       <Filter>MyPG\Class\Breaker</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Game.h">
+      <Filter>MyPG\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_MiniMap.h">
+      <Filter>MyPG\Game\MiniMap</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
