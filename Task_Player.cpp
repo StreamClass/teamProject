@@ -6,6 +6,7 @@
 #include  "MapBox.h"
 #include  "Task_Player.h" 
 #include  "Task_Breaker.h"
+#include  "Task_Door.h"
 
 namespace  Player
 {
@@ -44,7 +45,7 @@ namespace  Player
 		this->pos = ML::Vec3(0, 0, 0);
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->headHeight = 175;
-		this->angle = ML::Vec3(0, 0, 0);
+		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 
 		//★タスクの生成
@@ -87,9 +88,7 @@ namespace  Player
 		}
 		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
 
-		//this->pos += this->moveVec;
-
-		this->Player_CheckMove(this->moveVec);
+		this->Player_CheckMove(this->moveVec);		
 
 		if (in.B3.down)
 		{
@@ -101,10 +100,10 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(0, 0, 300, 100);
-		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
-			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y));
-		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
+		//ML::Box2D draw(0, 0, 300, 100);
+		//string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+		//	+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y));
+		//DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
@@ -193,6 +192,14 @@ namespace  Player
 				if (mp->arr[z][x].Get_Type() == Type::box) {
 					return true;
 				}
+				auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
+				for (auto it = d->begin(); it != d->end(); it++)
+				{
+					if ((*it)->Hit_Check(this->hitBase.OffsetCopy(this->pos)))
+					{
+						return true;
+					}
+				}
 			}
 		}
 		return false;//接触するものが検出されなかった
@@ -202,6 +209,7 @@ namespace  Player
 	//引数：（プレイヤの移動量）
 	void Object::Player_CheckMove(ML::Vec3& est_)
 	{
+
 		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
 		//水平方向（x平面)に対する移動
 		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
@@ -220,11 +228,11 @@ namespace  Player
 
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase;
-			hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit)) {
+			//hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
+			if (true == this->Map_CheckHit(hit.OffsetCopy(this->pos))) {
 				this->pos.x = preX;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
-			}
+			}			
 		}
 		//-----------------------------------------------------------------------------
 		//水平方向（z平面)に対する移動
@@ -245,11 +253,11 @@ namespace  Player
 
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase;
-			hit.Offset((int)this->pos.z, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit)) {
+			//hit.Offset((int)this->pos.z, (int)this->pos.y, (int)this->pos.z);
+			if (true == this->Map_CheckHit(hit.OffsetCopy(this->pos))) {
 				this->pos.z = preZ;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
-			}
+			}			
 		}
 	}
 	void Object::Touch()

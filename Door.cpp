@@ -40,6 +40,7 @@ void Door::Door_Open()
 	{
 		this->pos.x += 5;
 	}
+	this->hitBase.Offset(this->pos);
 	//開かれる間時間経過
 	this->timeCnt++;
 	//1秒過ぎたら完全に開かれたことにする

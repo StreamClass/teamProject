@@ -7,6 +7,7 @@
 #include  "Task_Title.h"
 #include  "Task_Camera.h"
 #include  "Task_Player.h"
+#include  "Task_MiniMap.h"
 
 namespace  Game
 {
@@ -58,10 +59,10 @@ namespace  Game
 
 		//★タスクの生成
 		auto pl = Player::Object::Create(true);
-		auto map = Map::Object::Create(true);
-		map->Load();
-		
 		auto cam = Camera::Object::Create(true);
+		auto map = Map::Object::Create(true);
+		map->Load();		
+		auto mm = MiniMap::Object::Create(true);
 		
 		return  true;
 	}
@@ -73,6 +74,9 @@ namespace  Game
 		ge->KillAll_G("フィールド");
 		ge->KillAll_G("カメラマン");
 		ge->KillAll_G("プレイヤ");
+		ge->KillAll_G("ドア");
+		ge->KillAll_G("ブレーカー");
+		ge->KillAll_G("ミニマップ");
 
 		ge->OM.Finalize();
 
