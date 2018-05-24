@@ -61,6 +61,8 @@ namespace Player
 		ML::Vec3 moveVec;
 		//コントローラネーム
 		string controllerName;
+		//クリア判定
+		bool		clearFlag;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す
@@ -82,5 +84,9 @@ namespace Player
 		void Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit,*/ML::Vec3& est_);
 		//ギミックへの干渉
 		void Touch();
+		//クリアしているか判定
+		void Check_Clear();
+		//クリア情報を渡す
+		bool Get_ClearFlag();
 	};
 }

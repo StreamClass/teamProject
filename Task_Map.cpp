@@ -66,6 +66,11 @@ namespace  Map
 		//今は上に移動させるだけ
 		pos.y += 350.0f;
 		this->ceiling = Box(chipSize, pos, hitBase);
+		//ゴール	の数値指定
+		chipSize = ML::Vec3(200, 300, 50);
+		pos = ML::Vec3(500, 150, 10025);
+		hitBase = ML::Box3D(0,0,0, 200, 300, 50);
+		this->goal = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
 		this->chipName = "box1.sob";
 		//マップチップを設定
@@ -134,7 +139,7 @@ namespace  Map
 		cmatT.Translation(this->ceiling.Get_Pos());
 		DG::EffectState().param.matWorld = cmatS * cmatT;
 		DG::Mesh_Draw(this->chipName);
-	}
+		}
 	//-------------------------------------------------------------------
 	//マップの読み込み
 	bool  Object::Load()

@@ -49,7 +49,11 @@ namespace MiniMap
 		//追加したい変数・メソッドはここに追加する
 		string imageName;
 		ML::Vec2 pos;
+		bool viewFlag;
 
-		
+		//ミニマップを表示するか判断
+		bool MiniMap_View();
+		//プレイヤからミニマップを出すか指定
+		void Set_MiniMap_View();
 	};
 }

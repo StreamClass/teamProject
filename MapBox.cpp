@@ -49,3 +49,9 @@ ML::Vec3 Box::Get_Scaling()
 	);
 	return scaling;
 }
+//‚ ‚½‚è”»’è
+bool Box::Map_Hit_Check(const ML::Box3D& hit_)
+{
+	auto me = this->hitBase_.OffsetCopy(this->pos_);
+	return me.Hit(hit_);
+}

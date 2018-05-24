@@ -45,17 +45,17 @@ namespace  Game
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 10.0f, 4000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(1, 0,0,0);
+		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//ライティングの設定
 		//ライティング有効化
 		//DG::EffectState().param.lightsEnable = true;
 		////環境光の強さを設定する
-		//DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+		//DG::EffectState().param.lightAmbient = ML::Color(1, 0.1f, 0.1f, 0.1f);
 		////平行光源の設定
 		//DG::EffectState().param.light[0].enable = true;
 		//DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		//DG::EffectState().param.light[0].direction = ML::Vec3(1, -1, 1).Normalize();//照射方向
-		//DG::EffectState().param.light[0].color = ML::Color(1, 1, 1, 1);//色と強さ
+		//DG::EffectState().param.light[0].color = ML::Color(1, 0.1f,0.1f,0.1f);//色と強さ
 
 		//★タスクの生成
 		auto pl = Player::Object::Create(true);
@@ -97,6 +97,11 @@ namespace  Game
 		{
 			this->Kill();
 		}
+		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		if (p->Get_ClearFlag() == true)
+		{
+			this->Kill();
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -107,11 +112,6 @@ namespace  Game
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		//平行移動行列を生成 //ワールド変換を適用する
-		ML::Mat4x4  matT;
-		matT.Translation(ML::Vec3(0, 0, 0));
-		DG::EffectState().param.matWorld = matT;
-		DG::Mesh_Draw("ArrowMesh");
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

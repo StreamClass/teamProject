@@ -55,6 +55,7 @@ namespace Map
 		int			tmpX, tmpZ;			//マップを設定するときの基準値
 		Box			arr[100][100];		//マップ全体のarr[z][x]
 		Box			floor, ceiling;		//天井と床
+		Box			goal;				//ゴール
 		string		fileName;			//読み取るマップの名前
 		string		filePath;			//マップファイル読み取り時のパス
 

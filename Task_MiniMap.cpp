@@ -31,6 +31,7 @@ namespace  MiniMap
 		//★データ初期化
 		this->imageName = "MapImg";
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
+		this->viewFlag = true;
 		//★タスクの生成
 
 		return  true;
@@ -59,15 +60,29 @@ namespace  MiniMap
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(0, 0, 500, 500);
-		ML::Box2D src(0, 0, 500, 500);
-		DG::Image_Draw(this->imageName, draw, src);
+		if (this->MiniMap_View() == true)
+		{
+			ML::Box2D draw(0, 0, 500, 500);
+			ML::Box2D src(0, 0, 500, 500);
+			DG::Image_Draw(this->imageName, draw, src);
+		}
 	}
 	//-------------------------------------------------------------------
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
 	}
+	//ミニマップを表示するか判断
+	bool Object::MiniMap_View()
+	{
+		return this->viewFlag;
+	}
+	//プレイヤからミニマップを表示するか指定
+	void Object::Set_MiniMap_View()
+	{
+		this->viewFlag = !this->viewFlag;
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

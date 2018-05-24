@@ -86,4 +86,6 @@ public:
 	ML::Box3D Get_HitBase();
 	//スケーリング
 	ML::Vec3 Get_Scaling();
+	//あたり判定
+	bool Map_Hit_Check(const ML::Box3D& hit_);
 };

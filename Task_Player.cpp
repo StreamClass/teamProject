@@ -7,6 +7,7 @@
 #include  "Task_Player.h" 
 #include  "Task_Breaker.h"
 #include  "Task_Door.h"
+#include  "Task_MiniMap.h"
 
 namespace  Player
 {
@@ -47,6 +48,7 @@ namespace  Player
 		this->headHeight = 175;
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
+		this->clearFlag = false;
 
 		//★タスクの生成
 
@@ -77,8 +79,8 @@ namespace  Player
 		{
 			ML::Mat4x4 matR;
 			matR.RotationY(this->angle.y);
-			this->moveVec.x = -20 * in.LStick.axis.y;
-			this->moveVec.z = -20 * in.LStick.axis.x;
+			this->moveVec.x = -40 * in.LStick.axis.y;
+			this->moveVec.z = -40 * in.LStick.axis.x;
 			//頂点を座標変換させる
 			this->moveVec = matR.TransformCoord(this->moveVec);
 		}
@@ -94,7 +96,11 @@ namespace  Player
 		{
 			this->Touch();
 		}
-		
+		if (in.B2.down)
+		{
+			auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
+			mm->Set_MiniMap_View();
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -200,6 +206,7 @@ namespace  Player
 						return true;
 					}
 				}
+				this->Check_Clear();
 			}
 		}
 		return false;//接触するものが検出されなかった
@@ -260,6 +267,7 @@ namespace  Player
 			}			
 		}
 	}
+	//ギミックへの干渉
 	void Object::Touch()
 	{
 		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
@@ -272,6 +280,24 @@ namespace  Player
 			}
 		}
 	}
+	//クリアしているか判定
+	void Object::Check_Clear()
+	{
+		auto m = ge->GetTask_Group_G<Map::Object>("フィールド");
+		for (auto it = m->begin(); it != m->end(); ++it)
+		{
+			if ((*it)->goal.Map_Hit_Check(this->hitBase.OffsetCopy(this->pos)))
+			{
+				this->clearFlag = true;
+			}
+		}
+	}
+	//クリア情報を渡す
+	bool Object::Get_ClearFlag()
+	{
+		return this->clearFlag;
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
