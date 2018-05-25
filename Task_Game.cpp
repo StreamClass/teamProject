@@ -48,9 +48,9 @@ namespace  Game
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//ライティングの設定
 		//ライティング有効化
-		//DG::EffectState().param.lightsEnable = true;
-		////環境光の強さを設定する
-		//DG::EffectState().param.lightAmbient = ML::Color(1, 0.1f, 0.1f, 0.1f);
+		DG::EffectState().param.lightsEnable = true;
+		//環境光の強さを設定する
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.4f, 0.4f, 0.4f);
 		////平行光源の設定
 		//DG::EffectState().param.light[0].enable = true;
 		//DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
@@ -63,6 +63,12 @@ namespace  Game
 		auto map = Map::Object::Create(true);
 		map->Load();		
 		auto mm = MiniMap::Object::Create(true);
+
+		DG::EffectState().param.fogEnable = true;
+		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
+		DG::EffectState().param.fogFore = 1500.0f;
+		DG::EffectState().param.fogMode = true;
+		DG::EffectState().param.fogNear = 1000.0f;
 		
 		return  true;
 	}

@@ -56,7 +56,8 @@ namespace  Camera
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
+
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		//注視点の距離
 		//カメラマンの座標にプレイヤ座標を代入
 		this->pos = pl->Get_Pos();
@@ -65,7 +66,7 @@ namespace  Camera
 		//注視点
 		ML::Mat4x4 matR;
 		matR.RotationY(this->angle.y);
-		ML::Vec3 vec = ML::Vec3(800, 0, 0);
+		ML::Vec3 vec = ML::Vec3(800, pl->Get_Adjust(), 0);
 		vec = matR.TransformCoord(vec);
 
 		ge->camera[0]->target = this->pos + vec;

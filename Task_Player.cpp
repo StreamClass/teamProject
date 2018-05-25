@@ -44,8 +44,11 @@ namespace  Player
 		this->controllerName = "P1";
 		//プレイヤの初期化
 		this->pos = ML::Vec3(0, 0, 0);
-		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->headHeight = 175;
+		this->adjust_TG = 175;
+		this->adjust_Min = -400;
+		this->adjust_Max = +400;
+		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->clearFlag = false;
@@ -79,8 +82,8 @@ namespace  Player
 		{
 			ML::Mat4x4 matR;
 			matR.RotationY(this->angle.y);
-			this->moveVec.x = -40 * in.LStick.axis.y;
-			this->moveVec.z = -40 * in.LStick.axis.x;
+			this->moveVec.x = -10 * in.LStick.axis.y;
+			this->moveVec.z = -10 * in.LStick.axis.x;
 			//頂点を座標変換させる
 			this->moveVec = matR.TransformCoord(this->moveVec);
 		}
@@ -89,6 +92,15 @@ namespace  Player
 			this->moveVec = ML::Vec3(0, 0, 0);
 		}
 		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
+		//注視点の上下移動
+		if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
+		{
+			this->adjust_TG += 20;
+		}
+		else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
+		{
+			this->adjust_TG -= 20;
+		}
 
 		this->Player_CheckMove(this->moveVec);		
 
@@ -106,10 +118,10 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		//ML::Box2D draw(0, 0, 300, 100);
-		//string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
-		//	+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y));
-		//DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
+		ML::Box2D draw(500, 0, 580, 300);
+		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG);
+		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
@@ -136,6 +148,12 @@ namespace  Player
 	int Object::Get_PointView()
 	{
 		return this->headHeight;
+	}
+	//-------------------------------------------------------------------
+	//注視点の高さ(adJust_TG)を返す
+	int Object::Get_Adjust()
+	{
+		return this->adjust_TG;
 	}
 	//-------------------------------------------------------------------
 	ML::Vec3 Object::Get_Angle()
@@ -267,6 +285,7 @@ namespace  Player
 			}			
 		}
 	}
+	//-------------------------------------------------------------------
 	//ギミックへの干渉
 	void Object::Touch()
 	{
@@ -280,6 +299,7 @@ namespace  Player
 			}
 		}
 	}
+	//-------------------------------------------------------------------
 	//クリアしているか判定
 	void Object::Check_Clear()
 	{
@@ -292,6 +312,7 @@ namespace  Player
 			}
 		}
 	}
+	//-------------------------------------------------------------------
 	//クリア情報を渡す
 	bool Object::Get_ClearFlag()
 	{

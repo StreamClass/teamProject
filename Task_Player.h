@@ -53,10 +53,16 @@ namespace Player
 		ML::Vec3 pos;
 		//プレイヤの矩形
 		ML::Box3D hitBase;
-		//プレイヤの頭の高さ
-		int headHeight;
 		//プレイやの向き
 		ML::Vec3 angle;
+		//プレイヤの視点(頭の高さ)
+		int headHeight;
+		//注視点の高さ
+		int adjust_TG;
+		//注視点高さの下限
+		int adjust_Min;
+		//注視点高さの上限
+		int adjust_Max;
 		//プレイヤの移動量
 		ML::Vec3 moveVec;
 		//コントローラネーム
@@ -67,6 +73,9 @@ namespace Player
 		//追加メソッド
 		//プレイヤの視点をint型で返す
 		int Get_PointView();
+		//注視点の高さ(adJust_TG)を返す
+		int Get_Adjust();
+		
 		//プレイヤの座標をML::Vec3型で返す
 		ML::Vec3 Get_Pos();
 		//プレイヤの向きをML::Vec3型で返す

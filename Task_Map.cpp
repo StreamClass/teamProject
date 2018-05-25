@@ -113,9 +113,17 @@ namespace  Map
 	{
 		//•Ç‚Ì•`‰æ
 		ML::Mat4x4 matS,matT;
-		for (int z = this->maxSizeZ - 1; z >= 0; --z)
+
+		int  sx, sz, ex, ez;
+		auto pl = ge->GetTask_One_G<Player::Object>("ƒvƒŒƒCƒ„");
+		sx = max(0, int(pl->Get_Pos().x / 100) - 16);
+		ex = min(this->maxSizeX, int(pl->Get_Pos().x / 100) + 16);
+		sz = max(0, int(pl->Get_Pos().z / 100) - 16);
+		ez = min(this->maxSizeZ, int(pl->Get_Pos().z / 100) + 16);
+
+		for (int z = ez - 1; z >= sz; --z)
 		{
-			for (int x = 0; x < this->maxSizeX; ++x)
+			for (int x = sx; x < ex; ++x)
 			{
 				int chipNum = this->arr[z][x].Get_Type();
 				if (chipNum != Type::box) { continue; }
@@ -126,6 +134,22 @@ namespace  Map
 				DG::Mesh_Draw(this->chipName);
 			}
 		}
+
+
+
+		//for (int z = this->maxSizeZ - 1; z >= 0; --z)
+		//{
+		//	for (int x = 0; x < this->maxSizeX; ++x)
+		//	{
+		//		int chipNum = this->arr[z][x].Get_Type();
+		//		if (chipNum != Type::box) { continue; }
+
+		//		matS.Scaling(this->arr[z][x].Get_Scaling());
+		//		matT.Translation(this->arr[z][x].Get_Pos());
+		//		DG::EffectState().param.matWorld = matS * matT;
+		//		DG::Mesh_Draw(this->chipName);
+		//	}
+		//}
 		//°‚Ì•`‰æ
 		ML::Mat4x4 fmatT, fmatS;
 		fmatS.Scaling(this->floor.Get_Scaling());
