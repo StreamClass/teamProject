@@ -56,8 +56,13 @@ namespace  Camera
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
 
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//タブレットが使用中なら更新を止める
+		if (pl->Is_Used_Tablet())
+		{
+			return;
+		}
 		//注視点の距離
 		//カメラマンの座標にプレイヤ座標を代入
 		this->pos = pl->Get_Pos();

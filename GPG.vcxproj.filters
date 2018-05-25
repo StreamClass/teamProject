@@ -77,6 +77,12 @@
     <Filter Include="MyPG\Game\MiniMap">
       <UniqueIdentifier>{6241e338-26b5-40b7-8f7c-12f6b12e9d40}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Class\Tablet">
+      <UniqueIdentifier>{8ac96558-a4bd-464e-927e-4c80da51dfc5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Game\Enemy">
+      <UniqueIdentifier>{242542ac-b4c2-4f58-89c2-bb6d7236115e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -169,6 +175,12 @@
     <ClCompile Include="Task_MiniMap.cpp">
       <Filter>MyPG\Game\MiniMap</Filter>
     </ClCompile>
+    <ClCompile Include="Tablet.cpp">
+      <Filter>MyPG\Class\Tablet</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Enemy.cpp">
+      <Filter>MyPG\Game\Enemy</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -257,6 +269,12 @@
     </ClInclude>
     <ClInclude Include="Task_MiniMap.h">
       <Filter>MyPG\Game\MiniMap</Filter>
+    </ClInclude>
+    <ClInclude Include="Tablet.h">
+      <Filter>MyPG\Class\Tablet</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Enemy.h">
+      <Filter>MyPG\Game\Enemy</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

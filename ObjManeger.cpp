@@ -6,6 +6,8 @@ ObjManeger::ObjManeger()
 {
 	this->door_Connencted_Breaker.clear();
 	this->first_Door_Connencted_Breaker.clear();
+	this->door.clear();
+	this->tab = new Tablet();
 }
 
 void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos)
@@ -89,9 +91,68 @@ void ObjManeger::Finalize()
 	{
 		delete d;
 	}
+	delete this->tab;
 
 	//ヴェクタークリア
 	this->door_Connencted_Breaker.clear();
 	this->first_Door_Connencted_Breaker.clear();
 	this->door.clear();
+}
+
+void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
+{
+	//引数でもらった角度を計算して
+	//カメラ位置をタブレットクラスに更新
+	ML::Vec3 target(0, 0, 0);
+	switch (angle)
+	{		
+		//東
+	case Type::camera_East:
+		target = pos + ML::Vec3(700, -200, 0);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//西
+	case Type::camera_West:
+		target = pos + ML::Vec3(-700, -200, 0);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//南
+	case Type::camera_South:
+		target = pos + ML::Vec3(0, -200, -700);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//北
+	case Type::camera_North:
+		target = pos + ML::Vec3(0, -200, 700);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//北東
+	case Type::camera_North_East:
+		target = pos + ML::Vec3(350, -200, 350);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//北西
+	case Type::camera_North_West:
+		target = pos + ML::Vec3(-350, -200, 350);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//南東
+	case Type::camera_South_East:
+		target = pos + ML::Vec3(350, -200, -350);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+		//南西
+	case Type::camera_South_West:
+		target = pos + ML::Vec3(-350, -200, -350);
+		this->tab->PushBack_Camera(pos, target);
+		break;
+	}
+
+	//タスク生成
+	//未実装
+}
+
+Tablet* ObjManeger::Get_Tablet()
+{
+	return this->tab;
 }

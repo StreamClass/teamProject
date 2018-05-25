@@ -5,6 +5,7 @@
 #include  "Task_Map.h"
 #include  "Task_Player.h"
 
+
 namespace  Map
 {
 	Resource::WP  Resource::instance;
@@ -113,7 +114,6 @@ namespace  Map
 	{
 		//•Ç‚Ì•`‰æ
 		ML::Mat4x4 matS,matT;
-
 		int  sx, sz, ex, ez;
 		auto pl = ge->GetTask_One_G<Player::Object>("ƒvƒŒƒCƒ„");
 		sx = max(0, int(pl->Get_Pos().x / 100) - 16);
@@ -134,22 +134,6 @@ namespace  Map
 				DG::Mesh_Draw(this->chipName);
 			}
 		}
-
-
-
-		//for (int z = this->maxSizeZ - 1; z >= 0; --z)
-		//{
-		//	for (int x = 0; x < this->maxSizeX; ++x)
-		//	{
-		//		int chipNum = this->arr[z][x].Get_Type();
-		//		if (chipNum != Type::box) { continue; }
-
-		//		matS.Scaling(this->arr[z][x].Get_Scaling());
-		//		matT.Translation(this->arr[z][x].Get_Pos());
-		//		DG::EffectState().param.matWorld = matS * matT;
-		//		DG::Mesh_Draw(this->chipName);
-		//	}
-		//}
 		//°‚Ì•`‰æ
 		ML::Mat4x4 fmatT, fmatS;
 		fmatS.Scaling(this->floor.Get_Scaling());
@@ -213,6 +197,16 @@ namespace  Map
 						break;
 					case Type::player:
 						ge->GetTask_One_G<Player::Object>("ƒvƒŒƒCƒ„")->Ini_Pos(pos-ML::Vec3(0,150,0));
+						break;
+					case Type::camera_East:
+					case Type::camera_North:
+					case Type::camera_South:
+					case Type::camera_West:
+					case Type::camera_North_East:
+					case Type::camera_North_West:
+					case Type::camera_South_East:
+					case Type::camera_South_West:
+						ge->OM.Create_Camera(pos+ML::Vec3(0,100,0), (Type)in);
 						break;
 					}					
 				}

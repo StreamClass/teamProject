@@ -101,9 +101,11 @@
     <ClCompile Include="myLib.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="ObjManeger.cpp" />
+    <ClCompile Include="Tablet.cpp" />
     <ClCompile Include="Task_Breaker.cpp" />
     <ClCompile Include="Task_Camera.cpp" />
     <ClCompile Include="Task_Door.cpp" />
+    <ClCompile Include="Task_Enemy.cpp" />
     <ClCompile Include="Task_Game.cpp" />
     <ClCompile Include="Task_Map.cpp" />
     <ClCompile Include="Task_MiniMap.cpp" />
@@ -133,9 +135,11 @@
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="ObjManeger.h" />
+    <ClInclude Include="Tablet.h" />
     <ClInclude Include="Task_Breaker.h" />
     <ClInclude Include="Task_Camera.h" />
     <ClInclude Include="Task_Door.h" />
+    <ClInclude Include="Task_Enemy.h" />
     <ClInclude Include="Task_Game.h" />
     <ClInclude Include="Task_Map.h" />
     <ClInclude Include="Task_MiniMap.h" />

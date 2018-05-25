@@ -53,6 +53,7 @@ namespace  Player
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->clearFlag = false;
 
+		this->tab = ge->OM.Get_Tablet();
 		//★タスクの生成
 
 		return  true;
@@ -78,40 +79,53 @@ namespace  Player
 	{
 		auto in = DI::GPad_GetState("P1");
 		//volumeが0の時は使ってはダメ
-		if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
+		//タブレットオフ
+		if (!this->tab->Is_Used_Now())
 		{
-			ML::Mat4x4 matR;
-			matR.RotationY(this->angle.y);
-			this->moveVec.x = -10 * in.LStick.axis.y;
-			this->moveVec.z = -10 * in.LStick.axis.x;
-			//頂点を座標変換させる
-			this->moveVec = matR.TransformCoord(this->moveVec);
+			if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
+			{
+				ML::Mat4x4 matR;
+				matR.RotationY(this->angle.y);
+				this->moveVec.x = -10 * in.LStick.axis.y;
+				this->moveVec.z = -10 * in.LStick.axis.x;
+				//頂点を座標変換させる
+				this->moveVec = matR.TransformCoord(this->moveVec);
+			}
+			else
+			{
+				this->moveVec = ML::Vec3(0, 0, 0);
+			}
+			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
+			//注視点の上下移動
+			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
+			{
+				this->adjust_TG += 20;
+			}
+			else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
+			{
+				this->adjust_TG -= 20;
+			}
+
+			this->Player_CheckMove(this->moveVec);
+
+			if (in.B3.down)
+			{
+				this->Touch();
+			}
+			if (in.B2.down)
+			{
+				auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
+				mm->Set_MiniMap_View();
+			}
 		}
 		else
 		{
-			this->moveVec = ML::Vec3(0, 0, 0);
-		}
-		this->angle.y += in.RStick.axis.x * ML::ToRadian(5);
-		//注視点の上下移動
-		if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
-		{
-			this->adjust_TG += 20;
-		}
-		else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
-		{
-			this->adjust_TG -= 20;
+			this->tab->Select_Camera();
 		}
 
-		this->Player_CheckMove(this->moveVec);		
-
-		if (in.B3.down)
+		if (in.B4.down)
 		{
-			this->Touch();
-		}
-		if (in.B2.down)
-		{
-			auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
-			mm->Set_MiniMap_View();
+			this->tab->Open_or_Close_Tablet();
 		}
 	}
 	//-------------------------------------------------------------------
@@ -319,6 +333,12 @@ namespace  Player
 		return this->clearFlag;
 	}
 
+	//------------------------------------------------------------------------
+	//タブレット使用中を返す
+	bool Object::Is_Used_Tablet()
+	{
+		return this->tab->Is_Used_Now();
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

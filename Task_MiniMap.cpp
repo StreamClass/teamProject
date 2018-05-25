@@ -30,8 +30,12 @@ namespace  MiniMap
 		this->res = Resource::Create();
 
 		//★データ初期化
+		this->render2D_Priority[1] = 0.1f;
 		this->imageName = "MapImg";
+		this->plImgName = "PlayerImg";
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
+		DG::Image_Create(this->plImgName, "./data/image/MiniMap_Player.bmp");
+		this->pos = ML::Vec2(0, 0);
 		this->viewFlag = true;
 		//★タスクの生成
 
@@ -43,6 +47,7 @@ namespace  MiniMap
 	{
 		//★データ＆タスク解放
 		DG::Image_Erase(this->imageName);
+		DG::Image_Erase(this->plImgName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -56,6 +61,8 @@ namespace  MiniMap
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		this->pos = ML::Vec2((int)pl->Get_Pos().x / 20 + 5, 500 - (int)pl->Get_Pos().z / 20 + 5);
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -66,6 +73,12 @@ namespace  MiniMap
 			ML::Box2D draw(0, 0, 500, 500);
 			ML::Box2D src(0, 0, 500, 500);
 			DG::Image_Draw(this->imageName, draw, src);
+
+			draw = ML::Box2D(0, 0, 5, 5);
+			src = ML::Box2D(0, 0, 5, 5);
+			draw.x += this->pos.x;
+			draw.y += this->pos.y;
+			DG::Image_Draw(this->plImgName, draw, src);
 		}
 	}
 	//-------------------------------------------------------------------

@@ -69,6 +69,8 @@ namespace Player
 		string controllerName;
 		//クリア判定
 		bool		clearFlag;
+		//タブレット
+		Tablet* tab;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す
@@ -97,5 +99,7 @@ namespace Player
 		void Check_Clear();
 		//クリア情報を渡す
 		bool Get_ClearFlag();
+		//タブレットを使用中を確認する関数
+		bool Is_Used_Tablet();
 	};
 }

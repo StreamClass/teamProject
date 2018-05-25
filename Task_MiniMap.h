@@ -48,6 +48,7 @@ namespace MiniMap
 	public:
 		//追加したい変数・メソッドはここに追加する
 		string imageName;
+		string plImgName;
 		ML::Vec2 pos;
 		bool viewFlag;
 
