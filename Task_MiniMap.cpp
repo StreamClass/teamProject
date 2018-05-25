@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_MiniMap.h"
+#include  "Task_Player.h"
 
 namespace  MiniMap
 {
