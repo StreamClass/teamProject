@@ -38,7 +38,7 @@ public:
 	//カメラの生成
 	void Create_Camera(ML::Vec3, Type);
 	//タブレットのアドレス値を返す関数(プレイヤの初期化にのみ使うこと)
-	Tablet* Get_Tablet();
+	Tablet* Create_Tablet();
 
 	//ファイナライズ,本編が終了する時絶対呼び出すこと
 	//ヒープから解放処理をやる

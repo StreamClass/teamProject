@@ -31,6 +31,7 @@ void Tablet::Change_Camera()
 	//カメラの位置と主視点更新
 	ge->camera[0]->pos = this->camera_Pos[this->Select];
 	ge->camera[0]->target = this->target_Pos[this->Select];
+	//ge->camera[0]->forePlane = 10000.0f;
 	ge->camera[0]->UpDate();
 }
 
@@ -59,6 +60,6 @@ void Tablet::Is_Select_Range_Over()
 	}
 	if (this->Select < 0)
 	{
-		this->Select = this->camera_Pos.size() - 1;
+		this->Select = (int)this->camera_Pos.size() - 1;
 	}
 }

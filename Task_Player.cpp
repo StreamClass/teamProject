@@ -53,7 +53,7 @@ namespace  Player
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->clearFlag = false;
 
-		this->tab = ge->OM.Get_Tablet();
+		this->tab = ge->OM.Create_Tablet();
 		//šƒ^ƒXƒN‚Ì¶¬
 
 		return  true;

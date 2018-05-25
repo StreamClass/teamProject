@@ -10,7 +10,7 @@ Breaker::Breaker()
 Breaker::Breaker(ML::Vec3 pos)
 {
 	this->pos = pos;
-	this->active_Base = ML::Box3D(-25, -100, -25, 50, 200, 50);
+	this->active_Base = ML::Box3D(-100, -100, -100, 200, 200, 200);
 	this->active_Falg = false;
 }
 

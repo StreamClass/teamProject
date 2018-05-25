@@ -6,8 +6,8 @@ ObjManeger::ObjManeger()
 {
 	this->door_Connencted_Breaker.clear();
 	this->first_Door_Connencted_Breaker.clear();
-	this->door.clear();
-	this->tab = new Tablet();
+	this->door.clear();	
+	this->tab = nullptr;
 }
 
 void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos)
@@ -152,7 +152,8 @@ void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 	//–¢À‘•
 }
 
-Tablet* ObjManeger::Get_Tablet()
+Tablet* ObjManeger::Create_Tablet()
 {
+	this->tab = new Tablet();
 	return this->tab;
 }
