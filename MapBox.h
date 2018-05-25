@@ -17,6 +17,14 @@
  2 : 遮断機
  3 : プレイヤ初期位置
  4 : 扉
+ 5 : カメラ　北
+ 6 : カメラ　北東
+ 7 : カメラ　東
+ 8 : カメラ　南東
+ 9 : カメラ　南
+ 10: カメラ　南西
+ 11: カメラ　西
+ 12: カメラ　北西
 */
 enum Type
 {
@@ -25,7 +33,15 @@ enum Type
 	box = 1,
 	breaker = 2,
 	player = 3,
-	door = 4
+	door = 4,
+	camera_North = 5,
+	camera_North_East = 6,
+	camera_East	= 7,
+	camera_South_East = 8,
+	camera_South = 9,
+	camera_South_West = 10,
+	camera_West = 11,
+	camera_North_West = 12
 };
 class Box
 {
