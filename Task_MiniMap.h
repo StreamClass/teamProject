@@ -49,8 +49,10 @@ namespace MiniMap
 		//追加したい変数・メソッドはここに追加する
 		string imageName;
 		string plImgName;
-		ML::Vec2 pos;
+		ML::Vec2 plpos;
+		ML::Vec2 capos;
 		bool viewFlag;
+		bool tab_use_now;
 
 		//ミニマップを表示するか判断
 		bool MiniMap_View();

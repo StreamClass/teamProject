@@ -115,11 +115,10 @@ namespace  Map
 		//•Ç‚Ì•`‰æ
 		ML::Mat4x4 matS,matT;
 		int  sx, sz, ex, ez;
-		auto pl = ge->GetTask_One_G<Player::Object>("ƒvƒŒƒCƒ„");
-		sx = max(0, int(pl->Get_Pos().x / 100) - 16);
-		ex = min(this->maxSizeX, int(pl->Get_Pos().x / 100) + 16);
-		sz = max(0, int(pl->Get_Pos().z / 100) - 16);
-		ez = min(this->maxSizeZ, int(pl->Get_Pos().z / 100) + 16);
+		sx = max(0, int(ge->camera[0]->pos.x / 100) - 16);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 16);
+		sz = max(0, int(ge->camera[0]->pos.z / 100) - 16);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 16);
 
 		for (int z = ez - 1; z >= sz; --z)
 		{

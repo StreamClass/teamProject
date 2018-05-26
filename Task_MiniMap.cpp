@@ -35,8 +35,10 @@ namespace  MiniMap
 		this->plImgName = "PlayerImg";
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
 		DG::Image_Create(this->plImgName, "./data/image/MiniMap_Player.bmp");
-		this->pos = ML::Vec2(0, 0);
+		this->plpos = ML::Vec2(0, 0);
+		this->capos = ML::Vec2(0, 0);
 		this->viewFlag = true;
+		this->tab_use_now = false;
 		//★タスクの生成
 
 		return  true;
@@ -62,23 +64,37 @@ namespace  MiniMap
 	void  Object::UpDate()
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		this->pos = ML::Vec2((int)pl->Get_Pos().x / 20 + 5, 500 - (int)pl->Get_Pos().z / 20 + 5);
+
+		this->plpos = ML::Vec2((int)pl->Get_Pos().x / 20 + 5, 500 - (int)pl->Get_Pos().z / 20 + 5);
+		this->tab_use_now = pl->Is_Used_Tablet();
+		if (this->tab_use_now == true)
+		{
+			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20 + 5, 500 - (int)ge->camera[0]->pos.z / 20 + 5);	
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		//ミニマップを表示していたら
 		if (this->MiniMap_View() == true)
 		{
+			//ミニマップ
 			ML::Box2D draw(0, 0, 500, 500);
 			ML::Box2D src(0, 0, 500, 500);
 			DG::Image_Draw(this->imageName, draw, src);
-
+			//プレイヤ位置
 			draw = ML::Box2D(0, 0, 5, 5);
 			src = ML::Box2D(0, 0, 5, 5);
-			draw.x += this->pos.x;
-			draw.y += this->pos.y;
+			draw.Offset(this->plpos);
 			DG::Image_Draw(this->plImgName, draw, src);
+			//タブレットを使用していたら
+			if (this->tab_use_now == true)
+			{
+				draw = ML::Box2D(0, 0, 5, 5);
+				draw.Offset(this->capos);
+				DG::Image_Draw(this->plImgName, draw, src, ML::Color(1, 1, 0.5f, 0.5f));
+			}
 		}
 	}
 	//-------------------------------------------------------------------
