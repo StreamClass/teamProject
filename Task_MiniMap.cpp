@@ -65,11 +65,11 @@ namespace  MiniMap
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 
-		this->plpos = ML::Vec2((int)pl->Get_Pos().x / 20 + 5, 500 - (int)pl->Get_Pos().z / 20 + 5);
+		this->plpos = ML::Vec2((int)pl->Get_Pos().x / 20, 500 - (int)pl->Get_Pos().z / 20);
 		this->tab_use_now = pl->Is_Used_Tablet();
 		if (this->tab_use_now == true)
 		{
-			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20 + 5, 500 - (int)ge->camera[0]->pos.z / 20 + 5);	
+			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20, 500 - (int)ge->camera[0]->pos.z / 20);	
 		}
 	}
 	//-------------------------------------------------------------------
@@ -84,14 +84,14 @@ namespace  MiniMap
 			ML::Box2D src(0, 0, 500, 500);
 			DG::Image_Draw(this->imageName, draw, src);
 			//プレイヤ位置
-			draw = ML::Box2D(0, 0, 5, 5);
+			draw = ML::Box2D(-3, -3, 5, 5);
 			src = ML::Box2D(0, 0, 5, 5);
 			draw.Offset(this->plpos);
 			DG::Image_Draw(this->plImgName, draw, src);
 			//タブレットを使用していたら
 			if (this->tab_use_now == true)
 			{
-				draw = ML::Box2D(0, 0, 5, 5);
+				draw = ML::Box2D(-3, -3, 5, 5);
 				draw.Offset(this->capos);
 				DG::Image_Draw(this->plImgName, draw, src, ML::Color(1, 1, 0.5f, 0.5f));
 			}
