@@ -33,8 +33,10 @@ namespace  MiniMap
 		this->render2D_Priority[1] = 0.1f;
 		this->imageName = "MapImg";
 		this->plImgName = "PlayerImg";
+		this->caImgName = "CameraImg";
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
 		DG::Image_Create(this->plImgName, "./data/image/MiniMap_Player.bmp");
+		DG::Image_Create(this->caImgName, "./data/image/MiniMap_Camera.bmp");
 		this->plpos = ML::Vec2(0, 0);
 		this->capos = ML::Vec2(0, 0);
 		this->viewFlag = true;
@@ -50,6 +52,7 @@ namespace  MiniMap
 		//★データ＆タスク解放
 		DG::Image_Erase(this->imageName);
 		DG::Image_Erase(this->plImgName);
+		DG::Image_Erase(this->caImgName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -93,7 +96,7 @@ namespace  MiniMap
 			{
 				draw = ML::Box2D(-3, -3, 5, 5);
 				draw.Offset(this->capos);
-				DG::Image_Draw(this->plImgName, draw, src, ML::Color(1, 1, 0.5f, 0.5f));
+				DG::Image_Draw(this->caImgName, draw, src);
 			}
 		}
 	}

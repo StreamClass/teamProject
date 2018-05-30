@@ -49,6 +49,8 @@ namespace Enemy
 		//追加変数
 		//自身の座標
 		ML::Vec3 pos;
+		//向き
+		ML::Vec3 angle;
 		//追跡用移動量
 		ML::Vec3 toVec;
 		//探知用矩形
