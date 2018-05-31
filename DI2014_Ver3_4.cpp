@@ -143,7 +143,7 @@ namespace DI_
 		vector<DWORD>         kbAxisL;	//キーボード専用方向キー
 		vector<DWORD>         kbAxisR;	//キーボード専用方向キー
 		vector<DWORD>         kbPov4;	//キーボード専用POVキー
-		StickInfo         ls, rs;
+		StickInfo			  ls, rs;
 
 		Input();
 		bool  Initialize(
@@ -632,7 +632,7 @@ namespace DI_
 		}
 		//アナログスティック対応
 		SIUpdate(ls,  js.lX * digToAnalog,  js.lY  * digToAnalog);
-		SIUpdate(rs,  js.lZ * digToAnalog,  js.lRz * digToAnalog);
+		SIUpdate(rs,  js.lRx * digToAnalog,  js.lRy * digToAnalog);
 
 
 		//POV対応
