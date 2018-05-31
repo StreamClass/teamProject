@@ -11,15 +11,21 @@ namespace  Title
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->imageName = "TitleLogoImg";
-		DG::Image_Create(this->imageName, "./data/image/Title.bmp");		
+		this->bgImgName = "TitleImg";
+		DG::Image_Create(this->bgImgName, "./data/image/TitleBG01.bmp");
+		this->loImgName = "LogoImg";
+		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
+		this->sbImgName = "StartButtonImg";
+		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Image_Erase(this->imageName);
+		DG::Image_Erase(this->bgImgName);
+		DG::Image_Erase(this->loImgName);
+		DG::Image_Erase(this->sbImgName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -32,7 +38,10 @@ namespace  Title
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->logoPosY = -270;
+		//ボタン用カウント
+		this->timeCnt = 0;
+		//Startボタンを押したか判断
+		this->pushSon = false;
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
@@ -56,7 +65,7 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto player = Game::Object::Create(true);
+			auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -66,36 +75,70 @@ namespace  Title
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
-
-		this->logoPosY += 9;
-		if (this->logoPosY > 0)
+		//スタートボタンを押したら
+		if (in.ST.down)
 		{
-			this->logoPosY = 0;
+			this->pushSon = true;
 		}
-
-		if (this->logoPosY == 0)
+		//カウントが3秒を超えたら
+		if (this->timeCnt >= 60 * 3)
 		{
-			if (in.ST.down)
-			{
-				//自身に消滅要請
-				this->Kill();
-			}
+			//消滅
+			this->Kill();
+		}
+		//ボタンを押していたら
+		if (this->pushSon)
+		{
+			//カウント開始
+			this->timeCnt++;
 		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(0, 0, 480, 270);
-		ML::Box2D src(0, 0, 240, 135);
-
-		draw.Offset(0, this->logoPosY);
-		DG::Image_Draw(this->res->imageName, draw, src);
+		//TitleBG描画
+		ML::Box2D draw(0, 0, 1920, 1080);
+		ML::Box2D src(0, 0, 1920, 1080);
+		DG::Image_Draw(this->res->bgImgName, draw, src);
+		//タイトルロゴ描画
+		draw = ML::Box2D(100, 200, 1300, 300);
+		src = ML::Box2D(0, 0, 1300, 300);
+		DG::Image_Draw(this->res->loImgName, draw, src);
+		//状態を判断して
+		if (this->LogoAnim())
+		{
+			//ボタンを描画
+			draw = ML::Box2D(400, 700, 345, 80);
+			src = ML::Box2D(0, 0, 332, 63);
+			DG::Image_Draw(this->res->sbImgName, draw, src);
+		}
 	}
-
+	//
 	void  Object::Render3D_L0()
 	{
 		
+	}
+	//ボタンの描画を判断
+	bool Object::LogoAnim()
+	{
+		//ボタンが押されていなかったら
+		if (!this->pushSon)
+		{
+			//常に描画
+			return true;
+		}
+		//押されていたら
+		if (this->pushSon)
+		{
+			//20フレーム間隔で描画
+			if ((this->timeCnt / 20) % 2 == 0)
+			{
+				return true;
+			}
+		}
+		//それ以外は見えないようにする
+		return false;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
