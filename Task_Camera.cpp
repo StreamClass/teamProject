@@ -33,6 +33,21 @@ namespace  Camera
 		this->angle = ML::Vec3(0, 0, 0);
 		this->dist = ML::Vec3(100, 0, 0);
 		
+		//カメラの設定
+		ge->camera[0] = MyPG::Camera::Create(
+			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
+			ML::Vec3(0.0f, 500.0f, -500.0f),			//	カメラ位置
+			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
+			ML::ToRadian(35), 10.0f, 8000.0f,	//	視野角・視野距離
+			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
+		
+		//フォグ(霧)の設定
+		DG::EffectState().param.fogEnable = true;
+		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
+		DG::EffectState().param.fogFore = 1500.0f;
+		DG::EffectState().param.fogMode = true;
+		DG::EffectState().param.fogNear = 1000.0f;
+
 		//★タスクの生成
 
 		return  true;

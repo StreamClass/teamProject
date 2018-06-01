@@ -30,7 +30,7 @@ namespace  MiniMap
 		this->res = Resource::Create();
 
 		//šƒf[ƒ^‰Šú‰»
-		this->render2D_Priority[1] = 0.1f;
+		this->render2D_Priority[1] = 0.5f;
 		this->imageName = "MapImg";
 		this->plImgName = "PlayerImg";
 		this->caImgName = "CameraImg";

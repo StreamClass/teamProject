@@ -1,15 +1,15 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//ゲーム管理
+//タイトル画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
-namespace Game
+namespace Loading
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("ゲーム");	//グループ名
-	const  string  defName("本編");	//タスク名
+	const  string  defGroupName("ローディング");	//グループ名
+	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
 	{
@@ -23,7 +23,7 @@ namespace Game
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		
+		string imageName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -48,7 +48,13 @@ namespace Game
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		bool pushButton;
+		//時間カウント
 		int timeCnt;
+		//透明度
+		float alpha;
+		//色の総括
+		ML::Color color;
+
+		void Killer(string& taskName);
 	};
 }

@@ -2,31 +2,24 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Title.h"
 #include  "Task_NowLoading.h"
 
-namespace  Title
+namespace  Loading
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->bgImgName = "TitleImg";
-		DG::Image_Create(this->bgImgName, "./data/image/TitleBG01.bmp");
-		this->loImgName = "LogoImg";
-		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
-		this->sbImgName = "StartButtonImg";
-		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
+		this->imageName = "LoadingImg";
+		DG::Image_Create(this->imageName, "./data/image/Loading.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Image_Erase(this->bgImgName);
-		DG::Image_Erase(this->loImgName);
-		DG::Image_Erase(this->sbImgName);
+		DG::Image_Erase(this->imageName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -39,14 +32,13 @@ namespace  Title
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->render2D_Priority[1] = 0.5f;
-		//ボタン用カウント
+		this->render2D_Priority[1] = 0.1f;
 		this->timeCnt = 0;
-		//Startボタンを押したか判断
-		this->pushSon = false;
-
-		//★タスクの生成
+		this->alpha = 0.0f;
+		this->color = ML::Color(this->alpha, 0, 0, 0);
 		
+		//★タスクの生成
+
 		return  true;
 	}
 	//-------------------------------------------------------------------
@@ -59,7 +51,6 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -68,77 +59,36 @@ namespace  Title
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
-		//スタートボタンを押したら
-		if (in.ST.down)
+		if (this->timeCnt < 60 * 2)
 		{
-			this->pushSon = true;
+			this->alpha += this->timeCnt / 180.f;
 		}
-		//3秒後に
-		if (this->timeCnt == 60 * 3)
+		else if (this->timeCnt < 60 * 4)
 		{
-			//ローディング呼び出し
-			auto lo = Loading::Object::Create(true);
+			this->alpha -= (this->timeCnt - 120) / 180.0f;
 		}
-		//5秒後に
-		if (this->timeCnt == 60 * 5)
+		if (this->alpha < 0)
 		{
-			//消滅
 			this->Kill();
 		}
-		//ボタンを押していたら
-		if (this->pushSon)
+		if (this->alpha >= 1.0f)
 		{
-			//カウント開始
-			this->timeCnt++;
+			this->alpha = 1.0f;
 		}
+		this->color = ML::Color(this->alpha, 0, 0, 0);
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		//TitleBG描画
 		ML::Box2D draw(0, 0, 1920, 1080);
-		ML::Box2D src(0, 0, 1920, 1080);
-		DG::Image_Draw(this->res->bgImgName, draw, src);
-		//タイトルロゴ描画
-		draw = ML::Box2D(100, 200, 1300, 300);
-		src = ML::Box2D(0, 0, 1300, 300);
-		DG::Image_Draw(this->res->loImgName, draw, src);
-		//状態を判断して
-		if (this->LogoAnim())
-		{
-			//ボタンを描画
-			draw = ML::Box2D(400, 700, 345, 80);
-			src = ML::Box2D(0, 0, 332, 63);
-			DG::Image_Draw(this->res->sbImgName, draw, src);
-		}
+		ML::Box2D src(0, 0, 160, 90);
+		DG::Image_Draw(this->res->imageName, draw, src, this->color);
 	}
-	//
+
 	void  Object::Render3D_L0()
 	{
-		
-	}
-	//ボタンの描画を判断
-	bool Object::LogoAnim()
-	{
-		//ボタンが押されていなかったら
-		if (!this->pushSon)
-		{
-			//常に描画
-			return true;
-		}
-		//押されていたら
-		if (this->pushSon)
-		{
-			//20フレーム間隔で描画
-			if ((this->timeCnt / 20) % 2 == 0)
-			{
-				return true;
-			}
-		}
-		//それ以外は見えないようにする
-		return false;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

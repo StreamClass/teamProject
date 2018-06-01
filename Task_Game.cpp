@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Game.h"
+#include  "Task_NowLoading.h"
 #include  "Task_Map.h"
 #include  "Task_Title.h"
 #include  "Task_Camera.h"
@@ -38,14 +39,9 @@ namespace  Game
 		this->res = Resource::Create();
 
 		//★データ初期化
+		this->pushButton = false;
+		this->timeCnt = 0;
 
-		//カメラの設定
-		ge->camera[0] = MyPG::Camera::Create(
-			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
-			ML::Vec3(0.0f, 500.0f, -500.0f),			//	カメラ位置
-			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 10.0f, 8000.0f,	//	視野角・視野距離
-			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//ライティングの設定
 		//ライティング有効化
@@ -66,11 +62,6 @@ namespace  Game
 		map->Load();		
 		auto mm = MiniMap::Object::Create(true);
 
-		DG::EffectState().param.fogEnable = true;
-		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
-		DG::EffectState().param.fogFore = 1500.0f;
-		DG::EffectState().param.fogMode = true;
-		DG::EffectState().param.fogNear = 1000.0f;
 		
 		return  true;
 	}
@@ -104,11 +95,21 @@ namespace  Game
 		auto in = DI::GPad_GetState("P1");
 		if (in.ST.down)
 		{
+			this->pushButton = true;
+			auto lo = Loading::Object::Create(true);
+		}
+		if (this->pushButton)
+		{
+			this->timeCnt++;
+		}
+		if (this->timeCnt == 60 * 1)
+		{
 			this->Kill();
 		}
 		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (p->Get_ClearFlag() == true)
 		{
+			auto lo = Loading::Object::Create(true);
 			this->Kill();
 		}
 	}
