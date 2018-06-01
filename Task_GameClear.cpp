@@ -2,24 +2,22 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_NowLoading.h"
+#include  "Task_GameClear.h"
+#include  "Task_Title.h"
 
-namespace  Loading
+namespace  Clear
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->imageName = "LoadingImg";
-		DG::Image_Create(this->imageName, "./data/image/Loading.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Image_Erase(this->imageName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -32,11 +30,7 @@ namespace  Loading
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->render2D_Priority[1] = 0.1f;
-		this->timeCnt = 0;
-		this->alpha = 0.0f;
-		this->color = ML::Color(this->alpha, 0, 0, 0);
-		
+		this->render2D_Priority[1] = 0.5f;
 		//★タスクの生成
 
 		return  true;
@@ -51,6 +45,7 @@ namespace  Loading
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
+			auto nectTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -59,40 +54,20 @@ namespace  Loading
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		if (this->timeCnt < 60 * 2)
-		{
-			this->alpha += this->timeCnt / 180.f;
-		}
-		else if (this->timeCnt < 60 * 4)
-		{
-			this->alpha -= (this->timeCnt - 120) / 180.0f;
-		}
-		if (this->alpha < 0)
+		auto in = DI::GPad_GetState("P1");
+		if (in.ST.down)
 		{
 			this->Kill();
 		}
-		if (this->alpha >= 1.0f)
-		{
-			this->alpha = 1.0f;
-		}
-		this->color = ML::Color(this->alpha, this->rgb, this->rgb, this->rgb);
-		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(0, 0, 1920, 1080);
-		ML::Box2D src(0, 0, 160, 90);
-		DG::Image_Draw(this->res->imageName, draw, src, this->color);
 	}
 
 	void  Object::Render3D_L0()
 	{
-	}
-	void Object::Set_Color(float& rgb)
-	{
-		this->rgb = rgb;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

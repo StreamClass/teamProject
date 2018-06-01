@@ -79,6 +79,8 @@ namespace  Title
 		{
 			//ローディング呼び出し
 			auto lo = Loading::Object::Create(true);
+			float color = 0.0f;
+			lo->Set_Color(color);
 		}
 		//5秒後に
 		if (this->timeCnt == 60 * 5)

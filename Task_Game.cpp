@@ -5,7 +5,7 @@
 #include  "Task_Game.h"
 #include  "Task_NowLoading.h"
 #include  "Task_Map.h"
-#include  "Task_Title.h"
+#include  "Task_GameClear.h"
 #include  "Task_Camera.h"
 #include  "Task_Player.h"
 #include  "Task_MiniMap.h"
@@ -83,7 +83,7 @@ namespace  Game
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//šˆø‚«Œp‚¬ƒ^ƒXƒN‚Ì¶¬
-			auto Title = Title::Object::Create(true);
+			auto nextTask = Clear::Object::Create(true);
 		}
 
 		return  true;
@@ -97,6 +97,8 @@ namespace  Game
 		{
 			this->pushButton = true;
 			auto lo = Loading::Object::Create(true);
+			float color = 1.0f;
+			lo->Set_Color(color);
 		}
 		if (this->pushButton)
 		{
@@ -110,6 +112,8 @@ namespace  Game
 		if (p->Get_ClearFlag() == true)
 		{
 			auto lo = Loading::Object::Create(true);
+			float color = 1.0f;
+			lo->Set_Color(color);
 			this->Kill();
 		}
 	}

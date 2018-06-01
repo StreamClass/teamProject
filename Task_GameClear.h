@@ -5,10 +5,10 @@
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
-namespace Loading
+namespace Clear
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("ローディング");	//グループ名
+	const  string  defGroupName("クリア画面");	//グループ名
 	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
@@ -23,7 +23,6 @@ namespace Loading
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		string imageName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -48,15 +47,6 @@ namespace Loading
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		//時間カウント
-		int timeCnt;
-		//透明度
-		float alpha;
-		//色の総括
-		ML::Color color;
-		//
-		float rgb;
-
-		void Set_Color(float& rgb);
+		string imageName;
 	};
 }
