@@ -23,6 +23,7 @@ namespace Clear
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		string imageName[4];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -47,6 +48,12 @@ namespace Clear
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		string imageName;
+		int timeCnt;
+		//雲00の座標
+		ML::Vec2 cloud00pos;
+		//雲01の座標
+		ML::Vec2 cloud01pos;
+		//テキストの透明度
+		float alpha;
 	};
 }
