@@ -4,6 +4,7 @@
 //エネミー
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include "ChaseSystem.h"
 
 namespace Enemy
 {
@@ -45,6 +46,7 @@ namespace Enemy
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
+	public:
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加変数
 		//自身の座標
@@ -53,9 +55,14 @@ namespace Enemy
 		ML::Vec3 angle;
 		//追跡用移動量
 		ML::Vec3 toVec;
+		//速度
+		int chasing_Speed;
 		//探知用矩形
-		ML::Box3D searchBase;
-	public:
+		//ML::Box3D searchBase;
+
+		//追跡システム
+		ChaseSystem system;
+		int timeCnt;
 		//追加したい変数・メソッドはここに追加する
 
 	};

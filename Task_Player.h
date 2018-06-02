@@ -82,6 +82,8 @@ namespace Player
 		ML::Vec3 Get_Pos();
 		//プレイヤの向きをML::Vec3型で返す
 		ML::Vec3 Get_Angle();
+		//あたり判定範囲をもらう関数
+		ML::Box3D Get_HitBase();
 		//プレイヤの初期値指定
 		void Ini_Pos(const ML::Vec3& pos);
 		//チップサイズをML::Vec3型に変換

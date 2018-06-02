@@ -41,8 +41,10 @@ namespace  Enemy
 		//仮の初期座標
 		//ゴール前
 		this->pos = ML::Vec3(500, 50, 9500);
-		this->searchBase = ML::Box3D(-250, -100, -250, 500, 200, 500);
+		//this->searchBase = ML::Box3D(-250, -100, -250, 500, 200, 500);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));
+		this->chasing_Speed = 16;
+		this->timeCnt = 0;
 
 		//★タスクの生成
 
@@ -69,16 +71,58 @@ namespace  Enemy
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 
 		//探知判定用矩形を用意
-		ML::Box3D me = this->searchBase;
+		//ML::Box3D me = this->searchBase;
 		//プレイヤの判定矩形を用意して接触判定
 
 		//移動先をプレイヤの位置を参照して指定
-		this->toVec = pl->Get_Pos() - this->pos;
+		//this->toVec = pl->Get_Pos() - this->pos;
 		//座標を移動先までの距離を20分の一ずつ移動
-		this->pos += this->toVec * 0.02f;
-		this->pos.y = 50;
+		//this->pos += this->toVec * 0.02f;
+
+		//センサー行動
+		if (this->system.Is_Chase_Mode() == false)
+		{
+			//通常モードの時
+			//センサーチェック
+			this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
+			this->timeCnt = 0;
+		}
+		else
+		{
+			//追跡モード
+			if (this->timeCnt == 0)
+			{
+				//目的地設定
+				this->toVec = this->system.NextRoute();
+			}
+			else if (this->timeCnt % 30 == 0)
+			{				
+				//センサーチェック
+				this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
+			}
+			ML::Vec3 speed = this->toVec - this->pos;
+			//一定距離以内なら新しい目的地を設定
+			if (speed.Length() <= this->chasing_Speed)
+			{
+				//向きをプレイヤ側にする
+				ML::Vec3 a = pl->Get_Pos() - this->pos;
+				this->angle.y = -atan2(a.z, a.x);
+				this->toVec = this->system.NextRoute();
+			}
+
+			//移動
+			this->pos += speed.Normalize() * this->chasing_Speed;
+
+			//カウント上昇
+			this->timeCnt++;
+		}		
 		if (this->toVec != ML::Vec3(0, 0, 0))
-			this->angle.y = atan2(this->toVec.x, this->toVec.z) + ML::ToRadian(-90);
+		{
+			//this->angle.y = atan2(this->toVec.z, this->toVec.x);
+			
+		}
+
+		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
