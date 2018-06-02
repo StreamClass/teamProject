@@ -86,11 +86,11 @@
     <Filter Include="MyPG\Class\Enemy">
       <UniqueIdentifier>{44d3ae00-8dce-4415-a0fb-e7e2900d7f76}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Game\Loading">
-      <UniqueIdentifier>{5422ac46-27b4-4fb2-92a6-cbedafca98bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="MyPG\Game\Ending">
+    <Filter Include="MyPG\Ending">
       <UniqueIdentifier>{040c3b84-5d62-4d03-8a5f-8d3ab6a0c8f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Loading">
+      <UniqueIdentifier>{5422ac46-27b4-4fb2-92a6-cbedafca98bd}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -197,10 +197,10 @@
       <Filter>MyPG\Class\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="Task_NowLoading.cpp">
-      <Filter>MyPG\Game\Loading</Filter>
+      <Filter>MyPG\Loading</Filter>
     </ClCompile>
     <ClCompile Include="Task_GameClear.cpp">
-      <Filter>MyPG\Game\Ending</Filter>
+      <Filter>MyPG\Ending</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -304,10 +304,10 @@
       <Filter>MyPG\Class\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="Task_NowLoading.h">
-      <Filter>MyPG\Game\Loading</Filter>
+      <Filter>MyPG\Loading</Filter>
     </ClInclude>
     <ClInclude Include="Task_GameClear.h">
-      <Filter>MyPG\Game\Ending</Filter>
+      <Filter>MyPG\Ending</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
