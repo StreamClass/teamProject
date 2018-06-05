@@ -104,12 +104,12 @@ namespace  Clear
 		{
 			this->alpha = 1.0f;
 		}
-		if (this->cloud00pos.x < -200.0f)
+		if (this->cloud00pos.x < -300.0f)
 		{
 			this->cloud00pos.y = rand() % 300 + 100;
 			this->cloud00pos.x = 1920;
 		}
-		if (this->cloud01pos.x < -200.0f)
+		if (this->cloud01pos.x < -300.0f)
 		{
 			this->cloud01pos.y = rand() % 300 + 100;
 			this->cloud01pos.x = 1920;
