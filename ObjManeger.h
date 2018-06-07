@@ -4,6 +4,7 @@
 #include "Door.h"
 #include "MapBox.h"
 #include "Tablet.h"
+#include "Routine.h"
 
 //^-----------------------------------------------------------
 //物体のアドレス値を管理するクラス
@@ -19,6 +20,8 @@ private:
 	std::vector<Door*> door;
 	//タブレットのアドレス値
 	Tablet* tab;
+	//
+	Routine* rou;
 
 
 	//最初のブレーカーの初期化
@@ -39,6 +42,12 @@ public:
 	void Create_Camera(ML::Vec3, Type);
 	//タブレットのアドレス値を返す関数(プレイヤの初期化にのみ使うこと)
 	Tablet* Create_Tablet();
+
+	Routine* Create_Routine();
+
+	void Push_Back_Conner(const ML::Vec3&, const int&);
+
+	void Set_Relationship();
 
 	//ファイナライズ,本編が終了する時絶対呼び出すこと
 	//ヒープから解放処理をやる

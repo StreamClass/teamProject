@@ -92,6 +92,7 @@ void ObjManeger::Finalize()
 		delete d;
 	}
 	delete this->tab;
+	delete this->rou;
 
 	//ヴェクタークリア
 	this->door_Connencted_Breaker.clear();
@@ -156,4 +157,24 @@ Tablet* ObjManeger::Create_Tablet()
 {
 	this->tab = new Tablet();
 	return this->tab;
+}
+
+Routine* ObjManeger::Create_Routine()
+{
+	this->rou = new Routine();
+
+	return this->rou;
+}
+
+void ObjManeger::Push_Back_Conner(const ML::Vec3& pos, const int& num)
+{
+	this->rou->Set_CornerPos(pos, num);
+}
+
+void ObjManeger::Set_Relationship()
+{
+	for (int i = 0; i < 25; i++)
+	{
+		this->rou->Initialize_RelationShip(i);
+	}
 }
