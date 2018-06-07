@@ -25,6 +25,7 @@
  10: カメラ　南西
  11: カメラ　西
  12: カメラ　北西
+ 13: コーナー
 */
 enum Type
 {
@@ -41,7 +42,8 @@ enum Type
 	camera_South = 9,
 	camera_South_West = 10,
 	camera_West = 11,
-	camera_North_West = 12
+	camera_North_West = 12,
+	corner = 13
 };
 class Box
 {
@@ -58,6 +60,8 @@ private:
 	float		chipSizeY_;
 	//Z方向のチップサイズ
 	float		chipSizeZ_;
+
+	int cornerNum;
 public:
 	//Boxクラスのメンバ変数の初期化(コンストラクタ) 
 	Box()
@@ -67,6 +71,7 @@ public:
 		, chipSizeX_(chipX)
 		, chipSizeY_(chipY)
 		, chipSizeZ_(chipZ)
+		, cornerNum(-1)
 	{}
 	//壁の座標・当たり判定矩形の指定
 	//引数：(座標 , 当たり判定矩形)
@@ -104,4 +109,6 @@ public:
 	ML::Vec3 Get_Scaling();
 	//あたり判定
 	bool Map_Hit_Check(const ML::Box3D& hit_);
+
+	void Ini_Corner_Num(const int num);
 };

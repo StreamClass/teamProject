@@ -1,40 +1,36 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//ゲームオーバー画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_GameClear.h"
+#include  "Task_GameOver.h"
 #include  "Task_Title.h"
 #include  "Task_NowLoading.h"
 
-namespace  Clear
+namespace  Over
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//背景
-		this->imageName[0] = "BGImg";
-		DG::Image_Create(this->imageName[0], "./data/image/ClearBG.png");
-		//雲00
-		this->imageName[1] = "Cloud00Img";
-		DG::Image_Create(this->imageName[1], "./data/image/Cloud00.png");
-		//雲01
-		this->imageName[2] = "Cloud01Img";
-		DG::Image_Create(this->imageName[2], "./data/image/Cloud01.png");
-		//クリアテキスト
-		this->imageName[3] = "TextImg";
-		DG::Image_Create(this->imageName[3], "./data/image/ClearText.png");
+		this->bImgName = "BGImg";
+		DG::Image_Create(this->bImgName, "./data/image/OverBG.png");
+		this->cImgName = "CharaImg";
+		DG::Image_Create(this->cImgName, "./data/image/OverChara.png");
+		this->eImgName = "BloodImg";
+		DG::Image_Create(this->eImgName, "./data/image/OverEffect.png");
+		this->lImgName = "LgImg";
+		DG::Image_Create(this->lImgName, "./data/image/OverLogo.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		for (int i = 0; i < 4; ++i)
-		{
-			DG::Image_Erase(this->imageName[i]);
-		}
+		DG::Image_Erase(this->bImgName);
+		DG::Image_Erase(this->cImgName);
+		DG::Image_Erase(this->eImgName);
+		DG::Image_Erase(this->lImgName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -47,12 +43,12 @@ namespace  Clear
 		this->res = Resource::Create();
 
 		//★データ初期化
-		srand((unsigned int)time(NULL));
-		this->render2D_Priority[1] = 0.5f;
+		this->render2D_Priority[1] = 1.0f;
+		this->al = 0.0f;
 		this->timeCnt = 0;
-		this->cloud00pos = ML::Vec2(1920, 0);
-		this->cloud01pos = ML::Vec2(960, 300);
-		this->alpha = 0.0f;
+		this->endCnt = 0;
+		this->cPos = ML::Vec2(ge->screen2DWidth - 500, ge->screen2DHeight - 400);
+		this->endFlag = false;
 		//★タスクの生成
 
 		return  true;
@@ -67,7 +63,7 @@ namespace  Clear
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nectTask = Title::Object::Create(true);
+			auto nextTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -77,68 +73,69 @@ namespace  Clear
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
-		//消滅
-		if (in.ST.down)
-		{
-			this->Kill();
-		}
-		if (this->timeCnt == 60 * 17.0f)
+
+		if (in.ST.down && this->endFlag == false)
 		{
 			auto lo = Loading::Object::Create(true);
-			float color = 1.0f;
-			lo->Set_Color(color);
+			lo->alpha = 0.0f;
+			this->endFlag = true;
 		}
-		if (this->timeCnt > 60 * 19.0f)
+
+		if (this->timeCnt > 60 * 2)
+		{
+			this->cPos.x -= (this->timeCnt - 120) * 6;
+		}
+		if (this->timeCnt > 60 * 5)
+		{
+			this->al += 1.0f / 60.0f * 3.0f;
+			if (in.ST.down && this->endFlag == false)
+			{
+				auto lo = Loading::Object::Create(true);
+				lo->alpha = 0.0f;
+				this->endFlag = true;
+			}
+		}
+		if (this->timeCnt > 60 * 15 && this->endFlag == false)
+		{
+			auto lo = Loading::Object::Create(true);
+			lo->alpha = 0.0f;
+			this->endFlag = true;
+		}
+		if (this->endFlag == true)
+		{
+			this->endCnt++;
+		}
+		if (this->endCnt > 60 * 2)
 		{
 			this->Kill();
 		}
-		if (this->timeCnt > 60 * 4 && this->timeCnt < 60 * 7 )
+		if (this->al > 1.0f)
 		{
-			this->alpha = (this->timeCnt - 60.0f * 4.0f) / 180.0f;
+			this->al = 1.0f;
 		}
-		if (this->alpha < 0.0f)
-		{
-			this->alpha = 0.0f;
-		}
-		if (this->alpha >= 1.0f)
-		{
-			this->alpha = 1.0f;
-		}
-		if (this->cloud00pos.x < -400.0f)
-		{
-			this->cloud00pos.y = rand() % 300 + 100;
-			this->cloud00pos.x = 1920;
-		}
-		if (this->cloud01pos.x < -400.0f)
-		{
-			this->cloud01pos.y = rand() % 300 + 100;
-			this->cloud01pos.x = 1920;
-		}
-		this->cloud00pos.x -= 3.0f;
-		this->cloud01pos.x -= 3.0f;
 		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		//背景描画
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 1920, 1080);
-		DG::Image_Draw(this->res->imageName[0], draw, src);
-		//雲00描画
-		draw = ML::Box2D(0, 0, 400, 250);
-		src = ML::Box2D(0, 0, 200, 100);
-		draw.Offset(this->cloud00pos);
-		DG::Image_Draw(this->res->imageName[1], draw, src);
-		//雲01描画
-		draw = ML::Box2D(0, 0, 400, 250);
-		draw.Offset(this->cloud01pos);
-		DG::Image_Draw(this->res->imageName[2], draw, src);
-		//テキスト描画
-		draw = ML::Box2D(0, 200, 1920, 300);
+		DG::Image_Draw(this->res->bImgName, draw, src);
+
+		if (this->cPos.x < -300)
+		{
+			DG::Image_Draw(this->res->eImgName, draw, src);
+		}
+
+		draw = ML::Box2D(0, 0, 300, 400);
+		src = ML::Box2D(0, 0, 300, 400);
+		draw.Offset(this->cPos);
+		DG::Image_Draw(this->res->cImgName,draw,src);
+		
+		draw = ML::Box2D(0, 350, 1920, 300);
 		src = ML::Box2D(0, 0, 1920, 300);
-		DG::Image_Draw(this->res->imageName[3], draw, src,ML::Color(this->alpha,1,1,1));
+		DG::Image_Draw(this->res->lImgName, draw, src, ML::Color(this->al, 1, 1, 1));
 	}
 
 	void  Object::Render3D_L0()

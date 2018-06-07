@@ -83,7 +83,14 @@ namespace  MyPG
 		
 		ObjManeger OM;
 		//shared_ptr<BEffect::SP> effmaneger;
-
+		enum State
+		{
+			non = -1,
+			game = 0,
+			clear = 1,
+			over = 2
+		};
+		State state;
 	//----------------------------------------------
 	};
 }

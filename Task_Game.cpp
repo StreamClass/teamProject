@@ -6,6 +6,8 @@
 #include  "Task_NowLoading.h"
 #include  "Task_Map.h"
 #include  "Task_GameClear.h"
+#include  "Task_GameOver.h"
+#include  "Task_Title.h"
 #include  "Task_Camera.h"
 #include  "Task_Player.h"
 #include  "Task_MiniMap.h"
@@ -39,6 +41,7 @@ namespace  Game
 		this->res = Resource::Create();
 
 		//★データ初期化
+		ge->state = ge->game;
 		this->pushButton = false;
 		this->timeCnt = 0;
 
@@ -83,7 +86,18 @@ namespace  Game
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nextTask = Clear::Object::Create(true);
+			if (ge->state == ge->clear)
+			{
+				auto nextTask = Clear::Object::Create(true);
+			}
+			else if (ge->state == ge->over)
+			{
+				auto nextTask = Over::Object::Create(true);
+			}
+			else
+			{
+				auto nextTask = Title::Object::Create(true);
+			}
 		}
 
 		return  true;
@@ -93,11 +107,24 @@ namespace  Game
 	void  Object::UpDate()
 	{		
 		auto in = DI::GPad_GetState("P1");
-		if (in.ST.down)
+		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		if (p->Get_ClearFlag() == true)
 		{
-			this->pushButton = true;
+			ge->state = ge->clear;
+		}
+		if (ge->state == ge->clear && this->pushButton == false)
+		{
 			auto lo = Loading::Object::Create(true);
 			float color = 1.0f;
+			lo->Set_Color(color);
+			this->pushButton = true;
+		}
+		if (in.ST.down && this->pushButton == false)
+		{
+			ge->state = ge->over;
+			this->pushButton = true;
+			auto lo = Loading::Object::Create(true);
+			float color = 0.0f;
 			lo->Set_Color(color);
 		}
 		if (this->pushButton)
@@ -106,14 +133,6 @@ namespace  Game
 		}
 		if (this->timeCnt == 60 * 1)
 		{
-			this->Kill();
-		}
-		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		if (p->Get_ClearFlag() == true)
-		{
-			auto lo = Loading::Object::Create(true);
-			float color = 1.0f;
-			lo->Set_Color(color);
 			this->Kill();
 		}
 	}

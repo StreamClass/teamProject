@@ -55,3 +55,8 @@ bool Box::Map_Hit_Check(const ML::Box3D& hit_)
 	auto me = this->hitBase_.OffsetCopy(this->pos_);
 	return me.Hit(hit_);
 }
+
+void Box::Ini_Corner_Num(const int num)
+{
+	this->cornerNum = num;
+}
