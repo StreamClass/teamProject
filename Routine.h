@@ -3,7 +3,7 @@
 #include "GameEngine_Ver3_7.h"
 
 //マップ内のコーナーの数
-#define corners 24
+#define corners 25
 //現在の最多選択肢数
 //4又が最多
 #define choices 4
@@ -28,15 +28,31 @@ private:
 	//選択肢の少ないコーナーには-1の要素を入れ要素数を埋める
 	//				[コーナー][最大選択肢数]
 	int choiceCorner[corners][choices];
+	//目的地検索用矩形の発射
+	bool RelationShip_XP(int num_ , int);
+	//	 
+	bool RelationShip_XM(int num_, int);
+	//	 
+	bool RelationShip_ZP(int num_, int);
+	//
+	bool RelationShip_ZM(int num_, int);
 public:
 	//コンストラクタ
 	Routine();
+	//ゲッター
+	int Get_Now();
 	//近いコーナーを目指して移動する
-	void Move();
+	ML::Vec3 Move(const ML::Vec3& );
 	//自分がコーナーに到達したかの判定
-	bool Judge();
+	bool Judge(const ML::Box3D&, const ML::Vec3&);
 	//自分のいるコーナーから行けるコーナーを選択する
-	int Choice(const int& now_);
+	void Choice(const int& now_);
 	//コーナーの持つ矩形の側がエネミーとの接触に応じて自分の番号を返す
-	int Recieved();
+	int Recieved(const ML::Box3D&, const ML::Vec3&);
+	//
+	void Set_CornerPos(const ML::Vec3& pos_, const int& num_);
+	//目的地の検索用
+	void Initialize_RelationShip(int num);
+	//
+
 };

@@ -38,13 +38,16 @@ namespace  Enemy
 		this->res = Resource::Create();
 
 		//★データ初期化
-		//仮の初期座標
-		//ゴール前
+		this->rou = ge->OM.Create_Routine();
+
 		this->pos = ML::Vec3(500, 50, 9500);
+		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		//this->searchBase = ML::Box3D(-250, -100, -250, 500, 200, 500);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));
 		this->chasing_Speed = 16;
 		this->timeCnt = 0;
+
+		
 
 		//★タスクの生成
 
@@ -70,6 +73,8 @@ namespace  Enemy
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 
+		ML::Vec3 speed = ML::Vec3(0, 0, 0);
+
 		//探知判定用矩形を用意
 		//ML::Box3D me = this->searchBase;
 		//プレイヤの判定矩形を用意して接触判定
@@ -86,6 +91,18 @@ namespace  Enemy
 			//センサーチェック
 			this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
 			this->timeCnt = 0;
+
+			if (rou->Judge(this->hitBase,this->pos))
+			{
+				rou->Choice(rou->Get_Now());
+			}
+
+			speed = rou->Move(this->pos);
+
+			this->pos += speed * this->chasing_Speed;
+
+			
+			this->angle.y = -atan2(speed.z, speed.x);
 		}
 		else
 		{
@@ -96,22 +113,24 @@ namespace  Enemy
 				this->toVec = this->system.NextRoute();
 			}
 			else if (this->timeCnt % 30 == 0)
-			{				
+			{
 				//センサーチェック
 				this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
 			}
-			ML::Vec3 speed = this->toVec - this->pos;
-			//一定距離以内なら新しい目的地を設定
-			if (speed.Length() <= this->chasing_Speed)
+
+			//今の目的地と一定距離以内なら新しい目的地を設定
+			if (ML::Vec3(this->toVec - this->pos).Length() <= this->chasing_Speed)
 			{
-				//向きをプレイヤ側にする
-				ML::Vec3 a = pl->Get_Pos() - this->pos;
-				this->angle.y = -atan2(a.z, a.x);
 				this->toVec = this->system.NextRoute();
 			}
 
+			speed = this->toVec - this->pos;
 			//移動
 			this->pos += speed.Normalize() * this->chasing_Speed;
+
+			//向きをプレイヤ側にする
+			ML::Vec3 a = pl->Get_Pos() - this->pos;
+			this->angle.y = -atan2(a.z, a.x);
 
 			//カウント上昇
 			this->timeCnt++;

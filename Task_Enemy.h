@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 #include "ChaseSystem.h"
+#include "Routine.h"
 
 namespace Enemy
 {
@@ -51,6 +52,8 @@ namespace Enemy
 		//追加変数
 		//自身の座標
 		ML::Vec3 pos;
+		//
+		ML::Box3D hitBase;
 		//向き
 		ML::Vec3 angle;
 		//追跡用移動量
@@ -59,6 +62,9 @@ namespace Enemy
 		int chasing_Speed;
 		//探知用矩形
 		//ML::Box3D searchBase;
+
+		//ルーチーンワーク
+		Routine* rou;
 
 		//追跡システム
 		ChaseSystem system;
