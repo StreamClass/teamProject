@@ -138,10 +138,8 @@ namespace  Enemy
 		if (this->toVec != ML::Vec3(0, 0, 0))
 		{
 			//this->angle.y = atan2(this->toVec.z, this->toVec.x);
-			
 		}
-
-		
+		this->Player_HitCheck();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -162,6 +160,16 @@ namespace  Enemy
 		DG::EffectState().param.objectColor = ML::Color( 1, 0.6f, 0.2f, 0.2f);
 		DG::Mesh_Draw(this->res->meshName);
 		DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+	}
+
+	//プレイヤとのあたり判定
+	void Object::Player_HitCheck()
+	{
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		if (this->hitBase.OffsetCopy(this->pos).Hit(pl->Get_HitBase().OffsetCopy(pl->Get_Pos())))
+		{
+			ge->state = ge->over;
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -110,6 +110,7 @@
     <ClCompile Include="Task_Enemy.cpp" />
     <ClCompile Include="Task_Game.cpp" />
     <ClCompile Include="Task_GameClear.cpp" />
+    <ClCompile Include="Task_GameOver.cpp" />
     <ClCompile Include="Task_Map.cpp" />
     <ClCompile Include="Task_MiniMap.cpp" />
     <ClCompile Include="Task_NowLoading.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="Task_Enemy.h" />
     <ClInclude Include="Task_Game.h" />
     <ClInclude Include="Task_GameClear.h" />
+    <ClInclude Include="Task_GameOver.h" />
     <ClInclude Include="Task_Map.h" />
     <ClInclude Include="Task_MiniMap.h" />
     <ClInclude Include="Task_NowLoading.h" />

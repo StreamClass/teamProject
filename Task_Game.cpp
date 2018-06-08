@@ -86,6 +86,7 @@ namespace  Game
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
+			//auto nextTask = Clear::Object::Create(true);
 			if (ge->state == ge->clear)
 			{
 				auto nextTask = Clear::Object::Create(true);
@@ -107,18 +108,6 @@ namespace  Game
 	void  Object::UpDate()
 	{		
 		auto in = DI::GPad_GetState("P1");
-		auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		if (p->Get_ClearFlag() == true)
-		{
-			ge->state = ge->clear;
-		}
-		if (ge->state == ge->clear && this->pushButton == false)
-		{
-			auto lo = Loading::Object::Create(true);
-			float color = 1.0f;
-			lo->Set_Color(color);
-			this->pushButton = true;
-		}
 		if (in.ST.down && this->pushButton == false)
 		{
 			ge->state = ge->over;
@@ -126,6 +115,25 @@ namespace  Game
 			auto lo = Loading::Object::Create(true);
 			float color = 0.0f;
 			lo->Set_Color(color);
+		}
+		//auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//if (p->Get_ClearFlag() == true)
+		//{
+		//	ge->state = ge->clear;
+		//}
+		if (ge->state == ge->clear && this->pushButton == false)
+		{
+			auto lo = Loading::Object::Create(true);
+			float color = 1.0f;
+			lo->Set_Color(color);
+			this->pushButton = true;
+		}
+		if (ge->state == ge->over && this->pushButton == false)
+		{
+			auto lo = Loading::Object::Create(true);
+			float color = 0.0f;
+			lo->Set_Color(color);
+			this->pushButton = true;
 		}
 		if (this->pushButton)
 		{

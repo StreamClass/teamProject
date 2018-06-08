@@ -152,6 +152,7 @@ namespace  Map
 	bool  Object::Load()
 	{
 		int x = 0, z = 0;
+		int num = 0;
 		//読み込んだファイル名がend以外の間回す
 		while (this->fileName != "end")
 		{
@@ -207,6 +208,10 @@ namespace  Map
 					case Type::camera_South_West:
 						ge->OM.Create_Camera(pos+ML::Vec3(0,100,0), (Type)in);
 						break;
+					case Type::corner:
+						ge->OM.Push_Back_Conner(pos, num);
+						++num;
+						break;
 					}					
 				}
 			}
@@ -239,6 +244,7 @@ namespace  Map
 			//ファイルを閉じる
 			fin.close();
 		}
+		ge->OM.Set_Relationship();
 		return true;
 	}
 

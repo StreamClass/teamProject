@@ -202,6 +202,9 @@
     <ClCompile Include="Task_GameClear.cpp">
       <Filter>MyPG\Ending</Filter>
     </ClCompile>
+    <ClCompile Include="Task_GameOver.cpp">
+      <Filter>MyPG\Ending</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -307,6 +310,9 @@
       <Filter>MyPG\Loading</Filter>
     </ClInclude>
     <ClInclude Include="Task_GameClear.h">
+      <Filter>MyPG\Ending</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_GameOver.h">
       <Filter>MyPG\Ending</Filter>
     </ClInclude>
   </ItemGroup>

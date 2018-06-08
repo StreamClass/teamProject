@@ -86,8 +86,8 @@ namespace  Player
 			{
 				ML::Mat4x4 matR;
 				matR.RotationY(this->angle.y);
-				this->moveVec.x = -10 * in.LStick.axis.y;
-				this->moveVec.z = -10 * in.LStick.axis.x;
+				this->moveVec.x = -20 * in.LStick.axis.y;
+				this->moveVec.z = -20 * in.LStick.axis.x;
 				//頂点を座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
 			}
@@ -117,6 +117,14 @@ namespace  Player
 				auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
 				mm->Set_MiniMap_View();
 			}
+			//if (in.L1.on)
+			//{
+			//	this->pos.y += 8;
+			//}
+			//if (in.R1.on)
+			//{
+			//	this->pos.y -= 8;
+			//}
 		}
 		else
 		{
@@ -227,9 +235,9 @@ namespace  Player
 		//接触判定開始
 		for (int z = sz; z <= ez; ++z) {
 			for (int x = sx; x <= ex; ++x) {
-				if (mp->arr[z][x].Get_Type() == Type::box) {
-					return true;
-				}
+				//if (mp->arr[z][x].Get_Type() == Type::box) {
+				//	return true;
+				//}
 				auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
 				for (auto it = d->begin(); it != d->end(); it++)
 				{
@@ -254,7 +262,7 @@ namespace  Player
 		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preX = this->pos.x;//移動前の座標を保持
 
-								  //1cmもしくはそれ以下の残り分移動させる
+			//1cmもしくはそれ以下の残り分移動させる
 			if (est_.x >= 1.0f) {
 				this->pos.x += 1.0f;		est_.x -= 1.0f;
 			}//+方向
@@ -322,7 +330,8 @@ namespace  Player
 		{
 			if ((*it)->goal.Map_Hit_Check(this->hitBase.OffsetCopy(this->pos)))
 			{
-				this->clearFlag = true;
+				//this->clearFlag = true;
+				ge->state = ge->clear;
 			}
 		}
 	}

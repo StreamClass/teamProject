@@ -83,6 +83,7 @@ namespace  MyPG
 		
 		ObjManeger OM;
 		//shared_ptr<BEffect::SP> effmaneger;
+
 		enum State
 		{
 			non = -1,
