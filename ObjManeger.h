@@ -42,12 +42,14 @@ public:
 	void Create_Camera(ML::Vec3, Type);
 	//タブレットのアドレス値を返す関数(プレイヤの初期化にのみ使うこと)
 	Tablet* Create_Tablet();
-
+	//ルーチンワークシステム生成
 	Routine* Create_Routine();
-
+	//ルーチンワークシステムに各コーナーを登録
 	void Push_Back_Conner(const ML::Vec3&, const int&);
-
+	//コーナー同士の関係性を構築
 	void Set_Relationship();
+	//エネミーを最終フェーズにする
+	void Game_Be_Final_Phase();
 
 	//ファイナライズ,本編が終了する時絶対呼び出すこと
 	//ヒープから解放処理をやる

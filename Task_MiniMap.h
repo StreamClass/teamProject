@@ -47,12 +47,26 @@ namespace MiniMap
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
+
+		ML::Vec2 epos;
+		float eangle;
+		//イメージ名
 		string imageName;
 		string plImgName;
 		string caImgName;
+		//ミニマップのプレイヤ用変数
+		//座標
 		ML::Vec2 plpos;
+		//向き
+		float plAngle;
+		//ミニマップのカメラ用変数
+		//座標
 		ML::Vec2 capos;
+		//向き
+		float caAngle;
+		//ミニマップを表示するか
 		bool viewFlag;
+		//タブレットを使用しているか
 		bool tab_use_now;
 
 		//ミニマップを表示するか判断

@@ -1,5 +1,7 @@
 #include "Door.h"
 
+#define DOOR_OPEN_SPEED 5
+
 Door::Door()
 {
 	this->pos = ML::Vec3(0, 0, 0);
@@ -24,21 +26,26 @@ void Door::Door_Open()
 {
 	//自分とつながっている全てのブレーカーを検索
 	for (auto b : this->cunnected_Breaker)
-	{
+	{		
 		//状態を確認する
 		if (!b->Get_Now_State())
 		{
 			return;
-		}		
+		}
+		//フェーズ移行を確かめる
+		else
+		{
+			
+		}
 	}
 	//全部働いているならドアを開ける
 	if (this->Get_Angle() == LR::Left)
 	{
-		this->pos.x -= 5;
+		this->pos.x -= DOOR_OPEN_SPEED;
 	}
 	else
 	{
-		this->pos.x += 5;
+		this->pos.x += DOOR_OPEN_SPEED;
 	}
 	this->hitBase.Offset(this->pos);
 	//開かれる間時間経過
@@ -83,4 +90,26 @@ LR Door::Get_Angle()
 bool Door::Is_Opened_Over()
 {
 	return this->timeCnt > 60;
+}
+
+//フェーズ移行感知
+bool Door::Is_Phase_Offset()
+{
+	//活動しているブレーカーの数
+	int actived_Breaker_Number = 0;	
+	//繋がっているブレーカーを全部確認
+	for (auto b : this->cunnected_Breaker)
+	{
+		if (b->Get_Now_State())
+		{
+			//活動ブレーカーの数を確認する
+			actived_Breaker_Number++;
+		}
+	}
+	//2体以上なら最終フェーズに
+	if (actived_Breaker_Number >= 2)
+	{
+		return true;
+	}
+	return false;
 }

@@ -4,6 +4,7 @@
 //プレイヤ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include "Tablet.h"
 
 namespace Player
 {
@@ -51,6 +52,8 @@ namespace Player
 		//追加変数
 		//プレイヤの座標
 		ML::Vec3 pos;
+		//移動速度
+		float speed;
 		//プレイヤの矩形
 		ML::Box3D hitBase;
 		//プレイやの向き
@@ -59,10 +62,16 @@ namespace Player
 		int headHeight;
 		//注視点の高さ
 		int adjust_TG;
+		//視点移動速度
+		float adjust_Speed;
 		//注視点高さの下限
 		int adjust_Min;
 		//注視点高さの上限
 		int adjust_Max;
+		//視点の揺れ幅
+		float tremor;
+		//視点揺れカウンタ
+		int cnt_TG;
 		//プレイヤの移動量
 		ML::Vec3 moveVec;
 		//コントローラネーム

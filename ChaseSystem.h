@@ -30,7 +30,7 @@ public:
 
 	//コンストラクタ・デストラクタ
 	ChaseSystem() :
-		sensor(-150, -100, -150, 300, 200, 300),
+		sensor(-300, -100, -300, 600, 200, 600),
 		systemFlag(false),
 		destination(0)
 	{

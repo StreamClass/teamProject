@@ -61,6 +61,11 @@ namespace Task_Door
 		{
 			//つながっているブレーカーを確認して開くかどうかを確認
 			this->circuit->Door_Open();
+			//フェーズ移行するかどうかを確認
+			if (this->circuit->Is_Phase_Offset())
+			{
+				ge->OM.Game_Be_Final_Phase();
+			}
 		}		
 	}
 	//-------------------------------------------------------------------

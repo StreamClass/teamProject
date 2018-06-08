@@ -52,6 +52,8 @@ namespace Enemy
 		//’Ç‰Á•Ï”
 		//©g‚ÌÀ•W
 		ML::Vec3 pos;
+		//œpœj‚ÌˆÚ“®‘¬“x
+		float speed;
 		//
 		ML::Box3D hitBase;
 		//Œü‚«

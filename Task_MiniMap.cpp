@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_MiniMap.h"
 #include  "Task_Player.h"
+#include  "Task_Enemy.h"
 
 namespace  MiniMap
 {
@@ -31,16 +32,26 @@ namespace  MiniMap
 
 		//★データ初期化
 		this->render2D_Priority[1] = 0.5f;
+		//イメージの設定
 		this->imageName = "MapImg";
 		this->plImgName = "PlayerImg";
 		this->caImgName = "CameraImg";
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
-		DG::Image_Create(this->plImgName, "./data/image/MiniMap_Player.bmp");
-		DG::Image_Create(this->caImgName, "./data/image/MiniMap_Camera.bmp");
+		DG::Image_Create(this->plImgName, "./data/image/Player_MiniMap.png");
+		DG::Image_Create(this->caImgName, "./data/image/Camera_MiniMap.png");
+		//プレイヤ用変数の初期化
 		this->plpos = ML::Vec2(0, 0);
+		this->plAngle = 0;
+		//カメラ用変数の初期化
 		this->capos = ML::Vec2(0, 0);
+		this->caAngle = 0;
+		//最初から見るように設定
 		this->viewFlag = true;
+		//タブレットは使っていない
 		this->tab_use_now = false;
+
+		this->epos = ML::Vec2(0, 0);
+		this->eangle = 0;
 		//★タスクの生成
 
 		return  true;
@@ -66,14 +77,25 @@ namespace  MiniMap
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//プレイヤの変数等を使えるように呼び出す
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-
+		//プレイヤ本体からミニマップ上の情報を参照
 		this->plpos = ML::Vec2((int)pl->Get_Pos().x / 20, 500 - (int)pl->Get_Pos().z / 20);
+		this->plAngle = (float)pl->Get_Angle().y + ML::ToRadian(90);
+		//タブレットの使用状況をプレイヤから受け取る
 		this->tab_use_now = pl->Is_Used_Tablet();
+		//タブレットを使っていたら
 		if (this->tab_use_now == true)
 		{
-			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20, 500 - (int)ge->camera[0]->pos.z / 20);	
+			//カメラからミニマップ上の情報を参照
+			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20, 500 - (int)ge->camera[0]->pos.z / 20);
+			ML::Vec2 a = ML::Vec2(ge->camera[0]->target.x - ge->camera[0]->pos.x, ge->camera[0]->target.z - ge->camera[0]->pos.z);
+			this->caAngle = -atan2(a.y,a.x) + ML::ToRadian(90);
 		}
+
+		auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
+		this->epos = ML::Vec2((int)e->pos.x / 20, 500 - (int)e->pos.z / 20);
+		this->eangle = e->angle.y + ML::ToRadian(90);
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -87,17 +109,24 @@ namespace  MiniMap
 			ML::Box2D src(0, 0, 500, 500);
 			DG::Image_Draw(this->imageName, draw, src);
 			//プレイヤ位置
-			draw = ML::Box2D(-3, -3, 5, 5);
-			src = ML::Box2D(0, 0, 5, 5);
+			draw = ML::Box2D(-5, -7, 9, 13);
+			src = ML::Box2D(0, 0, 20, 20);
 			draw.Offset(this->plpos);
+			DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
 			DG::Image_Draw(this->plImgName, draw, src);
 			//タブレットを使用していたら
 			if (this->tab_use_now == true)
 			{
-				draw = ML::Box2D(-3, -3, 5, 5);
+				draw = ML::Box2D(5, -7, 9, 13);
 				draw.Offset(this->capos);
+				DG::Image_Rotation(this->caImgName, this->caAngle, ML::Vec2(5, 10));
 				DG::Image_Draw(this->caImgName, draw, src);
 			}
+
+			draw = ML::Box2D(5, -7, 9, 13);
+			draw.Offset(this->epos);
+			DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
+			DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
 		}
 	}
 	//-------------------------------------------------------------------

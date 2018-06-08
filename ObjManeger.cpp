@@ -178,3 +178,9 @@ void ObjManeger::Set_Relationship()
 		this->rou->Initialize_RelationShip(i);
 	}
 }
+
+//エネミーを最終フェーズにする
+void ObjManeger::Game_Be_Final_Phase()
+{
+	this->rou->Set_Final_Phase();
+}

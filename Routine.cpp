@@ -1,5 +1,7 @@
 #include "Routine.h"
 #include "MapBox.h"
+#include "Task_Player.h"
+#include "MyPG.h"
 
 //マップ内のコーナーの数
 #define corners 25
@@ -15,6 +17,7 @@ Routine::Routine()
 	this->moveVec = ML::Vec3(0, 0, 0);
 	this->hitBase = ML::Box3D(0, 0, 0, 0, 0, 0);
 	this->now = 19;
+	this->final_Phase = false;
 	this->target = 0;
 	for (int i = 0; i < corners; ++i)
 	{
@@ -64,10 +67,42 @@ void Routine::Choice(const int& now_)
 	this->target = -1;
 	//コーナーによって選択肢の数が違うため
 	//自然数が出るまで選定を繰り返す
-	while (this->target < 0)
+	if (this->final_Phase == false)
 	{
-		this->target = 
-			this->choiceCorner[this->now][rand() % choices];
+		while (this->target < 0)
+		{
+			this->target =
+				this->choiceCorner[this->now][rand() % choices];
+		}
+	}
+	//最終フェーズの処理
+	//選べる選択肢の中でプレイヤと一番近いところを選ぶ
+	else
+	{
+		//プレイヤの情報をもらう
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		ML::Vec3 p_pos = pl->Get_Pos();
+		int m = 0;
+		ML::Vec3 min = p_pos - this->cornerPos[this->choiceCorner[now_][m]];
+
+		for (int i = 1; i < choices; i++)
+		{
+			int check = this->choiceCorner[now_][i];
+			//-1は不定アクセスだから処理せず次に
+			if (check == -1)
+			{
+				continue;
+			}
+
+			ML::Vec3 compare = p_pos - this->cornerPos[check];
+			if (min.Length() > compare.Length())
+			{
+				min = compare;
+				m = i;
+			}
+		}
+
+		this->target = this->choiceCorner[now_][m];
 	}
 }
 //コーナーの持つ矩形の側がエネミーとの接触に応じて自分の番号を返す
@@ -263,3 +298,10 @@ bool Routine::RelationShip_ZM(int num_, int c)
 //
 //	this->choiceCorner[13][0] = 7;
 //}
+
+
+//最終フェーズに移行
+void Routine::Set_Final_Phase()
+{
+	this->final_Phase = true;
+}

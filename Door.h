@@ -42,6 +42,9 @@ public:
 	LR Get_Angle();
 	//ドアが完全に開かれたかを返す関数
 	bool Is_Opened_Over();
+	//フェーズ移行感知
+	bool Is_Phase_Offset();
+
 
 	//コンストラクタ・デストラクタ
 	//ゼロクリア

@@ -24,6 +24,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 			//チェイスモードに変更し、プレイや位置をルートに登録
 			this->systemFlag = true;
 			this->PushBack_Route(plpos);
+			break;
 		}
 	}
 }

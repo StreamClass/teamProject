@@ -115,10 +115,10 @@ namespace  Map
 		//壁の描画
 		ML::Mat4x4 matS,matT;
 		int  sx, sz, ex, ez;
-		sx = max(0, int(ge->camera[0]->pos.x / 100) - 16);
-		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 16);
-		sz = max(0, int(ge->camera[0]->pos.z / 100) - 16);
-		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 16);
+		sx = max(0, int(ge->camera[0]->pos.x / 100) - 18);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 18);
+		sz = max(0, int(ge->camera[0]->pos.z / 100) - 18);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 18);
 
 		for (int z = ez - 1; z >= sz; --z)
 		{
@@ -216,10 +216,22 @@ namespace  Map
 				}
 			}
 
-			//ドアの生成は完全に別のところで
-			for (int z = tmpZ + this->sizeZ - 1; z >= this->tmpZ; --z)
+			
+			//X・Zの基準値更新
+			x += this->sizeX;
+			z += this->sizeZ;
+			this->tmpX = x % this->maxSizeX;
+			this->tmpZ = z / this->maxSizeZ * 20;
+			//ファイル名の読み込み
+			fin >> this->fileName;
+			//ファイルを閉じる
+			fin.close();
+		}
+		ge->OM.Set_Relationship();
+		//ドアの生成は完全に別のところで
+			for (int z =0; z < this->maxSizeZ; ++z)
 			{
-				for (int x = this->tmpX; x < this->tmpX + this->sizeX; ++x)
+				for (int x = 0; x < this->sizeX; ++x)
 				{
 					if (this->arr[z][x].Get_Type() == Type::door)
 					{					
@@ -234,18 +246,7 @@ namespace  Map
 					}
 				}
 			}
-			//X・Zの基準値更新
-			x += this->sizeX;
-			z += this->sizeZ;
-			this->tmpX = x % this->maxSizeX;
-			this->tmpZ = z / this->maxSizeZ * 20;
-			//ファイル名の読み込み
-			fin >> this->fileName;
-			//ファイルを閉じる
-			fin.close();
-		}
-		ge->OM.Set_Relationship();
-		return true;
+			return true;
 	}
 
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

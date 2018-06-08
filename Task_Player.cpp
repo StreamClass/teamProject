@@ -9,6 +9,9 @@
 #include  "Task_Door.h"
 #include  "Task_MiniMap.h"
 
+#define NORMALSPEED 10
+#define DASHSPEED 20
+
 namespace  Player
 {
 	Resource::WP  Resource::instance;
@@ -46,12 +49,16 @@ namespace  Player
 		this->pos = ML::Vec3(0, 0, 0);
 		this->headHeight = 175;
 		this->adjust_TG = 175;
+		this->cnt_TG = 0;
+		this->adjust_Speed = 20.0f;
 		this->adjust_Min = -400;
 		this->adjust_Max = +400;
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
+		this->speed = 10.0f;
 		this->clearFlag = false;
+		this->tremor = 4.0f;
 
 		this->tab = ge->OM.Create_Tablet();
 		//★タスクの生成
@@ -86,8 +93,8 @@ namespace  Player
 			{
 				ML::Mat4x4 matR;
 				matR.RotationY(this->angle.y);
-				this->moveVec.x = -20 * in.LStick.axis.y;
-				this->moveVec.z = -20 * in.LStick.axis.x;
+				this->moveVec.x = -this->speed * in.LStick.axis.y;
+				this->moveVec.z = -this->speed * in.LStick.axis.x;
 				//頂点を座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
 			}
@@ -96,14 +103,29 @@ namespace  Player
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
 			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
+
+			if (in.R1.on)
+			{
+				this->speed=DASHSPEED;
+			}
+			else if (in.R1.off)
+			{
+				this->speed = NORMALSPEED;
+			}
+
+			//画面揺れ用カウンタスタート
+			this->cnt_TG += 5; 
+			//画面揺れ処理
+			this->headHeight = 175.0f + this->tremor * sin(ML::ToRadian(this->cnt_TG));
+
 			//注視点の上下移動
 			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
 			{
-				this->adjust_TG += 20;
+				this->adjust_TG += this->adjust_Speed;
 			}
 			else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
 			{
-				this->adjust_TG -= 20;
+				this->adjust_TG -= this->adjust_Speed;
 			}
 
 			this->Player_CheckMove(this->moveVec);
@@ -117,6 +139,7 @@ namespace  Player
 				auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
 				mm->Set_MiniMap_View();
 			}
+			//デバッグ用
 			//if (in.L1.on)
 			//{
 			//	this->pos.y += 8;
@@ -235,9 +258,9 @@ namespace  Player
 		//接触判定開始
 		for (int z = sz; z <= ez; ++z) {
 			for (int x = sx; x <= ex; ++x) {
-				//if (mp->arr[z][x].Get_Type() == Type::box) {
-				//	return true;
-				//}
+				if (mp->arr[z][x].Get_Type() == Type::box) {
+					return true;
+				}
 				auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
 				for (auto it = d->begin(); it != d->end(); it++)
 				{

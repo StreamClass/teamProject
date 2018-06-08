@@ -41,13 +41,11 @@ namespace  Enemy
 		this->rou = ge->OM.Create_Routine();
 
 		this->pos = ML::Vec3(500, 50, 9500);
+		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
-		//this->searchBase = ML::Box3D(-250, -100, -250, 500, 200, 500);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));
 		this->chasing_Speed = 16;
 		this->timeCnt = 0;
-
-		
 
 		//★タスクの生成
 
@@ -73,7 +71,8 @@ namespace  Enemy
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 
-		ML::Vec3 speed = ML::Vec3(0, 0, 0);
+		//目的地
+		ML::Vec3 targetPos = ML::Vec3(0, 0, 0);
 
 		//探知判定用矩形を用意
 		//ML::Box3D me = this->searchBase;
@@ -97,12 +96,12 @@ namespace  Enemy
 				rou->Choice(rou->Get_Now());
 			}
 
-			speed = rou->Move(this->pos);
+			targetPos = rou->Move(this->pos);
 
-			this->pos += speed * this->chasing_Speed;
+			this->pos += targetPos * this->speed;
 
 			
-			this->angle.y = -atan2(speed.z, speed.x);
+			this->angle.y = -atan2(targetPos.z, targetPos.x);
 		}
 		else
 		{
@@ -124,9 +123,9 @@ namespace  Enemy
 				this->toVec = this->system.NextRoute();
 			}
 
-			speed = this->toVec - this->pos;
+			targetPos = this->toVec - this->pos;
 			//移動
-			this->pos += speed.Normalize() * this->chasing_Speed;
+			this->pos += targetPos.Normalize() * this->chasing_Speed;
 
 			//向きをプレイヤ側にする
 			ML::Vec3 a = pl->Get_Pos() - this->pos;

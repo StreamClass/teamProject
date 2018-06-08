@@ -18,6 +18,9 @@ private:
 	ML::Vec3 moveVec;
 	//判定矩形
 	ML::Box3D hitBase;
+	//最終フェーズなのかを確認するフラグ
+	bool final_Phase;
+
 	//現在のコーナー
 	int now;
 	//選ばれた移動先
@@ -55,4 +58,7 @@ public:
 	void Initialize_RelationShip(int num);
 	//
 
+
+	//最終フェーズに移行
+	void Set_Final_Phase();
 };
