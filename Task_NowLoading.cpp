@@ -11,6 +11,7 @@ namespace  Loading
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//画像読み込み
 		this->imageName = "LoadingImg";
 		DG::Image_Create(this->imageName, "./data/image/Loading.png");
 		return true;
@@ -19,6 +20,7 @@ namespace  Loading
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		//画像の解放
 		DG::Image_Erase(this->imageName);
 		return true;
 	}
@@ -35,7 +37,7 @@ namespace  Loading
 		this->render2D_Priority[1] = 0.1f;
 		this->timeCnt = 0;
 		this->alpha = 0.0f;
-		this->color = ML::Color(this->alpha, 0, 0, 0);
+		this->color = ML::Color(0, 0, 0, 0);
 		
 		//★タスクの生成
 
@@ -59,29 +61,39 @@ namespace  Loading
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//タスク生成から2秒間かけて
 		if (this->timeCnt < 60 * 2)
 		{
-			this->alpha += this->timeCnt / 180.f;
+			//不透明度を1に
+			this->alpha += this->timeCnt / 120.f;
 		}
+		//2~4秒の2秒間かけて
 		else if (this->timeCnt < 60 * 4)
 		{
-			this->alpha -= (this->timeCnt - 120) / 180.0f;
+			//不透明度を0に
+			this->alpha -= (this->timeCnt - 120) / 120.0f;
 		}
+		//不透明度が0未満になったら
 		if (this->alpha < 0)
 		{
+			//タスクを解放
 			this->Kill();
 		}
+		//不透明度の上限を指定
 		if (this->alpha >= 1.0f)
 		{
 			this->alpha = 1.0f;
 		}
+		//ローディング画面の不透明度・色を指定
 		this->color = ML::Color(this->alpha, this->rgb, this->rgb, this->rgb);
+		//フレーム数をカウント
 		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		//ローディング画面描画
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 160, 90);
 		DG::Image_Draw(this->res->imageName, draw, src, this->color);
@@ -90,6 +102,7 @@ namespace  Loading
 	void  Object::Render3D_L0()
 	{
 	}
+	//他のタスクからRGB値を指定
 	void Object::Set_Color(float& rgb)
 	{
 		this->rgb = rgb;

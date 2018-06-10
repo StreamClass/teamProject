@@ -23,9 +23,13 @@ namespace Over
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//背景のイメージ名 
 		string bImgName;
+		//キャラクタのイメージ名
 		string cImgName;
+		//エフェクトのイメージ名
 		string eImgName;
+		//ゲームオーバーロゴのイメージ名
 		string lImgName;
 	};
 	//-------------------------------------------------------------------
@@ -51,10 +55,15 @@ namespace Over
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
+		//ロゴの不透明度の指定
 		float al;
+		//フレーム数カウント
 		int timeCnt;
+		//キャラクタの2次元座標
 		ML::Vec2 cPos;
+		//エフェクトが出てロゴが出きっているか判断用
 		bool endFlag;
+		//endFlagがtrueになってからのフレーム数カウント
 		int endCnt;
 	};
 }

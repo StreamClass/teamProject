@@ -109,6 +109,6 @@ public:
 	ML::Vec3 Get_Scaling();
 	//‚ ‚½‚è”»’è
 	bool Map_Hit_Check(const ML::Box3D& hit_);
-
+	//‹È‚ª‚èŠp‚Ì”Ô†‚ğ“Ç‚İ‚ñ‚¾‡‚Éİ’è
 	void Ini_Corner_Num(const int num);
 };

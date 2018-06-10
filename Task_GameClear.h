@@ -23,6 +23,7 @@ namespace Clear
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//画像の名前４つ分
 		string imageName[4];
 	};
 	//-------------------------------------------------------------------
@@ -53,7 +54,7 @@ namespace Clear
 		ML::Vec2 cloud00pos;
 		//雲01の座標
 		ML::Vec2 cloud01pos;
-		//テキストの透明度
+		//テキストの不透明度
 		float alpha;
 	};
 }

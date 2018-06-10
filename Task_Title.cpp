@@ -79,6 +79,7 @@ namespace  Title
 		{
 			//ローディング呼び出し
 			auto lo = Loading::Object::Create(true);
+			//色を黒に指定
 			float color = 0.0f;
 			lo->Set_Color(color);
 		}
@@ -121,7 +122,9 @@ namespace  Title
 	{
 		
 	}
-	//ボタンの描画を判断
+
+	//メソッド
+	//StartButtonロゴのアニメーション処理
 	bool Object::LogoAnim()
 	{
 		//ボタンが押されていなかったら

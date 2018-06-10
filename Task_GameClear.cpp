@@ -77,45 +77,61 @@ namespace  Clear
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
-		//消滅
+		//startボタンを押すと解放
+		//デバッグ用
 		if (in.ST.down)
 		{
 			this->Kill();
 		}
+		//タスク生成から17秒後にローディング画面を呼び出し
 		if (this->timeCnt == 60 * 17.0f)
 		{
 			auto lo = Loading::Object::Create(true);
+			//ローディングの色を白に指定
 			float color = 1.0f;
 			lo->Set_Color(color);
 		}
+		/*19秒後(ローディングを呼んでから2秒後)
+		にタスクを解放*/
 		if (this->timeCnt > 60 * 19.0f)
 		{
 			this->Kill();
 		}
+		/*画面が見えてから2秒後(タスク生成から4秒後)
+		から3秒かけてゲームクリアのロゴを表示*/
 		if (this->timeCnt > 60 * 4 && this->timeCnt < 60 * 7 )
 		{
+			//タスク生成から描画開始までの4秒を差し引いて180フレーム分で分割
 			this->alpha = (this->timeCnt - 60.0f * 4.0f) / 180.0f;
 		}
+		//ロゴの不透明度の下限を指定
 		if (this->alpha < 0.0f)
 		{
 			this->alpha = 0.0f;
 		}
+		//ロゴの不透明度の上限を指定
 		if (this->alpha >= 1.0f)
 		{
 			this->alpha = 1.0f;
 		}
+		/*雲00が画面の左端から出きったらY座標を100～400ドットの間で指定し
+		画面の右端に指定*/
 		if (this->cloud00pos.x < -400.0f)
 		{
 			this->cloud00pos.y = rand() % 300 + 100;
 			this->cloud00pos.x = 1920;
 		}
+		/*雲01が画面の左端から出きったらY座標を100～400ドットの間で指定し
+		画面の右端に指定*/
 		if (this->cloud01pos.x < -400.0f)
 		{
 			this->cloud01pos.y = rand() % 300 + 100;
 			this->cloud01pos.x = 1920;
 		}
+		//毎フレーム3ドット左に移動
 		this->cloud00pos.x -= 3.0f;
 		this->cloud01pos.x -= 3.0f;
+		//フレーム数をカウント
 		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------

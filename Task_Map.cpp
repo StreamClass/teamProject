@@ -114,19 +114,23 @@ namespace  Map
 	{
 		//壁の描画
 		ML::Mat4x4 matS,matT;
+		//描画する範囲をカメラを中心に前後左右18マス分に指定
 		int  sx, sz, ex, ez;
 		sx = max(0, int(ge->camera[0]->pos.x / 100) - 18);
 		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 18);
 		sz = max(0, int(ge->camera[0]->pos.z / 100) - 18);
 		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 18);
 
+		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
 		{
 			for (int x = sx; x < ex; ++x)
 			{
+				//壁以外はcontinue
 				int chipNum = this->arr[z][x].Get_Type();
 				if (chipNum != Type::box) { continue; }
 
+				//各マスの情報をMapBoxから取得
 				matS.Scaling(this->arr[z][x].Get_Scaling());
 				matT.Translation(this->arr[z][x].Get_Pos());
 				DG::EffectState().param.matWorld = matS * matT;
@@ -174,30 +178,44 @@ namespace  Map
 			{
 				for (int x = this->tmpX; x < this->tmpX + this->sizeX; ++x)
 				{
+					//タイプを読み込み
 					int in;
 					fin >> in;
 					
+					//座標の指定
 					ML::Vec3 pos(
 						x * this->arr[z][x].Get_ChipSizeX() + this->arr[z][x].Get_ChipSizeX() / 2,
 						this->arr[z][x].Get_ChipSizeY() / 2,
 						z * this->arr[z][x].Get_ChipSizeZ() + this->arr[z][x].Get_ChipSizeZ() / 2
 					);
+					//あたり判定矩形のサイズを指定
 					ML::Box3D hitBase(
 						0,0,0,
 						this->arr[z][x].Get_ChipSizeX(),
 						this->arr[z][x].Get_ChipSizeY(),
 						this->arr[z][x].Get_ChipSizeZ()
 					);
+					//Boxのコンストラクタで座標と矩形を設定
 					this->arr[z][x] = Box(pos, hitBase);
+					//マスのタイプを設定
 					this->arr[z][x].Type_Read(in);
+					//タイプによって処理を分ける
 					switch ((Type)in)
 					{
+					//ブレイカーなら
 					case Type::breaker:
+						//オブジェクトマネージャでブレイカーを生成
 						ge->OM.Create_Breaker(pos);
 						break;
+
+					//プレイヤなら
 					case Type::player:
-						ge->GetTask_One_G<Player::Object>("プレイヤ")->Ini_Pos(pos-ML::Vec3(0,150,0));
+						//プレイヤの初期座標を設定
+						//															座標
+						ge->GetTask_One_G<Player::Object>("プレイヤ")->Ini_Pos(pos - ML::Vec3(0, 150, 0));
 						break;
+
+					//各監視カメラなら
 					case Type::camera_East:
 					case Type::camera_North:
 					case Type::camera_South:
@@ -206,17 +224,23 @@ namespace  Map
 					case Type::camera_North_West:
 					case Type::camera_South_East:
 					case Type::camera_South_West:
-						ge->OM.Create_Camera(pos+ML::Vec3(0,100,0), (Type)in);
+						//オブジェクトマネージャで監視カメラを生成
+						//						座標					  ,	タイプ
+						ge->OM.Create_Camera(pos + ML::Vec3(0, 100, 0), (Type)in);
 						break;
+
+					//曲がり角なら
 					case Type::corner:
+						//オブジェクトマネージャでコーナーを生成
+						//						座標,番号
 						ge->OM.Push_Back_Conner(pos, num);
+						//番号を1増やす
 						++num;
 						break;
 					}					
 				}
 			}
 
-			
 			//X・Zの基準値更新
 			x += this->sizeX;
 			z += this->sizeZ;
@@ -227,26 +251,33 @@ namespace  Map
 			//ファイルを閉じる
 			fin.close();
 		}
+		//コーナー同士の関係性を構築
 		ge->OM.Set_Relationship();
+
 		//ドアの生成は完全に別のところで
-			for (int z =0; z < this->maxSizeZ; ++z)
+		for (int z =0; z < this->maxSizeZ; ++z)
+		{
+			for (int x = 0; x < this->sizeX; ++x)
 			{
-				for (int x = 0; x < this->sizeX; ++x)
-				{
-					if (this->arr[z][x].Get_Type() == Type::door)
-					{					
-						if (this->arr[z][x - 1].Get_Type() == Type::door)
-						{
-							ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Right);
-						}
-						else
-						{
-							ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Left);
-						}						
+				//タイプがドアなら
+				if (this->arr[z][x].Get_Type() == Type::door)
+				{				
+					//左にもドアがあれば
+					if (this->arr[z][x - 1].Get_Type() == Type::door)
+					{
+						//右側としてドアを生成
+						ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Right);
 					}
+					//なければ
+					else
+					{
+						//左側としてドアを生成
+						ge->OM.Create_Door(this->arr[z][x].Get_Pos(), LR::Left);
+					}						
 				}
 			}
-			return true;
+		}
+		return true;
 	}
 
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

@@ -13,6 +13,8 @@ namespace  Over
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//各イメージ名指定
+		//画像を読み込み
 		this->bImgName = "BGImg";
 		DG::Image_Create(this->bImgName, "./data/image/OverBG.png");
 		this->cImgName = "CharaImg";
@@ -27,6 +29,7 @@ namespace  Over
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		//画像をすべて解放
 		DG::Image_Erase(this->bImgName);
 		DG::Image_Erase(this->cImgName);
 		DG::Image_Erase(this->eImgName);
@@ -74,67 +77,83 @@ namespace  Over
 	{
 		auto in = DI::GPad_GetState("P1");
 
+		//endFlagがfalseの時にstartボタンを押すとローディングを呼び出し
 		if (in.ST.down && this->endFlag == false)
 		{
 			auto lo = Loading::Object::Create(true);
-			lo->alpha = 0.0f;
+			//ローディング画面の色を黒に指定
+			float color = 0.0f;
+			lo->Set_Color(color);
 			this->endFlag = true;
 		}
-
+		//2秒後から
 		if (this->timeCnt > 60 * 2)
 		{
+			//キャラクタを左に6ドットずつ移動
 			this->cPos.x -= (this->timeCnt - 120) * 6;
 		}
+		//5秒後から
 		if (this->timeCnt > 60 * 5)
 		{
-			this->al += 1.0f / 60.0f * 3.0f;
-			if (in.ST.down && this->endFlag == false)
-			{
-				auto lo = Loading::Object::Create(true);
-				lo->alpha = 0.0f;
-				this->endFlag = true;
-			}
+			//3秒かけて不透明度を1に
+			this->al = (this->timeCnt - 60 * 5) / 60.0f * 3.0f;
 		}
+		//15秒後(ロゴがすべて出てから7秒後)かつendFlagがfalseなら
 		if (this->timeCnt > 60 * 15 && this->endFlag == false)
 		{
+			//ローディングを呼び出し
 			auto lo = Loading::Object::Create(true);
-			lo->alpha = 0.0f;
+			//ローディング画面の色を黒に指定
+			float color = 0.0f;
+			lo->Set_Color(color);
+			//endFlagをtrueに
 			this->endFlag = true;
 		}
+		//endFlagがtrueなら
 		if (this->endFlag == true)
 		{
+			//カウント開始
 			this->endCnt++;
 		}
+		//endCntが2秒分数えたら
 		if (this->endCnt > 60 * 2)
 		{
+			//タスクを解放
 			this->Kill();
 		}
+		//ロゴの不透明度の上限を指定
 		if (this->al > 1.0f)
 		{
 			this->al = 1.0f;
 		}
+		//タスクのフレーム数をカウント
 		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		//背景描画
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 1920, 1080);
 		DG::Image_Draw(this->res->bImgName, draw, src);
-
+		//キャラクタが画面左側から出て行ったら
 		if (this->cPos.x < -300)
 		{
+			//エフェクトを画面全体に描画
 			DG::Image_Draw(this->res->eImgName, draw, src);
 		}
 
+		//キャラクタ描画
 		draw = ML::Box2D(0, 0, 300, 400);
 		src = ML::Box2D(0, 0, 300, 400);
 		draw.Offset(this->cPos);
 		DG::Image_Draw(this->res->cImgName,draw,src);
 		
+		//ロゴ描画
 		draw = ML::Box2D(0, 350, 1920, 300);
 		src = ML::Box2D(0, 0, 1920, 300);
+		//														 不透明度
 		DG::Image_Draw(this->res->lImgName, draw, src, ML::Color(this->al, 1, 1, 1));
 	}
 

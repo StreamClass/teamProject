@@ -32,10 +32,11 @@ namespace  MiniMap
 
 		//★データ初期化
 		this->render2D_Priority[1] = 0.5f;
-		//イメージの設定
+		//イメージ名の指定
 		this->imageName = "MapImg";
 		this->plImgName = "PlayerImg";
 		this->caImgName = "CameraImg";
+		//各画像の読み込み
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
 		DG::Image_Create(this->plImgName, "./data/image/Player_MiniMap.png");
 		DG::Image_Create(this->caImgName, "./data/image/Camera_MiniMap.png");
@@ -50,7 +51,9 @@ namespace  MiniMap
 		//タブレットは使っていない
 		this->tab_use_now = false;
 
+		//エネミーの座標
 		this->epos = ML::Vec2(0, 0);
+		//エネミーの向き
 		this->eangle = 0;
 		//★タスクの生成
 
@@ -93,6 +96,8 @@ namespace  MiniMap
 			this->caAngle = -atan2(a.y,a.x) + ML::ToRadian(90);
 		}
 
+		//デバック用
+		//エネミーからミニマップ上での情報を参照
 		auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
 		this->epos = ML::Vec2((int)e->pos.x / 20, 500 - (int)e->pos.z / 20);
 		this->eangle = e->angle.y + ML::ToRadian(90);
@@ -110,7 +115,7 @@ namespace  MiniMap
 			DG::Image_Draw(this->imageName, draw, src);
 			//プレイヤ位置
 			draw = ML::Box2D(-5, -7, 9, 13);
-			src = ML::Box2D(0, 0, 20, 20);
+			src = ML::Box2D(0, 0, 50, 50);
 			draw.Offset(this->plpos);
 			DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
 			DG::Image_Draw(this->plImgName, draw, src);
@@ -123,6 +128,8 @@ namespace  MiniMap
 				DG::Image_Draw(this->caImgName, draw, src);
 			}
 
+			//デバッグ用
+			//エネミー描画
 			draw = ML::Box2D(5, -7, 9, 13);
 			draw.Offset(this->epos);
 			DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));

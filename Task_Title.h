@@ -24,8 +24,11 @@ namespace Title
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//背景イメージ名
 		string bgImgName;
+		//ロゴイメージ名
 		string loImgName;
+		//StartButtonイメージ名
 		string sbImgName;
 	};
 	//-------------------------------------------------------------------
@@ -51,9 +54,13 @@ namespace Title
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
+		//フレームカウンタ
 		int timeCnt;
+		//Startボタンを押したか判断
 		bool pushSon;
 
+		//メソッド
+		//StartButtonロゴのアニメーション処理
 		bool LogoAnim();
 	};
 }

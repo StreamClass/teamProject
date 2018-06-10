@@ -38,11 +38,12 @@ float Box::Get_ChipSizeZ()
 {
 	return this->chipSizeZ_;
 }
-//スケーリング            (サイズを変更したいboxの種類:wal,floor,ceilingの頭文字を入れる)
+//スケーリング
 ML::Vec3 Box::Get_Scaling()
 {
 	ML::Vec3 scaling
 	(
+		//サイズの％でサイズを指定
 		this->chipSizeX_ / 100.0f,
 		this->chipSizeY_ / 100.0f,
 		this->chipSizeZ_ / 100.0f
@@ -55,7 +56,7 @@ bool Box::Map_Hit_Check(const ML::Box3D& hit_)
 	auto me = this->hitBase_.OffsetCopy(this->pos_);
 	return me.Hit(hit_);
 }
-
+//曲がり角の番号を読み込んだ順に設定
 void Box::Ini_Corner_Num(const int num)
 {
 	this->cornerNum = num;

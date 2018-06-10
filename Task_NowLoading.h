@@ -23,6 +23,7 @@ namespace Loading
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//イメージ名
 		string imageName;
 	};
 	//-------------------------------------------------------------------
@@ -50,13 +51,15 @@ namespace Loading
 		//追加したい変数・メソッドはここに追加する
 		//時間カウント
 		int timeCnt;
-		//透明度
+		//不透明度
 		float alpha;
 		//色の総括
 		ML::Color color;
-		//
+		//RGBの値(一括)
 		float rgb;
 
+		//メソッド
+		//他のタスクからRGB値を指定
 		void Set_Color(float& rgb);
 	};
 }

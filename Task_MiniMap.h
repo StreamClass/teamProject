@@ -48,8 +48,6 @@ namespace MiniMap
 	public:
 		//追加したい変数・メソッドはここに追加する
 
-		ML::Vec2 epos;
-		float eangle;
 		//イメージ名
 		string imageName;
 		string plImgName;
@@ -69,9 +67,18 @@ namespace MiniMap
 		//タブレットを使用しているか
 		bool tab_use_now;
 
+		//メソッド
 		//ミニマップを表示するか判断
 		bool MiniMap_View();
 		//プレイヤからミニマップを出すか指定
 		void Set_MiniMap_View();
+
+
+		//デバッグ時用変数
+		//エネミーの座標
+		ML::Vec2 epos;
+		//エネミーの向き
+		float eangle;
+
 	};
 }

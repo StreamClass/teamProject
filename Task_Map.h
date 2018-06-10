@@ -24,6 +24,7 @@ namespace Map
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//イメージ名
 		string imageName;
 	};
 	//-------------------------------------------------------------------
