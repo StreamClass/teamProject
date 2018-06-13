@@ -1,4 +1,6 @@
 #include "ChaseSystem.h"
+#include "MyPG.h"
+#include "Task_Player.h"
 
 void ChaseSystem::PushBack_Route(const ML::Vec3& pos)
 {
@@ -14,10 +16,21 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 
 	matR.RotationY(angle);
 	a = matR.TransformCoord(a);
+
+	//マップとのあたり判定を持っているタスクをもらう
+	auto h = ge->GetTask_One_G<Player::Object>("プレイヤ");
 	//アングル方向にセンサー矩形発射
 	for (int i = 0; i < 1000; i += 50)
 	{
 		ML::Box3D s =this->sensor.OffsetCopy(pos + (a.Normalize()*i));
+		//センサーの中心に範囲1の矩形を同時に発射
+		ML::Box3D c(0, 0, 0, 1, 1, 1);
+		c.Offset(pos + (a.Normalize()*i));
+		//マップとのあたり判定であたったら処理終了
+		if (h->Map_CheckHit(c))
+		{
+			break;
+		}
 		//センサーに当たったら
 		if (s.Hit(hit))
 		{

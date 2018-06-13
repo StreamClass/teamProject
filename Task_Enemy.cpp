@@ -44,7 +44,8 @@ namespace  Enemy
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));
-		this->chasing_Speed = 16;
+		this->chasing_Speed = 16.0f;
+		this->final_Phase_Speed = 13.0f;
 		this->timeCnt = 0;
 
 		//šƒ^ƒXƒN‚Ì¶¬
@@ -98,7 +99,14 @@ namespace  Enemy
 
 			targetPos = rou->Move(this->pos);
 
-			this->pos += targetPos * this->speed;
+			if (rou->Is_Final_Phase() == false)
+			{
+				this->pos += targetPos * this->speed;
+			}
+			else
+			{
+				this->pos += targetPos * this->final_Phase_Speed;
+			}
 
 			
 			this->angle.y = -atan2(targetPos.z, targetPos.x);

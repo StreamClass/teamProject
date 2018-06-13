@@ -56,7 +56,9 @@ public:
 	void Set_CornerPos(const ML::Vec3& pos_, const int& num_);
 	//目的地の検索用
 	void Initialize_RelationShip(int num);
-	//
+
+	//フェーズ確認
+	bool Is_Final_Phase();
 
 
 	//最終フェーズに移行

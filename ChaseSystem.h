@@ -17,20 +17,21 @@ private:
 
 	//プレイヤの位置をルートに登録
 	void PushBack_Route(const ML::Vec3& pos);
+	//ルーチンワークに戻る
 	void Shift_to_Routine();
 public:
 	//あたり判定(引数 : プレイヤのあたり判定矩形,プレイやの位置,エネミーの現在位置,エネミーのアングル)
 	void SensorCheck(const ML::Box3D& hit,const ML::Vec3& plpos, const ML::Vec3& pos, const float& angle);
 	//次の追跡場所を返す
 	ML::Vec3 NextRoute();
-	//システムモードを確認する関数
+	//システムモードを確認するメソッド
 	bool Is_Chase_Mode();
 
 
 
 	//コンストラクタ・デストラクタ
 	ChaseSystem() :
-		sensor(-300, -100, -300, 600, 200, 600),
+		sensor(-500, -100, -50, 1000, 200, 100),
 		systemFlag(false),
 		destination(0)
 	{

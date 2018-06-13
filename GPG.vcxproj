@@ -97,6 +97,7 @@
     <ClCompile Include="DG2014\DG2014_VertexContainer.cpp" />
     <ClCompile Include="DI2014_Ver3_4.cpp" />
     <ClCompile Include="Door.cpp" />
+    <ClCompile Include="easing.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
     <ClCompile Include="MapBox.cpp" />
     <ClCompile Include="myLib.cpp" />
@@ -135,6 +136,7 @@
     <ClInclude Include="DG2014\DG2014_VertexContainer.h" />
     <ClInclude Include="DI2014_Ver3_4.h" />
     <ClInclude Include="Door.h" />
+    <ClInclude Include="easing.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
     <ClInclude Include="MapBox.h" />

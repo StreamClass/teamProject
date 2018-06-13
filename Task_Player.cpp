@@ -8,9 +8,12 @@
 #include  "Task_Breaker.h"
 #include  "Task_Door.h"
 #include  "Task_MiniMap.h"
+#include  "easing.h"
 
 #define NORMALSPEED 10
+#define TIRED_SPEED 3
 #define DASHSPEED 20
+#define MAX_STAMINA 180
 
 namespace  Player
 {
@@ -50,6 +53,9 @@ namespace  Player
 		this->headHeight = 175;
 		this->adjust_TG = 175;
 		this->cnt_TG = 0;
+		this->cnt_SP = 1;
+		this->trm_Max = 190.0f;
+		this->trm_Min = 175.0f;
 		this->adjust_Speed = 20.0f;
 		this->adjust_Min = -400;
 		this->adjust_Max = +400;
@@ -59,8 +65,14 @@ namespace  Player
 		this->speed = 10.0f;
 		this->clearFlag = false;
 		this->tremor = 4.0f;
+		this->stamina = MAX_STAMINA;
+		this->recovery_Flag = false;
 
 		this->tab = ge->OM.Create_Tablet();
+		//視点イージング
+		easing::Set("cam01", easing::EXPOINOUT, this->trm_Min, this->trm_Max, 120);
+		easing::Set("cam02", easing::QUADOUT, this->trm_Max, this->trm_Min, 120);
+
 		//★タスクの生成
 
 		return  true;
@@ -91,6 +103,11 @@ namespace  Player
 		{
 			if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
 			{
+				//走る途中はスタミナ減少
+				if (in.R1.on)
+				{
+					this->stamina--;
+				}
 				ML::Mat4x4 matR;
 				matR.RotationY(this->angle.y);
 				this->moveVec.x = -this->speed * in.LStick.axis.y;
@@ -103,20 +120,76 @@ namespace  Player
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
 			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
-
+			//速度指定
 			if (in.R1.on)
 			{
-				this->speed=DASHSPEED;
+				if (this->recovery_Flag == false)
+				{
+					this->speed = DASHSPEED;
+				}
+				else
+				{
+					this->speed = TIRED_SPEED;
+				}
 			}
 			else if (in.R1.off)
 			{
-				this->speed = NORMALSPEED;
+				if (this->recovery_Flag == false)
+				{
+					this->speed = NORMALSPEED;
+				}
+				else
+				{
+					this->speed = TIRED_SPEED;
+				}
+				//スタミナ回復
+				this->stamina++;
+			}
+			
+			//スタミナ範囲
+			if (this->stamina < 0)
+			{
+				this->stamina = 0;
+			}
+			else if (this->stamina > MAX_STAMINA)
+			{
+				this->stamina = MAX_STAMINA;
+			}
+
+			//リカバリーモードに切り替え
+			if (this->recovery_Flag == false && this->stamina <= 0)
+			{
+				this->recovery_Flag = true;
+			}
+			//通常モードに切り替え
+			if (this->recovery_Flag == true && this->stamina >= MAX_STAMINA / 2)
+			{
+				this->recovery_Flag = false;
 			}
 
 			//画面揺れ用カウンタスタート
-			this->cnt_TG += 5; 
-			//画面揺れ処理
-			this->headHeight = 175.0f + this->tremor * sin(ML::ToRadian(this->cnt_TG));
+			//走る速度で画面揺れの速度が変化する
+			this->cnt_TG += this->cnt_SP;
+			//イージング
+			easing::UpDate();
+			if (this->cnt_TG < 120)
+			{
+				easing::Start("cam01");
+				easing::Reset("cam02");
+				this->headHeight = easing::GetPos("cam01");
+				this->adjust_TG = easing::GetPos("cam01");
+			}
+			else if (this->cnt_TG > 160)
+			{
+				easing::Start("cam02");
+				easing::Reset("cam01");
+				this->headHeight = easing::GetPos("cam02");
+				this->adjust_TG = easing::GetPos("cam02");
+			}
+			if (this->cnt_TG > 280)
+			{
+				this->cnt_TG = 0;
+			}
 
 			//注視点の上下移動
 			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
@@ -264,7 +337,7 @@ namespace  Player
 				auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
 				for (auto it = d->begin(); it != d->end(); it++)
 				{
-					if ((*it)->Hit_Check(this->hitBase.OffsetCopy(this->pos)))
+					if ((*it)->Hit_Check(pHit))
 					{
 						return true;
 					}

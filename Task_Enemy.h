@@ -61,7 +61,8 @@ namespace Enemy
 		//追跡用移動量
 		ML::Vec3 toVec;
 		//速度
-		int chasing_Speed;
+		float chasing_Speed;
+		float final_Phase_Speed;
 		//探知用矩形
 		//ML::Box3D searchBase;
 

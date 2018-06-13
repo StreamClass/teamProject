@@ -64,14 +64,19 @@ namespace Player
 		int adjust_TG;
 		//視点移動速度
 		float adjust_Speed;
-		//注視点高さの下限
 		int adjust_Min;
 		//注視点高さの上限
 		int adjust_Max;
-		//視点の揺れ幅
-		float tremor;
 		//視点揺れカウンタ
 		int cnt_TG;
+		//視点揺れの速度
+		int cnt_SP;
+		//画面揺れ上限
+		float trm_Max;
+		//画面揺れ下限
+		float trm_Min;		
+		//視点の揺れ幅
+		float tremor;		
 		//プレイヤの移動量
 		ML::Vec3 moveVec;
 		//コントローラネーム
@@ -80,6 +85,11 @@ namespace Player
 		bool		clearFlag;
 		//タブレット
 		Tablet* tab;
+
+		//スタミナ
+		int stamina;
+		//スタミナ回復フラグ
+		bool recovery_Flag;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す

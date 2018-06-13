@@ -205,6 +205,9 @@
     <ClCompile Include="Task_GameOver.cpp">
       <Filter>MyPG\Ending</Filter>
     </ClCompile>
+    <ClCompile Include="easing.cpp">
+      <Filter>MyPG</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -314,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="Task_GameOver.h">
       <Filter>MyPG\Ending</Filter>
+    </ClInclude>
+    <ClInclude Include="easing.h">
+      <Filter>MyPG</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

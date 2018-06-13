@@ -67,12 +67,11 @@ void Routine::Choice(const int& now_)
 	this->target = -1;
 	//コーナーによって選択肢の数が違うため
 	//自然数が出るまで選定を繰り返す
-	if (this->final_Phase == false)
+	if (this->Is_Final_Phase() == false)
 	{
 		while (this->target < 0)
 		{
-			this->target =
-				this->choiceCorner[this->now][rand() % choices];
+			this->target = this->choiceCorner[this->now][rand() % choices];
 		}
 	}
 	//最終フェーズの処理
@@ -304,4 +303,10 @@ bool Routine::RelationShip_ZM(int num_, int c)
 void Routine::Set_Final_Phase()
 {
 	this->final_Phase = true;
+}
+
+//ファイナルフェーズかを確認する
+bool Routine::Is_Final_Phase()
+{
+	return this->final_Phase;
 }
