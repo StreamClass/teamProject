@@ -96,7 +96,7 @@ namespace Task_Door
 		{
 			return false;
 		}
-		this->circuit->Player_Hit_the_Door(hit);
+		return this->circuit->Player_Hit_the_Door(hit);
 	}
 
 	//šššššššššššššššššššššššššššššššššššššššššš

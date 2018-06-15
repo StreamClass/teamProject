@@ -337,7 +337,7 @@ namespace  Player
 				this->Check_Clear();
 			}
 		}
-		auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
+		auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
 		for (auto it = d->begin(); it != d->end(); it++)
 		{
 			if ((*it)->Hit_Check(pHit))
