@@ -116,10 +116,10 @@ namespace  Map
 		ML::Mat4x4 matS,matT;
 		//描画する範囲をカメラを中心に前後左右18マス分に指定
 		int  sx, sz, ex, ez;
-		sx = max(0, int(ge->camera[0]->pos.x / 100) - 18);
-		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 18);
-		sz = max(0, int(ge->camera[0]->pos.z / 100) - 18);
-		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 18);
+		sx = max(0, int(ge->camera[0]->pos.x / 100) - 15);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 15);
+		sz = max(0, int(ge->camera[0]->pos.z / 100) - 15);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 15);
 
 		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
@@ -231,6 +231,8 @@ namespace  Map
 
 					//曲がり角なら
 					case Type::corner:
+						//エネミー用に高さを足元の高さに設定
+						pos.y = 50.0f;
 						//オブジェクトマネージャでコーナーを生成
 						//						座標,番号
 						ge->OM.Push_Back_Conner(pos, num);

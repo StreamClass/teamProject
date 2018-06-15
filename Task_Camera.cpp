@@ -44,9 +44,9 @@ namespace  Camera
 		//フォグ(霧)の設定
 		DG::EffectState().param.fogEnable = true;
 		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
-		DG::EffectState().param.fogFore = 1800.0f;
+		DG::EffectState().param.fogFore = 1500.0f;
 		DG::EffectState().param.fogMode = true;
-		DG::EffectState().param.fogNear = 1300.0f;
+		DG::EffectState().param.fogNear = 1000.0f;
 
 		//★タスクの生成
 

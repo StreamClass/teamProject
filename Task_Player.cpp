@@ -143,7 +143,7 @@ namespace  Player
 					this->speed = TIRED_SPEED;
 				}
 				//スタミナ回復
-				this->stamina++;
+				this->stamina+=0.3f;
 			}
 			
 			//スタミナ範囲
@@ -334,15 +334,15 @@ namespace  Player
 				if (mp->arr[z][x].Get_Type() == Type::box) {
 					return true;
 				}
-				auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
-				for (auto it = d->begin(); it != d->end(); it++)
-				{
-					if ((*it)->Hit_Check(pHit))
-					{
-						return true;
-					}
-				}
 				this->Check_Clear();
+			}
+		}
+		auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
+		for (auto it = d->begin(); it != d->end(); it++)
+		{
+			if ((*it)->Hit_Check(pHit))
+			{
+				return true;
 			}
 		}
 		return false;//接触するものが検出されなかった
@@ -353,7 +353,6 @@ namespace  Player
 	void Object::Player_CheckMove(ML::Vec3& est_)
 	{
 
-		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
 		//水平方向（x平面)に対する移動
 		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preX = this->pos.x;//移動前の座標を保持
@@ -370,9 +369,9 @@ namespace  Player
 			}
 
 			//接触判定を試みる
-			ML::Box3D hit = this->hitBase;
+			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
 			//hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit.OffsetCopy(this->pos))) {
+			if (true == this->Map_CheckHit(hit)) {
 				this->pos.x = preX;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
@@ -395,9 +394,9 @@ namespace  Player
 			}
 
 			//接触判定を試みる
-			ML::Box3D hit = this->hitBase;
-			//hit.Offset((int)this->pos.z, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit.OffsetCopy(this->pos))) {
+			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
+			//hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
+			if (true == this->Map_CheckHit(hit)) {
 				this->pos.z = preZ;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			

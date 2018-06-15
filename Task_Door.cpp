@@ -13,7 +13,7 @@ namespace Task_Door
 	{
 		this->meshName = "Door_mesh";
 		//‰¼‚ÌƒƒbƒVƒ…
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box3.sob");
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/door.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -77,10 +77,11 @@ namespace Task_Door
 
 	void  Object::Render3D_L0()
 	{		
-		ML::Mat4x4 matT;
+		ML::Mat4x4 matT, matS;
+		matS.Scaling(100);
 		matT.Translation(this->circuit->Get_Pos());
 
-		DG::EffectState().param.matWorld = matT;
+		DG::EffectState().param.matWorld = matS * matT;
 
 		DG::Mesh_Draw(this->res->meshName);
 	}

@@ -87,7 +87,7 @@ namespace Player
 		Tablet* tab;
 
 		//スタミナ
-		int stamina;
+		float stamina;
 		//スタミナ回復フラグ
 		bool recovery_Flag;
 	public:

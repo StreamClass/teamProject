@@ -5,6 +5,7 @@
 #include  "Task_GameOver.h"
 #include  "Task_Title.h"
 #include  "Task_NowLoading.h"
+#include  "easing.h"
 
 namespace  Over
 {
@@ -50,8 +51,10 @@ namespace  Over
 		this->al = 0.0f;
 		this->timeCnt = 0;
 		this->endCnt = 0;
-		this->cPos = ML::Vec2(ge->screen2DWidth - 500, ge->screen2DHeight - 400);
+		this->cPos = ML::Vec2(ge->screen2DWidth - 800, ge->screen2DHeight - 800);
 		this->endFlag = false;
+		this->easingName = "moveEasing";
+		easing::Set(this->easingName, easing::BACKINOUT, this->cPos.x, -2000, 60 * 2);
 		//★タスクの生成
 
 		return  true;
@@ -76,6 +79,7 @@ namespace  Over
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState("P1");
+		easing::UpDate();
 
 		//endFlagがfalseの時にstartボタンを押すとローディングを呼び出し
 		if (in.ST.down && this->endFlag == false)
@@ -89,8 +93,9 @@ namespace  Over
 		//2秒後から
 		if (this->timeCnt > 60 * 2)
 		{
+			easing::Start(this->easingName);
 			//キャラクタを左に6ドットずつ移動
-			this->cPos.x -= (this->timeCnt - 120) * 6;
+			this->cPos.x = easing::GetPos(this->easingName);
 		}
 		//5秒後から
 		if (this->timeCnt > 60 * 5)
@@ -138,14 +143,14 @@ namespace  Over
 		ML::Box2D src(0, 0, 1920, 1080);
 		DG::Image_Draw(this->res->bImgName, draw, src);
 		//キャラクタが画面左側から出て行ったら
-		if (this->cPos.x < -300)
+		if (this->cPos.x < -600)
 		{
 			//エフェクトを画面全体に描画
 			DG::Image_Draw(this->res->eImgName, draw, src);
 		}
 
 		//キャラクタ描画
-		draw = ML::Box2D(0, 0, 300, 400);
+		draw = ML::Box2D(0, 0, 600, 800);
 		src = ML::Box2D(0, 0, 300, 400);
 		draw.Offset(this->cPos);
 		DG::Image_Draw(this->res->cImgName,draw,src);
