@@ -130,10 +130,10 @@ namespace  MiniMap
 
 			//デバッグ用
 			//エネミー描画
-			//draw = ML::Box2D(5, -7, 9, 13);
-			//draw.Offset(this->epos);
-			//DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
-			//DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
+			draw = ML::Box2D(5, -7, 9, 13);
+			draw.Offset(this->epos);
+			DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
+			DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
 		}
 	}
 	//-------------------------------------------------------------------

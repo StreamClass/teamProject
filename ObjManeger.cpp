@@ -173,7 +173,7 @@ void ObjManeger::Push_Back_Conner(const ML::Vec3& pos, const int& num)
 
 void ObjManeger::Set_Relationship()
 {
-	for (int i = 0; i < 25; i++)
+	for (int i = 0; i < 28; i++)
 	{
 		this->rou->Initialize_RelationShip(i);
 	}

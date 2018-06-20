@@ -40,7 +40,7 @@ namespace  Enemy
 		//šƒf[ƒ^‰Šú‰»
 		this->rou = ge->OM.Create_Routine();
 
-		this->pos = ML::Vec3(500, 50, 9500);
+		this->pos = ML::Vec3(500, 50, 17 * 100);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));

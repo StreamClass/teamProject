@@ -192,14 +192,14 @@ namespace  Player
 			}
 
 			//’Ž‹“_‚Ìã‰ºˆÚ“®
-			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
-			{
-				this->adjust_TG += this->adjust_Speed;
-			}
-			else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
-			{
-				this->adjust_TG -= this->adjust_Speed;
-			}
+			//if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
+			//{
+			//	this->adjust_TG += this->adjust_Speed;
+			//}
+			//else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
+			//{
+			//	this->adjust_TG -= this->adjust_Speed;
+			//}
 
 			this->Player_CheckMove(this->moveVec);
 

@@ -3,7 +3,7 @@
 #include "GameEngine_Ver3_7.h"
 
 //マップ内のコーナーの数
-#define corners 25
+#define corners 28
 //現在の最多選択肢数
 //4又が最多
 #define choices 4
