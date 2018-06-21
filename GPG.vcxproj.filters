@@ -208,6 +208,9 @@
     <ClCompile Include="easing.cpp">
       <Filter>MyPG</Filter>
     </ClCompile>
+    <ClCompile Include="Task_Aim.cpp">
+      <Filter>MyPG\Game\Player</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -320,6 +323,9 @@
     </ClInclude>
     <ClInclude Include="easing.h">
       <Filter>MyPG</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Aim.h">
+      <Filter>MyPG\Game\Player</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

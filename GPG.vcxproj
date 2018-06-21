@@ -105,6 +105,7 @@
     <ClCompile Include="ObjManeger.cpp" />
     <ClCompile Include="Routine.cpp" />
     <ClCompile Include="Tablet.cpp" />
+    <ClCompile Include="Task_Aim.cpp" />
     <ClCompile Include="Task_Breaker.cpp" />
     <ClCompile Include="Task_Camera.cpp" />
     <ClCompile Include="Task_Door.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="ObjManeger.h" />
     <ClInclude Include="Routine.h" />
     <ClInclude Include="Tablet.h" />
+    <ClInclude Include="Task_Aim.h" />
     <ClInclude Include="Task_Breaker.h" />
     <ClInclude Include="Task_Camera.h" />
     <ClInclude Include="Task_Door.h" />

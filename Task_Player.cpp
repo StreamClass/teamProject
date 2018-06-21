@@ -2,18 +2,20 @@
 //プレイヤ
 //-------------------------------------------------------------------
 #include  "MyPG.h"
+#include  "Task_Player.h" 
+#include  "Task_Aim.h"
 #include  "Task_Map.h"
 #include  "MapBox.h"
-#include  "Task_Player.h" 
 #include  "Task_Breaker.h"
 #include  "Task_Door.h"
 #include  "Task_MiniMap.h"
 #include  "easing.h"
 
+
 #define NORMALSPEED 10
 #define TIRED_SPEED 3
 #define DASHSPEED 20
-#define MAX_STAMINA 180
+#define MAX_STAMINA 240
 
 namespace  Player
 {
@@ -74,6 +76,7 @@ namespace  Player
 		easing::Set("cam02", easing::QUADOUT, this->trm_Max, this->trm_Min, 120);
 
 		//★タスクの生成
+		auto aim = Aiming::Object::Create(true);
 
 		return  true;
 	}
@@ -82,7 +85,7 @@ namespace  Player
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		ge->KillAll_G("エイム");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -143,7 +146,7 @@ namespace  Player
 					this->speed = TIRED_SPEED;
 				}
 				//スタミナ回復
-				this->stamina+=0.3f;
+				this->stamina += 0.3f;
 			}
 			
 			//スタミナ範囲
@@ -162,7 +165,7 @@ namespace  Player
 				this->recovery_Flag = true;
 			}
 			//通常モードに切り替え
-			if (this->recovery_Flag == true && this->stamina >= MAX_STAMINA / 2)
+			if (this->recovery_Flag == true && this->stamina >= MAX_STAMINA / 3)
 			{
 				this->recovery_Flag = false;
 			}
