@@ -44,9 +44,9 @@ ML::Vec3 Box::Get_Scaling()
 	ML::Vec3 scaling
 	(
 		//サイズの％でサイズを指定
-		this->chipSizeX_ / 100.0f,
-		this->chipSizeY_ / 100.0f,
-		this->chipSizeZ_ / 100.0f
+		this->chipSizeX_,
+		this->chipSizeY_,
+		this->chipSizeZ_
 	);
 	return scaling;
 }

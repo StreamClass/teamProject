@@ -73,9 +73,9 @@ namespace  Map
 		hitBase = ML::Box3D(0,0,0, 200, 300, 50);
 		this->goal = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
-		this->chipName = "box1.sob";
+		this->chipName = "MapBox.SOB";
 		//マップチップを設定
-		DG::Mesh_CreateFromSOBFile(this->chipName, "./data/Mesh/" + this->chipName);
+		DG::Mesh_CreateFromSOBFile(this->chipName, "./data/mesh/" + this->chipName);
 		//読み込むファイル名の初期化
 		this->fileName = "Map00.txt";
 		//ファイルパスの初期化
