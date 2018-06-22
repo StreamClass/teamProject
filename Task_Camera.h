@@ -22,7 +22,9 @@ namespace Camera
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する		
+		//共有する変数はここに追加する
+		string tablet_Img_Name;
+		string display_Noise_Img_Name;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -53,10 +55,12 @@ namespace Camera
 		ML::Vec3 angle;
 		//注視点
 		ML::Vec3 dist;
+		//ノイズの動き用のカウント
+		int noise_Cnt;
 
 	public:
 		//追加メソッド
-
+		void Noise_Reset();
 		
 	};
 }

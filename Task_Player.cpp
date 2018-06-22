@@ -53,12 +53,17 @@ namespace  Player
 		//プレイヤの初期化
 		this->pos = ML::Vec3(0, 0, 0);
 		this->headHeight = 175;
+		this->headHeight_std = 175;
 		this->adjust_TG = 175;
+		this->adjust_TG_std = 175;
 		this->cnt_TG = 0;
+		this->add_adjust = 0.0f;
 		this->cnt_SP = 1;
-		this->trm_Max = 190.0f;
-		this->trm_Min = 175.0f;
-		this->adjust_Speed = 20.0f;
+		this->trm_Max_std = 15.0f;
+		this->trm_Min = 0.0f;
+		this->trm_Max_dash = 25.0f;
+		this->trm_Max_trd = 25.0f;
+		this->adjust_Speed = 10.0f;
 		this->adjust_Min = -400;
 		this->adjust_Max = +400;
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
@@ -72,8 +77,14 @@ namespace  Player
 
 		this->tab = ge->OM.Create_Tablet();
 		//視点イージング
-		easing::Set("cam01", easing::EXPOINOUT, this->trm_Min, this->trm_Max, 120);
-		easing::Set("cam02", easing::QUADOUT, this->trm_Max, this->trm_Min, 120);
+		easing::Set("camStdUp", easing::EXPOINOUT, this->trm_Min, this->trm_Max_std, 120);
+		easing::Set("camStdDown", easing::QUADOUT, this->trm_Max_std, this->trm_Min, 120);
+		//ダッシュ用
+		easing::Set("camDashUp", easing::EXPOINOUT, this->trm_Min, this->trm_Max_dash, 15);
+		easing::Set("camDashDown", easing::QUADOUT, this->trm_Max_dash, this->trm_Min, 10);
+		//疲労時用
+		easing::Set("camTrdUp", easing::EXPOINOUT, this->trm_Min, this->trm_Max_trd, 180);
+		easing::Set("camTrdDown", easing::QUADOUT, this->trm_Max_trd, this->trm_Min, 180);
 
 		//★タスクの生成
 		auto aim = Aiming::Object::Create(true);
@@ -169,40 +180,89 @@ namespace  Player
 			{
 				this->recovery_Flag = false;
 			}
-
+			//注視点の上下移動
+			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
+			{
+				this->add_adjust += this->adjust_Speed;
+			}
+			else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
+			{
+				this->add_adjust -= this->adjust_Speed;
+			}
 			//画面揺れ用カウンタスタート
 			//走る速度で画面揺れの速度が変化する
 			this->cnt_TG += this->cnt_SP;
 			//イージング
 			easing::UpDate();
-			if (this->cnt_TG < 120)
+			//通常の速度の画面揺れ
+			if (this->speed == NORMALSPEED)
 			{
-				easing::Start("cam01");
-				easing::Reset("cam02");
-				this->headHeight = easing::GetPos("cam01");
-				this->adjust_TG = easing::GetPos("cam01");
+				if (this->cnt_TG < 120)
+				{
+					easing::Start("camStdUp");
+					easing::Reset("camStdDown");
+					this->headHeight = this->headHeight_std + easing::GetPos("camStdUp");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camStdUp");
+				}
+				else if (this->cnt_TG > 120)
+				{
+					easing::Start("camStdDown");
+					easing::Reset("camStdUp");
+					this->headHeight = this->headHeight_std + easing::GetPos("camStdDown");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camStdDown");
+				}
+				//カウンタのリセット
+				if (this->cnt_TG > 240)
+				{
+					this->cnt_TG = 0;
+				}
 			}
-			else if (this->cnt_TG > 160)
+			//ダッシュ中の画面揺れ
+			else if (this->speed == DASHSPEED)
 			{
-				easing::Start("cam02");
-				easing::Reset("cam01");
-				this->headHeight = easing::GetPos("cam02");
-				this->adjust_TG = easing::GetPos("cam02");
+				if (this->cnt_TG < 15)
+				{
+					easing::Start("camDashUp");
+					easing::Reset("camDashDown");
+					this->headHeight = this->headHeight_std + easing::GetPos("camDashUp");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camDashUp");
+				}
+				else if (this->cnt_TG > 15)
+				{
+					easing::Start("camDashDown");
+					easing::Reset("camDashUp");
+					this->headHeight = this->headHeight_std + easing::GetPos("camDashDown");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camDashDown");
+				}
+				//カウンタのリセット
+				if (this->cnt_TG > 25)
+				{
+					this->cnt_TG = 0;
+				}
 			}
-			if (this->cnt_TG > 280)
+			//疲労時の画面揺れ
+			else if (this->speed == TIRED_SPEED)
 			{
-				this->cnt_TG = 0;
+				if (this->cnt_TG < 180)
+				{
+					easing::Start("camTrdUp");
+					easing::Reset("camTrdDown");
+					this->headHeight = this->headHeight_std + easing::GetPos("camTrdUp");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camTrdUp");
+				}
+				else if (this->cnt_TG > 180)
+				{
+					easing::Start("camTrdDown");
+					easing::Reset("camTrdUp");
+					this->headHeight = this->headHeight_std + easing::GetPos("camTrdDown");
+					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camTrdDown");
+				}
+				//カウンタのリセット
+				if (this->cnt_TG > 360)
+				{
+					this->cnt_TG = 0;
+				}
 			}
-
-			//注視点の上下移動
-			//if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
-			//{
-			//	this->adjust_TG += this->adjust_Speed;
-			//}
-			//else if (in.RStick.D.on && this->adjust_TG > this->adjust_Min)
-			//{
-			//	this->adjust_TG -= this->adjust_Speed;
-			//}
 
 			this->Player_CheckMove(this->moveVec);
 

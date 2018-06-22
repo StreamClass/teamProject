@@ -13,31 +13,33 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 	//アングルに合わせた方向ベクトル算出
 	ML::Mat4x4 matR;
 	ML::Vec3 a(1, 0, 0);
-
-	matR.RotationY(angle);
-	a = matR.TransformCoord(a);
-
-	//マップとのあたり判定を持っているタスクをもらう
-	auto h = ge->GetTask_One_G<Player::Object>("プレイヤ");
-	//アングル方向にセンサー矩形発射
-	for (int i = 0; i < 1000; i += 50)
+	for (int i = -1; i < 2; i++)
 	{
-		ML::Box3D s =this->sensor.OffsetCopy(pos + (a.Normalize()*i));
-		//センサーの中心に範囲1の矩形を同時に発射
-		ML::Box3D c(0, 0, 0, 1, 1, 1);
-		c.Offset(pos + (a.Normalize()*i));
-		//マップとのあたり判定であたったら処理終了
-		if (h->Map_CheckHit(c))
+		matR.RotationY(angle +ML::ToRadian(45*i));
+		a = matR.TransformCoord(a);
+
+		//マップとのあたり判定を持っているタスクをもらう
+		auto h = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//アングル方向にセンサー矩形発射
+		for (int i = 0; i < 1000; i += 50)
 		{
-			break;
-		}
-		//センサーに当たったら
-		if (s.Hit(hit))
-		{
-			//チェイスモードに変更し、プレイや位置をルートに登録
-			this->systemFlag = true;
-			this->PushBack_Route(plpos);
-			break;
+			ML::Box3D s = this->sensor.OffsetCopy(pos + (a.Normalize()*i));
+			//センサーの中心に範囲1の矩形を同時に発射
+			ML::Box3D c(0, 0, 0, 1, 1, 1);
+			c.Offset(pos + (a.Normalize()*i));
+			//マップとのあたり判定であたったら処理終了
+			if (h->Map_CheckHit(c))
+			{
+				break;
+			}
+			//センサーに当たったら
+			if (s.Hit(hit))
+			{
+				//チェイスモードに変更し、プレイや位置をルートに登録
+				this->systemFlag = true;
+				this->PushBack_Route(plpos);
+				break;
+			}
 		}
 	}
 }

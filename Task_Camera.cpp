@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Camera.h"
 #include  "Task_Player.h"
+#include  "easing.h"
 
 namespace  Camera
 {
@@ -11,13 +12,19 @@ namespace  Camera
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
-	{		
+	{
+		this->display_Noise_Img_Name = "noise";
+		this->tablet_Img_Name = "tablet";
+		DG::Image_Create(this->tablet_Img_Name, "./data/image/tablet.png");
+		DG::Image_Create(this->display_Noise_Img_Name, "./data/image/disp_noise.jpg");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{		
+		DG::Image_Erase(this->display_Noise_Img_Name);
+		DG::Image_Erase(this->tablet_Img_Name);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -44,9 +51,16 @@ namespace  Camera
 		//フォグ(霧)の設定
 		DG::EffectState().param.fogEnable = true;
 		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
-		DG::EffectState().param.fogFore = 2500.0f;
+		DG::EffectState().param.fogFore = 1500.0f;
 		DG::EffectState().param.fogMode = true;
-		DG::EffectState().param.fogNear = 2000.0f;
+		DG::EffectState().param.fogNear = 1000.0f;
+
+		//タブレット使用中のeasingをセット
+		easing::Set("disp_Noise_Alpha", easing::CUBICOUT, 1.0f, 0.03f, 30);
+		easing::Start("disp_Noise_Alpha");
+		
+		//ノイズのスクロールカウント
+		this->noise_Cnt = 0;
 
 		//★タスクの生成
 
@@ -71,7 +85,13 @@ namespace  Camera
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		easing::UpDate();
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
+		this->noise_Cnt+=10;
+		if (this->noise_Cnt > (int)ge->screenWidth)
+		{
+			this->noise_Cnt = 0;
+		}
 
 		//タブレットが使用中なら更新を止める
 		if (pl->Is_Used_Tablet())
@@ -90,13 +110,37 @@ namespace  Camera
 		vec = matR.TransformCoord(vec);
 
 		ge->camera[0]->target = this->pos + vec;
-		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);
+		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
+
+		//タブレットが使用中ならノイズとタブレット枠を描画する
+		if (pl->Is_Used_Tablet())
+		{
+			//ノイズ描画
+			ML::Box2D noise_Draw0(0, 0, ge->screenWidth, ge->screenHeight);
+			ML::Box2D noise_Draw1(ge->screenWidth, 0, ge->screenWidth, ge->screenHeight);
+			POINT ns = DG::Image_Size(this->res->display_Noise_Img_Name);
+			ML::Box2D noise_Src(0, 0, ns.x, ns.y);
+			//ノイズの無限スクロール
+			noise_Draw0.Offset(-this->noise_Cnt, 0);
+			noise_Draw1.Offset(-this->noise_Cnt, 0);
+
+			DG::Image_Draw(this->res->display_Noise_Img_Name, noise_Draw0, noise_Src, ML::Color(easing::GetPos("disp_Noise_Alpha"), 1, 1, 1));
+			DG::Image_Draw(this->res->display_Noise_Img_Name, noise_Draw1, noise_Src, ML::Color(easing::GetPos("disp_Noise_Alpha"), 1, 1, 1));
+			//タブレット枠描画
+			ML::Box2D tablet_Draw(0, 0, ge->screenWidth,ge->screenHeight);
+			POINT tb = DG::Image_Size(this->res->tablet_Img_Name);
+			ML::Box2D tablet_Src(0, 0, tb.x, tb.y);
+
+			DG::Image_Draw(this->res->tablet_Img_Name, tablet_Draw, tablet_Src);			
+		}
+
+		return;
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
@@ -104,7 +148,13 @@ namespace  Camera
 		
 	}
 	//-------------------------------------------------------------------
-	
+	//ノイズeasingリセット(タブレットクラスで呼ぶ処理)
+	void Object::Noise_Reset()
+	{
+		easing::Reset("disp_Noise_Alpha");
+		easing::Start("disp_Noise_Alpha");
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

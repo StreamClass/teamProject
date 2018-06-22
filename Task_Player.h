@@ -60,10 +60,17 @@ namespace Player
 		ML::Vec3 angle;
 		//プレイヤの視点(頭の高さ)
 		int headHeight;
+		//プレイやの視点基準
+		int headHeight_std;
 		//注視点の高さ
 		int adjust_TG;
+		//注視点の高さ基準
+		int adjust_TG_std;
+		//注視点の増減量
+		float add_adjust;
 		//視点移動速度
 		float adjust_Speed;
+		//注視点高さの下限
 		int adjust_Min;
 		//注視点高さの上限
 		int adjust_Max;
@@ -71,10 +78,14 @@ namespace Player
 		int cnt_TG;
 		//視点揺れの速度
 		int cnt_SP;
-		//画面揺れ上限
-		float trm_Max;
 		//画面揺れ下限
-		float trm_Min;		
+		float trm_Min;
+		//画面揺れ上限
+		float trm_Max_std;
+		//ダッシュ用上限
+		float trm_Max_dash;
+		//疲労時用上限
+		float trm_Max_trd;
 		//視点の揺れ幅
 		float tremor;		
 		//プレイヤの移動量
