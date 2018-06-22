@@ -13,7 +13,7 @@ namespace Task_Breaker
 	{
 		this->meshName = "Breaker_Mesh";
 		//仮のメッシュ
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/box2.sob");
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/BreakerBase.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -24,7 +24,7 @@ namespace Task_Breaker
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(Breaker* b)
+	bool  Object::Initialize(Breaker* b, int angle)
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -33,6 +33,8 @@ namespace Task_Breaker
 
 		//★データ初期化
 		this->circuit = b;
+
+		this->angle = angle;
 		//★タスクの生成
 
 		return  true;
@@ -67,10 +69,12 @@ namespace Task_Breaker
 
 	void  Object::Render3D_L0()
 	{
-		ML::Mat4x4 matT;
+		ML::Mat4x4 matT, matS, matR;
+		matS.Scaling(100);
 		matT.Translation(this->circuit->Get_Pos());
+		matR.RotationY(this->RotationY_Angle(this->angle));
 
-		DG::EffectState().param.matWorld = matT;
+		DG::EffectState().param.matWorld = matS * matR * matT;
 
 		DG::Mesh_Draw(this->res->meshName);
 	}
@@ -86,12 +90,27 @@ namespace Task_Breaker
 	{
 		this->circuit->Activate_Breaker();
 	}
+	//-----------------------------------------------------------------------
+	//向きの設定
+	float Object::RotationY_Angle(int& angle)
+	{
+		float angle_;
+		if (this->angle == 2)
+		{
+			angle_= ML::ToRadian(0);
+		}
+		else if (this->angle == 3)
+		{
+			angle_ = ML::ToRadian(180);
+		}
+		return angle_;
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Breaker* b)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Breaker* b, int angle)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -99,7 +118,7 @@ namespace Task_Breaker
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(b)) {
+			if (!ob->B_Initialize(b, angle)) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -107,9 +126,9 @@ namespace Task_Breaker
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(Breaker* b)
+	bool  Object::B_Initialize(Breaker* b, int angle)
 	{
-		return  this->Initialize(b);
+		return  this->Initialize(b, angle);
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

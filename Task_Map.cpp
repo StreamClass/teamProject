@@ -116,10 +116,10 @@ namespace  Map
 		ML::Mat4x4 matS,matT;
 		//描画する範囲をカメラを中心に前後左右18マス分に指定
 		int  sx, sz, ex, ez;
-		sx = max(0, int(ge->camera[0]->pos.x / 100) - 15);
-		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 100) + 15);
-		sz = max(0, int(ge->camera[0]->pos.z / 100) - 15);
-		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 100) + 15);
+		sx = max(0, int(ge->camera[0]->pos.x / 150) - 15);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 150) + 15);
+		sz = max(0, int(ge->camera[0]->pos.z / 150) - 15);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 150) + 15);
 
 		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
@@ -203,9 +203,10 @@ namespace  Map
 					switch ((Type)in)
 					{
 					//ブレイカーなら
-					case Type::breaker:
+					case Type::breakerN:
+					case Type::breakerS:
 						//オブジェクトマネージャでブレイカーを生成
-						ge->OM.Create_Breaker(pos);
+						ge->OM.Create_Breaker(pos, (Type)in);
 						break;
 
 					//プレイヤなら

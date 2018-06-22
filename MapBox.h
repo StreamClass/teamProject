@@ -5,45 +5,47 @@
 //-----------------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 //壁のサイズ指定
-#define chipX 100
+#define chipX 150
 #define chipY 300
-#define chipZ 100
+#define chipZ 150
 
 //マップチップの状態
 /*
 -1 : なし
  0 : 空気(マップなし)
  1 : 壁
- 2 : 遮断機
- 3 : プレイヤ初期位置
- 4 : 扉
- 5 : カメラ　北
- 6 : カメラ　北東
- 7 : カメラ　東
- 8 : カメラ　南東
- 9 : カメラ　南
- 10: カメラ　南西
- 11: カメラ　西
- 12: カメラ　北西
- 13: コーナー
+ 2 : 遮断機北向き
+ 3 : 遮断機南向き
+ 4 : プレイヤ初期位置
+ 5 : 扉
+ 6 : カメラ　北
+ 7 : カメラ　北東
+ 8 : カメラ　東
+ 9 : カメラ　南東
+ 10 : カメラ　南
+ 11: カメラ　南西
+ 12: カメラ　西
+ 13: カメラ　北西
+ 14: コーナー
 */
 enum Type
 {
 	clear_Type = -1,
 	air	= 0,
 	box = 1,
-	breaker = 2,
-	player = 3,
-	door = 4,
-	camera_North = 5,
-	camera_North_East = 6,
-	camera_East	= 7,
-	camera_South_East = 8,
-	camera_South = 9,
-	camera_South_West = 10,
-	camera_West = 11,
-	camera_North_West = 12,
-	corner = 13
+	breakerN = 2,
+	breakerS = 3,
+	player = 4,
+	door = 5,
+	camera_North = 6,
+	camera_North_East = 7,
+	camera_East	= 8,
+	camera_South_East = 9,
+	camera_South = 10,
+	camera_South_West = 11,
+	camera_West = 12,
+	camera_North_West = 13,
+	corner = 14
 };
 class Box
 {

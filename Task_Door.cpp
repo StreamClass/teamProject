@@ -78,7 +78,7 @@ namespace Task_Door
 	void  Object::Render3D_L0()
 	{		
 		ML::Mat4x4 matT, matS;
-		matS.Scaling(100);
+		matS.Scaling(ML::Vec3(150,100,150));
 		matT.Translation(this->circuit->Get_Pos());
 
 		DG::EffectState().param.matWorld = matS * matT;

@@ -25,9 +25,9 @@ private:
 
 
 	//最初のブレーカーの初期化
-	void Init_First_Doors_Breaker(ML::Vec3);
+	void Init_First_Doors_Breaker(ML::Vec3, int);
 	//ブレーカーの初期化
-	void Init_Doors_Breaker(ML::Vec3);
+	void Init_Doors_Breaker(ML::Vec3, int);
 
 	//最初のドアの初期化
 	void Init_First_Door(ML::Vec3, LR);
@@ -35,7 +35,7 @@ private:
 	void Init_Door(ML::Vec3, LR);
 public:
 	//ブレーカーを作る
-	void Create_Breaker(ML::Vec3);
+	void Create_Breaker(ML::Vec3, Type);
 	//ドアを作る
 	void Create_Door(ML::Vec3, LR);
 	//カメラの生成

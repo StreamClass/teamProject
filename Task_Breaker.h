@@ -35,13 +35,13 @@ namespace Task_Breaker
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_, Breaker*);
+		static  Object::SP  Create(bool flagGameEnginePushBack_, Breaker*, int);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize(Breaker*);
+		bool  B_Initialize(Breaker*, int);
 		bool  B_Finalize();
-		bool  Initialize(Breaker*);	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize(Breaker*, int);	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
@@ -52,7 +52,8 @@ namespace Task_Breaker
 		//変数
 		//ブレーカー回路
 		Breaker* circuit;
-		//
+		//ブレーカーの向き(2 or 3)
+		int angle;
 
 	public:
 		//メソッド
@@ -60,5 +61,7 @@ namespace Task_Breaker
 		bool Hit_Check(const ML::Box3D& hit);
 		//ブレーカー起動
 		void ActivateBreaker();
+		//向きの設定
+		float RotationY_Angle(int& angle);
 	};
 }

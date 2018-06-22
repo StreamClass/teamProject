@@ -50,6 +50,8 @@ namespace  MiniMap
 		this->viewFlag = true;
 		//タブレットは使っていない
 		this->tab_use_now = false;
+		//座標参照用倍率
+		this->magni = 30;
 
 		//エネミーの座標
 		this->epos = ML::Vec2(0, 0);
@@ -83,7 +85,7 @@ namespace  MiniMap
 		//プレイヤの変数等を使えるように呼び出す
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		//プレイヤ本体からミニマップ上の情報を参照
-		this->plpos = ML::Vec2((int)pl->Get_Pos().x / 20, 500 - (int)pl->Get_Pos().z / 20);
+		this->plpos = ML::Vec2((int)pl->Get_Pos().x / this->magni, 500 - (int)pl->Get_Pos().z / this->magni);
 		this->plAngle = (float)pl->Get_Angle().y + ML::ToRadian(90);
 		//タブレットの使用状況をプレイヤから受け取る
 		this->tab_use_now = pl->Is_Used_Tablet();
@@ -91,7 +93,7 @@ namespace  MiniMap
 		if (this->tab_use_now == true)
 		{
 			//カメラからミニマップ上の情報を参照
-			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / 20, 500 - (int)ge->camera[0]->pos.z / 20);
+			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / this->magni, 500 - (int)ge->camera[0]->pos.z / this->magni);
 			ML::Vec2 a = ML::Vec2(ge->camera[0]->target.x - ge->camera[0]->pos.x, ge->camera[0]->target.z - ge->camera[0]->pos.z);
 			this->caAngle = -atan2(a.y,a.x) + ML::ToRadian(90);
 		}
@@ -99,7 +101,7 @@ namespace  MiniMap
 		//デバック用
 		//エネミーからミニマップ上での情報を参照
 		auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
-		this->epos = ML::Vec2((int)e->pos.x / 20, 500 - (int)e->pos.z / 20);
+		this->epos = ML::Vec2((int)e->pos.x / this->magni, 500 - (int)e->pos.z / this->magni);
 		this->eangle = e->angle.y + ML::ToRadian(90);
 	}
 	//-------------------------------------------------------------------

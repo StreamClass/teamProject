@@ -10,22 +10,22 @@ ObjManeger::ObjManeger()
 	this->tab = nullptr;
 }
 
-void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos)
+void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos, int angle)
 {
 	Breaker* b = new Breaker(pos);
 	this->first_Door_Connencted_Breaker.push_back(b);
 
 	//ブレーカータスク生成
-	Task_Breaker::Object::Create(true, b);
+	Task_Breaker::Object::Create(true, b, angle);
 }
 
-void ObjManeger::Init_Doors_Breaker(ML::Vec3 pos)
+void ObjManeger::Init_Doors_Breaker(ML::Vec3 pos, int angle)
 {
 	Breaker* b = new Breaker(pos);
 	this->door_Connencted_Breaker.push_back(b);
 
 	//ブレーカータスク生成
-	Task_Breaker::Object::Create(true, b);
+	Task_Breaker::Object::Create(true, b, angle);
 }
 
 void ObjManeger::Init_First_Door(ML::Vec3 pos, LR a)
@@ -50,15 +50,15 @@ void ObjManeger::Init_Door(ML::Vec3 pos, LR a)
 }
 //--------------------------------------------------------------------------------------------
 //実際に呼び出せる関数
-void ObjManeger::Create_Breaker(ML::Vec3 pos)
+void ObjManeger::Create_Breaker(ML::Vec3 pos, Type type)
 {
 	if (this->first_Door_Connencted_Breaker.size() == 0)
 	{
-		this->Init_First_Doors_Breaker(pos);
+		this->Init_First_Doors_Breaker(pos, (int)type);
 	}
 	else
 	{
-		this->Init_Doors_Breaker(pos);
+		this->Init_Doors_Breaker(pos, (int)type);
 	}
 }
 
