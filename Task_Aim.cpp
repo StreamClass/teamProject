@@ -62,6 +62,11 @@ namespace  Aiming
 	//u‚Q‚c•`‰æv‚PƒtƒŒ[ƒ€–ˆ‚És‚¤ˆ—
 	void  Object::Render2D_AF()
 	{
+		auto pl = ge->GetTask_One_G<Player::Object>("ƒvƒŒƒCƒ„");
+		if (pl->Is_Used_Tablet() == true)
+		{
+			return;
+		}
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src = draw;
 		DG::Image_Draw(this->res->imageName, draw, src);
