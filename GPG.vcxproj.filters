@@ -62,9 +62,6 @@
     <Filter Include="MyPG\Class\Door">
       <UniqueIdentifier>{68d76f0b-df54-40e3-b448-e32170f2eede}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Class\Breaker">
-      <UniqueIdentifier>{75f866e2-be60-4f33-bc7e-e8cb1a794d41}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Class\ObjManejer">
       <UniqueIdentifier>{7c4191da-1e58-4b33-95eb-566537f43a00}</UniqueIdentifier>
     </Filter>
@@ -91,6 +88,9 @@
     </Filter>
     <Filter Include="MyPG\Loading">
       <UniqueIdentifier>{5422ac46-27b4-4fb2-92a6-cbedafca98bd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Breaker">
+      <UniqueIdentifier>{75f866e2-be60-4f33-bc7e-e8cb1a794d41}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

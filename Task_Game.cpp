@@ -54,18 +54,8 @@ namespace  Game
 		////平行光源の設定
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
+		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.2f,0.2f,0.2f);//色と強さ
-
-		DG::EffectState().param.light[1].enable = true;
-		DG::EffectState().param.light[1].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[1].direction = ML::Vec3(0, 0, 1).Normalize();//照射方向
-		DG::EffectState().param.light[1].color = ML::Color(1, 0.1f, 0.1f, 0.1f);//色と強さ
-
-		DG::EffectState().param.light[2].enable = true;
-		DG::EffectState().param.light[2].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[2].direction = ML::Vec3(0, 0, -1).Normalize();//照射方向
-		DG::EffectState().param.light[2].color = ML::Color(1, 0.3f, 0.3f, 0.3f);//色と強さ
 
 		//★タスクの生成
 		auto pl = Player::Object::Create(true);

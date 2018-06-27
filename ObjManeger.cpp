@@ -109,42 +109,42 @@ void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 	{		
 		//“Œ
 	case Type::camera_East:
-		target = pos + ML::Vec3(700, -200, 0);
+		target = pos + ML::Vec3(900, -200, 0);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//¼
 	case Type::camera_West:
-		target = pos + ML::Vec3(-700, -200, 0);
+		target = pos + ML::Vec3(-900, -200, 0);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//“ì
 	case Type::camera_South:
-		target = pos + ML::Vec3(0, -200, -700);
+		target = pos + ML::Vec3(0, -200, -900);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//–k
 	case Type::camera_North:
-		target = pos + ML::Vec3(0, -200, 700);
+		target = pos + ML::Vec3(0, -200, 900);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//–k“Œ
 	case Type::camera_North_East:
-		target = pos + ML::Vec3(350, -200, 350);
+		target = pos + ML::Vec3(450, -200, 450);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//–k¼
 	case Type::camera_North_West:
-		target = pos + ML::Vec3(-350, -200, 350);
+		target = pos + ML::Vec3(-450, -200, 450);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//“ì“Œ
 	case Type::camera_South_East:
-		target = pos + ML::Vec3(350, -200, -350);
+		target = pos + ML::Vec3(450, -200, -450);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 		//“ì¼
 	case Type::camera_South_West:
-		target = pos + ML::Vec3(-350, -200, -350);
+		target = pos + ML::Vec3(-450, -200, -450);
 		this->tab->PushBack_Camera(pos, target);
 		break;
 	}

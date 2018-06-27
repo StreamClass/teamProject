@@ -68,9 +68,9 @@ namespace  Map
 		pos.y += 350.0f;
 		this->ceiling = Box(chipSize, pos, hitBase);
 		//ゴール	の数値指定
-		chipSize = ML::Vec3(200, 300, 50);
-		pos = ML::Vec3(500, 150, 10025);
-		hitBase = ML::Box3D(0,0,0, 200, 300, 50);
+		chipSize = ML::Vec3(chipX * 2, chipY, chipZ / 3);
+		pos = ML::Vec3(chipSize.x * 2 + chipSize.x / 2, chipSize.y / 2, chipSize.z * 300 + chipSize.z / 2);
+		hitBase = ML::Box3D(0,0,0, chipSize.x, chipSize.y, chipSize.z);
 		this->goal = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
 		this->chipName = "MapBox.SOB";
@@ -116,10 +116,10 @@ namespace  Map
 		ML::Mat4x4 matS,matT;
 		//描画する範囲をカメラを中心に前後左右18マス分に指定
 		int  sx, sz, ex, ez;
-		sx = max(0, int(ge->camera[0]->pos.x / 150) - 15);
-		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / 150) + 15);
-		sz = max(0, int(ge->camera[0]->pos.z / 150) - 15);
-		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / 150) + 15);
+		sx = max(0, int(ge->camera[0]->pos.x / chipX) - 15);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / chipX) + 15);
+		sz = max(0, int(ge->camera[0]->pos.z / chipZ) - 15);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / chipZ) + 15);
 
 		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
