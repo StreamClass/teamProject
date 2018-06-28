@@ -13,9 +13,9 @@ namespace  Aiming
 	bool  Resource::Initialize()
 	{
 		this->imageName[0] = "AimCenterImg";
-		DG::Image_Create(this->imageName[0], "./data/image/AimImg.png");
+		DG::Image_Create(this->imageName[0], "./data/image/AimCenter.png");
 		this->imageName[1] = "AimUDImg";
-		DG::Image_Create(this->imageName[1], "./data/image/aimUD.png");
+		DG::Image_Create(this->imageName[1], "./data/image/aimTB.png");
 		this->imageName[2] = "AimLRImg";
 		DG::Image_Create(this->imageName[2], "./data/image/aimLR.png");
 		return true;
@@ -42,6 +42,13 @@ namespace  Aiming
 		//★データ初期化
 		this->render2D_Priority[1] = 0.2f;
 		this->hitBase = ML::Box3D(0, 0, 0, 100, 10, 10);
+		this->aimPosC = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2);
+		this->aimPosT = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 - 15);
+		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
+		this->aimPosL = ML::Vec2(ge->screen2DWidth / 2 - 15, ge->screen2DHeight / 2);
+		this->aimPosR = ML::Vec2(ge->screen2DWidth / 2 + 15, ge->screen2DHeight / 2);
+		this->aimMoveMax = 20.0f;
+		this->timeCnt = 0;
 		//★タスクの生成
 
 		return  true;
@@ -64,11 +71,15 @@ namespace  Aiming
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		//if (pl->Get_MoveSpeed() == NORMALSPEED)
-		//{
-		//	this->aimPos[0] -= 
-		//}
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		if (pl->Is_Used_Tablet() == false)
+		{
+			this->aimPosT.y = -sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosB.y =  sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosL.x = -sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosR.x =  sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->timeCnt++;
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -79,9 +90,29 @@ namespace  Aiming
 		{
 			return;
 		}
-		ML::Box2D draw(0, 0, 1920, 1080);
-		ML::Box2D src = draw;
+		//注視点
+		ML::Box2D draw(-5, -5, 9, 9);
+		ML::Box2D src(0, 0, 9, 9);
+		draw.Offset(this->aimPosC);
 		DG::Image_Draw(this->res->imageName[0], draw, src);
+		//エイム上
+		draw = ML::Box2D(-3, -10, 5, 19);
+		src = ML::Box2D(0, 0, 9, 39);
+		draw.Offset(this->aimPosT);
+		DG::Image_Draw(this->res->imageName[1], draw, src);
+		//エイム下
+		draw = ML::Box2D(-3, -10, 5, 19);
+		draw.Offset(this->aimPosB);
+		DG::Image_Draw(this->res->imageName[1], draw, src);
+		//エイム右
+		draw = ML::Box2D(-10, -3, 19, 5);
+		src = ML::Box2D(0, 0, 39, 9);
+		draw.Offset(this->aimPosR);
+		DG::Image_Draw(this->res->imageName[2], draw, src);
+		//エイム左
+		draw = ML::Box2D(-10, -3, 19, 5);
+		draw.Offset(this->aimPosL);
+		DG::Image_Draw(this->res->imageName[2], draw, src);
 	}
 
 	void  Object::Render3D_L0()

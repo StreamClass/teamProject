@@ -152,11 +152,11 @@ namespace  Map
 		DG::Mesh_Draw(this->chipName);
 		
 		//ゴール位置確認用
-		//ML::Mat4x4 gT, gS;
-		//gS.Scaling(this->goal.Get_Scaling());
-		//gT.Translation(this->goal.Get_Pos());
-		//DG::EffectState().param.matWorld = gS * gT;
-		//DG::Mesh_Draw(this->chipName);
+		ML::Mat4x4 gT, gS;
+		gS.Scaling(this->goal.Get_Scaling());
+		gT.Translation(this->goal.Get_Pos());
+		DG::EffectState().param.matWorld = gS * gT;
+		DG::Mesh_Draw(this->chipName);
 	}
 	//-------------------------------------------------------------------
 	//マップの読み込み
@@ -191,16 +191,16 @@ namespace  Map
 					
 					//座標の指定
 					ML::Vec3 pos(
-						x * this->arr[z][x].Get_ChipSizeX() + this->arr[z][x].Get_ChipSizeX() / 2,
-						this->arr[z][x].Get_ChipSizeY() / 2,
-						z * this->arr[z][x].Get_ChipSizeZ() + this->arr[z][x].Get_ChipSizeZ() / 2
+						x * chipX + chipX / 2,
+						chipY / 2,
+						z * chipZ + chipZ / 2
 					);
 					//あたり判定矩形のサイズを指定
 					ML::Box3D hitBase(
 						0,0,0,
-						this->arr[z][x].Get_ChipSizeX(),
-						this->arr[z][x].Get_ChipSizeY(),
-						this->arr[z][x].Get_ChipSizeZ()
+						chipX,
+						chipY,
+						chipZ
 					);
 					//Boxのコンストラクタで座標と矩形を設定
 					this->arr[z][x] = Box(pos, hitBase);

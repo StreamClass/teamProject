@@ -95,6 +95,8 @@ namespace Player
 		float tremor;		
 		//プレイヤの移動量
 		ML::Vec3 moveVec;
+		//プレイヤの移動量保存
+		float moveVecRec;
 		//コントローラネーム
 		string controllerName;
 		//クリア判定

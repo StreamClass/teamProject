@@ -48,7 +48,13 @@ namespace Aiming
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
 		ML::Box3D hitBase;
-		ML::Vec2 aimPos[4];
+		float timeCnt;
+		ML::Vec2 aimPosC;
+		ML::Vec2 aimPosT;
+		ML::Vec2 aimPosB; 
+		ML::Vec2 aimPosL; 
+		ML::Vec2 aimPosR;
+		float aimMoveMax;
 	public:
 	};
 }

@@ -65,6 +65,7 @@ namespace  Player
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
+		this->moveVecRec = 0.0f;
 		this->speed = 10.0f;
 		this->clearFlag = false;
 		this->tremor = 4.0f;
@@ -259,7 +260,7 @@ namespace  Player
 					this->cnt_TG = 0;
 				}
 			}
-
+			this->moveVecRec = this->moveVec.Length();
 			this->Player_CheckMove(this->moveVec);
 
 			if (in.B3.down)
@@ -328,7 +329,7 @@ namespace  Player
 		return this->headHeight;
 	}
 	//-------------------------------------------------------------------
-	//注視点の高さ(adJust_TG)を返す
+	//注視点の高さ(adJust_TG)を返す7
 	int Object::Get_Adjust()
 	{
 		return this->adjust_TG;
@@ -397,14 +398,14 @@ namespace  Player
 				this->Check_Clear();
 			}
 		}
-		auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
-		for (auto it = d->begin(); it != d->end(); it++)
-		{
-			if ((*it)->Hit_Check(pHit))
-			{
-				return true;
-			}
-		}
+		//auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
+		//for (auto it = d->begin(); it != d->end(); it++)
+		//{
+		//	if ((*it)->Hit_Check(pHit))
+		//	{
+		//		return true;
+		//	}
+		//}
 		return false;//接触するものが検出されなかった
 	}
 	//-------------------------------------------------------------------
@@ -513,7 +514,7 @@ namespace  Player
 	//移動速度をfloatで返す
 	float Object::Get_MoveSpeed()
 	{
-		float reta = abs(this->moveVec.x) + abs(this->moveVec.z) / (float)DASHSPEED;
+		return this->moveVecRec;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
