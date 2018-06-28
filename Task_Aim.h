@@ -23,7 +23,7 @@ namespace Aiming
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		string imageName;
+		string imageName[3];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -46,8 +46,9 @@ namespace Aiming
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		ML::Box3D hitBase;
+		ML::Vec2 aimPos[4];
+	public:
 	};
 }

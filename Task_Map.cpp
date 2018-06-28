@@ -69,7 +69,7 @@ namespace  Map
 		this->ceiling = Box(chipSize, pos, hitBase);
 		//ゴール	の数値指定
 		chipSize = ML::Vec3(chipX * 2, chipY, chipZ / 3);
-		pos = ML::Vec3(chipSize.x * 2 + chipSize.x / 2, chipSize.y / 2, chipSize.z * 300 + chipSize.z / 2);
+		pos = ML::Vec3(chipX * 4 + chipSize.x / 2, chipY / 2, chipZ * 100 + chipSize.z / 2);
 		hitBase = ML::Box3D(0,0,0, chipSize.x, chipSize.y, chipSize.z);
 		this->goal = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
@@ -150,7 +150,14 @@ namespace  Map
 		cmatT.Translation(this->ceiling.Get_Pos());
 		DG::EffectState().param.matWorld = cmatS * cmatT;
 		DG::Mesh_Draw(this->chipName);
-		}
+		
+		//ゴール位置確認用
+		//ML::Mat4x4 gT, gS;
+		//gS.Scaling(this->goal.Get_Scaling());
+		//gT.Translation(this->goal.Get_Pos());
+		//DG::EffectState().param.matWorld = gS * gT;
+		//DG::Mesh_Draw(this->chipName);
+	}
 	//-------------------------------------------------------------------
 	//マップの読み込み
 	bool  Object::Load()

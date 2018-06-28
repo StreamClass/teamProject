@@ -20,15 +20,12 @@ namespace  Game
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//メッシュの読み込み
-		DG::Mesh_CreateFromSOBFile("ArrowMesh", "./data/mesh/arrow.sob");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Mesh_Erase("ArrowMesh");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -41,9 +38,11 @@ namespace  Game
 		this->res = Resource::Create();
 
 		//★データ初期化
-		ge->state = ge->game;
+		ge->state = ge->standby;
 		this->pushButton = false;
 		this->timeCnt = 0;
+		this->stanbyCnt = 0;
+		this->startTime = 60 * 2;
 
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//ライティングの設定
@@ -108,6 +107,26 @@ namespace  Game
 	void  Object::UpDate()
 	{		
 		auto in = DI::GPad_GetState("P1");
+
+		if (this->stanbyCnt == 0)
+		{
+			ge->StopAll_G("エネミー", true);
+			this->stanbyCnt = 1;
+		}
+		//スタンバイ時の処理
+		else if (this->stanbyCnt == 1)
+		{
+			ge->StopAll_G("プレイヤ", true);
+			this->stanbyCnt++;
+		}
+		else if(this->stanbyCnt < this->startTime)
+		{
+			this->stanbyCnt++;
+		}
+		else if(this->stanbyCnt == this->startTime)
+		{
+			this->Start();
+		}
 		if (in.ST.down && this->pushButton == false)
 		{
 			ge->state = ge->over;
@@ -116,11 +135,6 @@ namespace  Game
 			float color = 0.0f;
 			lo->Set_Color(color);
 		}
-		//auto p = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		//if (p->Get_ClearFlag() == true)
-		//{
-		//	ge->state = ge->clear;
-		//}
 		if (ge->state == ge->clear && this->pushButton == false)
 		{
 			auto lo = Loading::Object::Create(true);
@@ -153,6 +167,13 @@ namespace  Game
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
+	}
+	//-------------------------------------------------------------------
+	//ゲーム開始処理
+	void Object::Start()
+	{
+		ge->StopAll_G("プレイヤ", false);
+		ge->StopAll_G("エネミー", false);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

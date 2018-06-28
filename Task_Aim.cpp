@@ -12,15 +12,22 @@ namespace  Aiming
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->imageName = "AimImg";
-		DG::Image_Create(this->imageName, "./data/image/AimImg.png");
+		this->imageName[0] = "AimCenterImg";
+		DG::Image_Create(this->imageName[0], "./data/image/AimImg.png");
+		this->imageName[1] = "AimUDImg";
+		DG::Image_Create(this->imageName[1], "./data/image/aimUD.png");
+		this->imageName[2] = "AimLRImg";
+		DG::Image_Create(this->imageName[2], "./data/image/aimLR.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Image_Erase(this->imageName);
+		for (int i = 0; i < 3; ++i)
+		{
+			DG::Image_Erase(this->imageName[i]);
+		}
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -57,6 +64,11 @@ namespace  Aiming
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//if (pl->Get_MoveSpeed() == NORMALSPEED)
+		//{
+		//	this->aimPos[0] -= 
+		//}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -69,7 +81,7 @@ namespace  Aiming
 		}
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src = draw;
-		DG::Image_Draw(this->res->imageName, draw, src);
+		DG::Image_Draw(this->res->imageName[0], draw, src);
 	}
 
 	void  Object::Render3D_L0()

@@ -23,7 +23,6 @@ namespace Game
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -46,9 +45,14 @@ namespace Game
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		bool pushButton;
 		int timeCnt;
+		int stanbyCnt;
+		int startTime;
+	public:
+
+		void Stanby();
+		void Start();
 	};
 }

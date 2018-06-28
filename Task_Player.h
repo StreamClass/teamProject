@@ -6,6 +6,11 @@
 #include "GameEngine_Ver3_7.h"
 #include "Tablet.h"
 
+#define NORMALSPEED 10
+#define TIRED_SPEED 3
+#define DASHSPEED 20
+#define MAX_STAMINA 240
+
 namespace Player
 {
 	//タスクに割り当てるグループ名と固有名
@@ -114,6 +119,8 @@ namespace Player
 		ML::Vec3 Get_Angle();
 		//あたり判定範囲をもらう関数
 		ML::Box3D Get_HitBase();
+		//移動速度をfloatで返す
+		float Get_MoveSpeed();
 		//プレイヤの初期値指定
 		void Ini_Pos(const ML::Vec3& pos);
 		//チップサイズをML::Vec3型に変換

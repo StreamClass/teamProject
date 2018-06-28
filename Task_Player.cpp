@@ -12,10 +12,6 @@
 #include  "easing.h"
 
 
-#define NORMALSPEED 10
-#define TIRED_SPEED 3
-#define DASHSPEED 20
-#define MAX_STAMINA 240
 
 namespace  Player
 {
@@ -299,24 +295,25 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(500, 0, 580, 300);
-		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
-			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG);
-		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
+		//ML::Box2D draw(500, 0, 580, 300);
+		//string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+		//	+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG);
+		//DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		ML::Mat4x4 matT;
-		matT.Translation(this->pos);
-		//回転行列の生成
-		ML::Mat4x4 matR;
-		matR.RotationY(this->angle.y);
-
-		//モデル表示
-		//ML::Mat4x4 matW = matR * matT;
-		//DG::EffectState().param.matWorld = matW;
-		//DG::Mesh_Draw(this->res->meshName);
+		if (this->Is_Used_Tablet() == true)
+		{
+			ML::Mat4x4 matT;
+			matT.Translation(this->pos);
+			//回転行列の生成
+			ML::Mat4x4 matR;
+			matR.RotationY(this->angle.y);
+			//モデル表示
+			DG::EffectState().param.matWorld = matR * matT;;
+			DG::Mesh_Draw(this->res->meshName);
+		}
 	}
 	//-------------------------------------------------------------------
 	//プレイヤの座標をML::Vec3型で返す
@@ -511,6 +508,12 @@ namespace  Player
 	ML::Box3D Object::Get_HitBase()
 	{
 		return this->hitBase;
+	}
+	//-----------------------------------------------------------------------
+	//移動速度をfloatで返す
+	float Object::Get_MoveSpeed()
+	{
+		float reta = abs(this->moveVec.x) + abs(this->moveVec.z) / (float)DASHSPEED;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -15,7 +15,7 @@ Door::Door()
 Door::Door(ML::Vec3 pos, std::vector<Breaker*> b, LR a)
 {
 	this->pos = pos;
-	this->hitBase = ML::Box3D(-25, -100, -25, 50, 100, 50);
+	this->hitBase = ML::Box3D(-75, -150, -25, 150, 300, 50);
 	this->timeCnt = 0;
 	this->openFlag = false;
 	this->cunnected_Breaker = b;

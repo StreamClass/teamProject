@@ -2,6 +2,7 @@
 //エネミー
 //-------------------------------------------------------------------
 #include  "MyPG.h"
+#include  "Task_MiniMap.h"
 #include  "Task_Map.h"
 #include  "Task_Player.h"
 #include  "Task_Enemy.h"
@@ -40,7 +41,7 @@ namespace  Enemy
 		//★データ初期化
 		this->rou = ge->OM.Create_Routine();
 
-		this->pos = ML::Vec3(500, 50, 17 * 100);
+		this->pos = ML::Vec3(chipX * 5, 50, chipZ * 13);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));

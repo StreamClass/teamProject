@@ -4,7 +4,7 @@
 
 Tablet::Tablet()
 {
-	this->be_used_now = false;
+	this->be_used_now = true;
 	this->Select = 0;
 	this->camera_Pos.clear();
 	this->target_Pos.clear();

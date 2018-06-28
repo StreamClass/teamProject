@@ -89,7 +89,8 @@ namespace  MyPG
 			non = -1,
 			game = 0,
 			clear = 1,
-			over = 2
+			over = 2,
+			standby = 3
 		};
 		State state;
 	//----------------------------------------------

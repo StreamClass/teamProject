@@ -37,6 +37,7 @@ namespace  Camera
 		this->res = Resource::Create();
 
 		//★データ初期化
+		this->render2D_Priority[1] = 0.3f;
 		this->angle = ML::Vec3(0, 0, 0);
 		this->dist = ML::Vec3(100, 0, 0);
 		
@@ -71,7 +72,6 @@ namespace  Camera
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
