@@ -62,6 +62,7 @@ namespace  Player
 		this->adjust_Speed = 10.0f;
 		this->adjust_Min = -400;
 		this->adjust_Max = +400;
+		this->heightMax = 180;
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
@@ -136,7 +137,11 @@ namespace  Player
 			{
 				if (this->recovery_Flag == false)
 				{
-					this->speed = DASHSPEED;
+					//cnt++;
+					//if (cnt >= 10) {
+						this->speed = min(DASHSPEED, this->speed + 0.5f);
+					//}
+					//this->speed = DASHSPEED;
 				}
 				else
 				{
@@ -147,7 +152,9 @@ namespace  Player
 			{
 				if (this->recovery_Flag == false)
 				{
-					this->speed = NORMALSPEED;
+//					this->speed = NORMALSPEED;
+					this->speed = max(NORMALSPEED, this->speed - 0.5f);
+
 				}
 				else
 				{
@@ -156,7 +163,7 @@ namespace  Player
 				//スタミナ回復
 				this->stamina += 0.3f;
 			}
-			
+//			ge->Dbg_FileOut("speed = %0.2f", this->speed);
 			//スタミナ範囲
 			if (this->stamina < 0)
 			{
@@ -186,79 +193,25 @@ namespace  Player
 			{
 				this->add_adjust -= this->adjust_Speed;
 			}
-			//画面揺れ用カウンタスタート
-			//走る速度で画面揺れの速度が変化する
-			this->cnt_TG += this->cnt_SP;
-			//イージング
-			easing::UpDate();
-			//通常の速度の画面揺れ
-			if (this->speed == NORMALSPEED)
+			//画面揺れ
+			//カウンタスタート
+			this->cnt_TG++;
+			//sin()の頂点が一定以上なら反映しない(息を吸っていったん止める)
+			if (this->speed != DASHSPEED)
 			{
-				if (this->cnt_TG < 120)
+				float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG))*this->speed;
+				float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG))*this->speed + this->add_adjust;
+
+				if (!(headY > this->heightMax || targetY > this->heightMax))
 				{
-					easing::Start("camStdUp");
-					easing::Reset("camStdDown");
-					this->headHeight = this->headHeight_std + easing::GetPos("camStdUp");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camStdUp");
-				}
-				else if (this->cnt_TG > 120)
-				{
-					easing::Start("camStdDown");
-					easing::Reset("camStdUp");
-					this->headHeight = this->headHeight_std + easing::GetPos("camStdDown");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camStdDown");
-				}
-				//カウンタのリセット
-				if (this->cnt_TG > 240)
-				{
-					this->cnt_TG = 0;
+					this->headHeight = headY;
+					this->adjust_TG = targetY;
 				}
 			}
-			//ダッシュ中の画面揺れ
-			else if (this->speed == DASHSPEED)
+			else
 			{
-				if (this->cnt_TG < 15)
-				{
-					easing::Start("camDashUp");
-					easing::Reset("camDashDown");
-					this->headHeight = this->headHeight_std + easing::GetPos("camDashUp");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camDashUp");
-				}
-				else if (this->cnt_TG > 15)
-				{
-					easing::Start("camDashDown");
-					easing::Reset("camDashUp");
-					this->headHeight = this->headHeight_std + easing::GetPos("camDashDown");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camDashDown");
-				}
-				//カウンタのリセット
-				if (this->cnt_TG > 25)
-				{
-					this->cnt_TG = 0;
-				}
-			}
-			//疲労時の画面揺れ
-			else if (this->speed == TIRED_SPEED)
-			{
-				if (this->cnt_TG < 180)
-				{
-					easing::Start("camTrdUp");
-					easing::Reset("camTrdDown");
-					this->headHeight = this->headHeight_std + easing::GetPos("camTrdUp");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camTrdUp");
-				}
-				else if (this->cnt_TG > 180)
-				{
-					easing::Start("camTrdDown");
-					easing::Reset("camTrdUp");
-					this->headHeight = this->headHeight_std + easing::GetPos("camTrdDown");
-					this->adjust_TG = this->adjust_TG_std + this->add_adjust + easing::GetPos("camTrdDown");
-				}
-				//カウンタのリセット
-				if (this->cnt_TG > 360)
-				{
-					this->cnt_TG = 0;
-				}
+				this->headHeight = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG*this->speed))*this->speed;
+				this->adjust_TG = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG*this->speed))*this->speed + this->add_adjust;
 			}
 			this->moveVecRec = this->moveVec.Length();
 			this->Player_CheckMove(this->moveVec);

@@ -93,6 +93,16 @@ namespace  MyPG
 			standby = 3
 		};
 		State state;
+		void Dbg_ShowFps();
+
+		double FpsTime = (timeGetTime() + 1.0);
+		double FpsData = 0.0;
+		int FpsCnt = 1;
+
+		void Dbg_DisplayToMessage(int x, int y, const char * str, ...);
+		void Dbg_TilteToMessage(const char * str, ...);
+		void Dbg_BoxToMessage(const char *str, ...);
+		void Dbg_FileOut(const char *str, ...);
 	//----------------------------------------------
 	};
 }

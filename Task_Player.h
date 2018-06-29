@@ -93,6 +93,8 @@ namespace Player
 		float trm_Max_trd;
 		//視点の揺れ幅
 		float tremor;		
+		//画面揺れ上限
+		float heightMax;
 		//プレイヤの移動量
 		ML::Vec3 moveVec;
 		//プレイヤの移動量保存

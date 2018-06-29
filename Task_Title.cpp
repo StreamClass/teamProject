@@ -70,9 +70,14 @@ namespace  Title
 	{
 		auto in = DI::GPad_GetState("P1");
 		//スタートボタンを押したら
-		if (in.ST.down)
+		if (in.ST.down && this->pushSon == false)
 		{
 			this->pushSon = true;
+		}
+
+		else if (in.B1.down && this->pushSon == true)
+		{
+			this->Kill();
 		}
 		//3秒後に
 		if (this->timeCnt == 60 * 3)

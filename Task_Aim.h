@@ -24,6 +24,7 @@ namespace Aiming
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
 		string imageName[3];
+		string controrlImg[2];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -56,5 +57,8 @@ namespace Aiming
 		ML::Vec2 aimPosR;
 		float aimMoveMax;
 	public:
+		//‘€ìà–¾
+		void TabletMode();
+		void NormalMode();
 	};
 }

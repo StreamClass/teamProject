@@ -201,6 +201,79 @@ namespace MyPG
 		DG::EffectState( ).param.matProjection	=  matProj;
 		DG::EffectState( ).param.eyePos			=  pos;
 	}
+	//---------------------------------------------------------------------------------------
+	//ウインドウへメッセージの表示
+	//	引数
+	//		x,y			表示位置
+	//		str			フォーマット前文字列
+	//		...			可変個引数指定
+	//---------------------------------------------------------------------------------------
+	void MyGameEngine::Dbg_DisplayToMessage(int x, int y, const char * str, ...) {
+
+		char buf[256];
+		vsprintf(buf, str, (char*)(&str + 1));
+		ML::Box2D draw(x, y, 480, 30);
+		DG::Font_Draw("Debug", draw,
+			buf, ML::Color(1, 1, 0, 0));
+	}
+
+	//---------------------------------------------------------------------------------------
+	//タイトルへメッセージの表示
+	//	引数
+	//		str			フォーマット前文字列
+	//		...			可変個引数指定
+	//---------------------------------------------------------------------------------------
+	void MyGameEngine::Dbg_TilteToMessage(const char * str, ...) {
+
+		char buf[256];
+		vsprintf(buf, str, (char*)(&str + 1));
+		SetWindowText(GetActiveWindow(), (LPCSTR)buf);
+	}
+
+	//---------------------------------------------------------------------------------------
+	//メッセージボックスへの表示
+	//	引数
+	//		str			フォーマット前文字列
+	//		...			可変個引数指定
+	//---------------------------------------------------------------------------------------
+	void MyGameEngine::Dbg_BoxToMessage(const char *str, ...) {
+
+		char buf[256];
+		vsprintf(buf, str, (char*)(&str + 1));
+		MessageBox(NULL, (LPCSTR)buf, "Message", MB_OK);
+	}
+
+	//---------------------------------------------------------------------------------------
+	//ファイルOUT関数
+	//	引数
+	//		str			フォーマット前文字列
+	//		...			可変個引数指定
+	//---------------------------------------------------------------------------------------
+	void MyGameEngine::Dbg_FileOut(const char *str, ...) {
+
+		FILE*	fp;
+		char buff[128];
+		vsprintf(buff, (char*)str, (char*)(&str + 1));
+		strcat(buff, "\n");
+		if ((fp = fopen("debug.txt", "at")) != NULL) {
+			fprintf(fp, "%s", buff);
+			fclose(fp);
+		}
+	}
+	void MyGameEngine::Dbg_ShowFps()
+	{
+		if (timeGetTime() >= (unsigned)FpsTime) {
+			FpsData = FpsCnt;
+			FpsCnt = 0;
+			FpsTime = (timeGetTime() + 1000);
+		}
+		//FPSカウント
+		FpsCnt++;
+		char Buffer[1024];
+		sprintf_s(Buffer, "%3.2f", FpsData);
+		ge->Dbg_TilteToMessage("fps = %s", Buffer);
+	}
+
 }
 
 MyPG::MyGameEngine* ge;

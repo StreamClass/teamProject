@@ -122,6 +122,10 @@ namespace  Game
 		else if(this->stanbyCnt < this->startTime)
 		{
 			this->stanbyCnt++;
+			if (in.B1.down)
+			{
+				this->stanbyCnt = this->startTime;
+			}
 		}
 		else if(this->stanbyCnt == this->startTime)
 		{

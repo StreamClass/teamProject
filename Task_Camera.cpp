@@ -87,7 +87,7 @@ namespace  Camera
 	{
 		easing::UpDate();
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
-		this->noise_Cnt+=10;
+		this->noise_Cnt += 10;
 		if (this->noise_Cnt > (int)ge->screenWidth)
 		{
 			this->noise_Cnt = 0;

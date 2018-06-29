@@ -18,6 +18,11 @@ namespace  Aiming
 		DG::Image_Create(this->imageName[1], "./data/image/aimTB.png");
 		this->imageName[2] = "AimLRImg";
 		DG::Image_Create(this->imageName[2], "./data/image/aimLR.png");
+
+		this->controrlImg[0] = "NomalImg";
+		DG::Image_Create(this->controrlImg[0], "./data/image/NormalImg.png");
+		this->controrlImg[1] = "TabletImg";
+		DG::Image_Create(this->controrlImg[1], "./data/image/TabletImg.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -27,6 +32,10 @@ namespace  Aiming
 		for (int i = 0; i < 3; ++i)
 		{
 			DG::Image_Erase(this->imageName[i]);
+		}
+		for (int i = 0; i < 2; ++i)
+		{
+			DG::Image_Erase(this->controrlImg[i]);
 		}
 		return true;
 	}
@@ -79,6 +88,10 @@ namespace  Aiming
 			this->aimPosL.x = -sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
 			this->aimPosR.x =  sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
 			this->timeCnt++;
+			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f )
+			{
+				this->timeCnt = 0;
+			}
 		}
 	}
 	//-------------------------------------------------------------------
@@ -88,8 +101,10 @@ namespace  Aiming
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (pl->Is_Used_Tablet() == true)
 		{
+			this->TabletMode();
 			return;
 		}
+		this->NormalMode();
 		//注視点
 		ML::Box2D draw(-5, -5, 9, 9);
 		ML::Box2D src(0, 0, 9, 9);
@@ -117,6 +132,19 @@ namespace  Aiming
 
 	void  Object::Render3D_L0()
 	{
+	}
+
+	void Object::NormalMode()
+	{
+		ML::Box2D draw(0, 1020, 1920, 60);
+		ML::Box2D src(0, 0, 1920, 60);
+		DG::Image_Draw(this->res->controrlImg[0], draw, src);
+	}
+	void Object::TabletMode() 
+	{
+		ML::Box2D draw(0, 1020, 1920, 60);
+		ML::Box2D src(0, 0, 1920, 60);
+		DG::Image_Draw(this->res->controrlImg[1], draw, src);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

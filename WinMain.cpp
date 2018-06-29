@@ -45,6 +45,9 @@ int __stdcall WinMain(	HINSTANCE inst_,	//
 		else if(GetActiveWindow() == wnd)
 		{
 			ge->B_Step(wnd);		//	ゲーム処理
+
+			ge->Dbg_ShowFps();
+
 		}
 	}
 
@@ -127,6 +130,8 @@ LRESULT CALLBACK WndProc(	HWND	wnd_,		//	ウィンドウハンドル
 
 	//	ウインドウが生成された
 		case WM_CREATE:
+			timeBeginPeriod(1);
+
 			break;
 
 	//	このウインドウがアクティブになった
@@ -136,6 +141,8 @@ LRESULT CALLBACK WndProc(	HWND	wnd_,		//	ウィンドウハンドル
 	//	×ボタンが押された
 		case WM_CLOSE:
 			ge->quitRequest = true;
+			timeEndPeriod(1);
+
 			break;
 
 	//	ウインドウが破棄された
