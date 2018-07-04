@@ -81,8 +81,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Bone.cpp" />
     <ClCompile Include="Breaker.cpp" />
     <ClCompile Include="ChaseSystem.cpp" />
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="DG2014\DG2014_DGObject.cpp" />
     <ClCompile Include="DG2014\DG2014_Effect.cpp" />
     <ClCompile Include="DG2014\DG2014_Font.cpp" />
@@ -99,11 +101,14 @@
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
+    <ClCompile Include="Joint.cpp" />
     <ClCompile Include="MapBox.cpp" />
     <ClCompile Include="myLib.cpp" />
+    <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="MyPG.cpp" />
     <ClCompile Include="ObjManeger.cpp" />
     <ClCompile Include="Routine.cpp" />
+    <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Tablet.cpp" />
     <ClCompile Include="Task_Aim.cpp" />
     <ClCompile Include="Task_Breaker.cpp" />
@@ -122,8 +127,10 @@
     <ClCompile Include="xnacollision.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bone.h" />
     <ClInclude Include="Breaker.h" />
     <ClInclude Include="ChaseSystem.h" />
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="DG2014\DG2014_DGObject.h" />
     <ClInclude Include="DG2014\DG2014_Effect.h" />
     <ClInclude Include="DG2014\DG2014_Font.h" />
@@ -140,12 +147,15 @@
     <ClInclude Include="easing.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
+    <ClInclude Include="Joint.h" />
     <ClInclude Include="MapBox.h" />
     <ClInclude Include="Motion.h" />
     <ClInclude Include="myLib.h" />
+    <ClInclude Include="MyMath.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="ObjManeger.h" />
     <ClInclude Include="Routine.h" />
+    <ClInclude Include="Shape.h" />
     <ClInclude Include="Tablet.h" />
     <ClInclude Include="Task_Aim.h" />
     <ClInclude Include="Task_Breaker.h" />

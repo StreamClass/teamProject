@@ -98,6 +98,18 @@
     <Filter Include="MyPG\Namespace\Motion">
       <UniqueIdentifier>{a0bde344-570a-4c90-84d3-95c8311c530d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Namespace\Math">
+      <UniqueIdentifier>{109a3297-aa61-4c36-8103-32080197e81c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Shape">
+      <UniqueIdentifier>{c1104f2c-1e43-45b5-982d-52bbdc66e97a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Bone">
+      <UniqueIdentifier>{23019236-7d87-4a2d-8e86-89ca16e634f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Class\Joint">
+      <UniqueIdentifier>{1cf54e49-99e8-4a97-93f7-58c507ba6d2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -217,6 +229,21 @@
     <ClCompile Include="Task_Aim.cpp">
       <Filter>MyPG\Game\Player</Filter>
     </ClCompile>
+    <ClCompile Include="MyMath.cpp">
+      <Filter>MyPG\Namespace\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Bone.cpp">
+      <Filter>MyPG\Class\Bone</Filter>
+    </ClCompile>
+    <ClCompile Include="Joint.cpp">
+      <Filter>MyPG\Class\Joint</Filter>
+    </ClCompile>
+    <ClCompile Include="Cube.cpp">
+      <Filter>MyPG\Class\Shape</Filter>
+    </ClCompile>
+    <ClCompile Include="Shape.cpp">
+      <Filter>MyPG\Class\Shape</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -335,6 +362,21 @@
     </ClInclude>
     <ClInclude Include="Motion.h">
       <Filter>MyPG\Namespace\Motion</Filter>
+    </ClInclude>
+    <ClInclude Include="MyMath.h">
+      <Filter>MyPG\Namespace\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Bone.h">
+      <Filter>MyPG\Class\Bone</Filter>
+    </ClInclude>
+    <ClInclude Include="Joint.h">
+      <Filter>MyPG\Class\Joint</Filter>
+    </ClInclude>
+    <ClInclude Include="Cube.h">
+      <Filter>MyPG\Class\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Shape.h">
+      <Filter>MyPG\Class\Shape</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
