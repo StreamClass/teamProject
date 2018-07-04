@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Map.h"
 #include  "Task_Player.h"
+#include  "Task_Door.h"
 
 
 namespace  Map
@@ -289,7 +290,77 @@ namespace  Map
 		}
 		return true;
 	}
+	//-------------------------------------------------------------------
+	//マップとの接触判定
+	//引数：（プレイヤの矩形）
+	bool Object::Map_CheckHit(const ML::Box3D& pHit)
+	{
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//読み込んだ矩形の最大、最小頂点の座標
+		struct Box3D_2Point
+		{
+			int fx, fy, fz;//値が小さい側の点
+			int bx, by, bz;//値が大きい側の点
+		};
+		//プレイヤの判定用頂点を設定
+		Box3D_2Point r =
+		{
+			pHit.x,			pHit.y,			pHit.z,
+			pHit.x + pHit.w,pHit.y + pHit.h,pHit.z + pHit.d
+		};
+		//マップの判定用頂点を設定
+		Box3D_2Point m =
+		{
+			0,
+			0,
+			0,
+			chipX * this->maxSizeX,
+			chipY,
+			chipZ * this->maxSizeZ
+		};
 
+		//キャラクタの矩形をマップ範囲内に丸め込む
+		if (r.fx < m.fx) { r.fx = m.fx; }
+		if (r.fz < m.fz) { r.fz = m.fz; }
+		if (r.bx > m.bx) { r.bx = m.bx; }
+		if (r.bz > m.bz) { r.bz = m.bz; }
+
+		//キャラクタがマップ範囲外にっ完全に出ていたら判定終了
+		if (r.bx <= r.fx) { return false; }
+		if (r.bz <= r.fz) { return false; }
+		//ループ範囲を特定
+		int sx, sz, ex, ez;
+		sx = r.fx / chipX;
+		sz = r.fz / chipZ;
+		ex = (r.bx - 1) / chipX;
+		ez = (r.bz - 1) / chipZ;
+		//接触判定開始
+		for (int z = sz; z <= ez; ++z) {
+			for (int x = sx; x <= ex; ++x) {
+				if (this->arr[z][x].Get_Type() == Type::box) {
+					return true;
+				}
+				pl->Check_Clear();
+			}
+		}
+		auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
+		for (auto it = d->begin(); it != d->end(); it++)
+		{
+			if ((*it)->Hit_Check(pHit))
+			{
+				return true;
+			}
+		}
+		return false;//接触するものが検出されなかった
+	}
+	//-------------------------------------------------------------------
+	//ゴールとの接触判定
+	//引数：（プレイヤの矩形）
+	bool Object::Goal_CheckHit(const ML::Box3D& pHit)
+	{
+		ML::Box3D goalHit = this->goal.Get_HitBase().OffsetCopy(this->goal.Get_Pos());
+		return goalHit.Hit(pHit);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

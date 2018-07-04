@@ -112,11 +112,23 @@ namespace  MiniMap
 		if (this->MiniMap_View() == true)
 		{
 			//ミニマップ
-			ML::Box2D draw(0, 0, 500, 500);
+			ML::Box2D draw(60,60, 500, 500);
 			ML::Box2D src(0, 0, 500, 500);
+			//draw.Offset(this->plpos);
+			//src.Offset(this->plpos);
+			//src.w += this->plpos.x;
+			//src.h += this->plpos.y;
+			//if (src.w > 500)
+			//{
+			//	src.w = 500;
+			//}
+			//if (src.h > 500)
+			//{
+			//	src.h = 500;
+			//}
 			DG::Image_Draw(this->imageName, draw, src);
 			//プレイヤ位置
-			draw = ML::Box2D(-5, -7, 9, 13);
+			draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
 			src = ML::Box2D(0, 0, 50, 50);
 			draw.Offset(this->plpos);
 			DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
@@ -124,7 +136,7 @@ namespace  MiniMap
 			//タブレットを使用していたら
 			if (this->tab_use_now == true)
 			{
-				draw = ML::Box2D(5, -7, 9, 13);
+				draw = ML::Box2D(-5 + 60 , -7 + 60, 9, 13);
 				draw.Offset(this->capos);
 				DG::Image_Rotation(this->caImgName, this->caAngle, ML::Vec2(5, 10));
 				DG::Image_Draw(this->caImgName, draw, src);
@@ -132,7 +144,7 @@ namespace  MiniMap
 
 			//デバッグ用
 			//エネミー描画
-			draw = ML::Box2D(5, -7, 9, 13);
+			draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
 			draw.Offset(this->epos);
 			DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
 			DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));

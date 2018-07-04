@@ -24,7 +24,8 @@ namespace Aiming
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
 		string imageName[3];
-		string controrlImg[2];
+		string normalModeImg[2];
+		string tabletModeImg[2];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -49,7 +50,8 @@ namespace Aiming
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
 		ML::Box3D hitBase;
-		float timeCnt;
+		int timeCnt;
+		float moveCnt;
 		ML::Vec2 aimPosC;
 		ML::Vec2 aimPosT;
 		ML::Vec2 aimPosB; 
@@ -57,8 +59,12 @@ namespace Aiming
 		ML::Vec2 aimPosR;
 		float aimMoveMax;
 	public:
-		//操作説明
+		//各状態での操作説明
 		void TabletMode();
 		void NormalMode();
+		//エイムのアニメーション
+		void AimingRender();
+		//当たり判定を渡す
+		ML::Box3D Get_HitBase();
 	};
 }

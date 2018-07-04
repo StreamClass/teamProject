@@ -73,6 +73,8 @@ namespace  Player
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
 
+		this->breakerOnCnt = 0;
+
 		this->tab = ge->OM.Create_Tablet();
 		//視点イージング
 		easing::Set("camStdUp", easing::EXPOINOUT, this->trm_Min, this->trm_Max_std, 120);
@@ -249,10 +251,11 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		//ML::Box2D draw(500, 0, 580, 300);
-		//string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
-		//	+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG);
-		//DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
+		ML::Box2D draw(500, 0, 580, 300);
+		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG) + "\n" +
+			to_string(this->breakerOnCnt);
+		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
@@ -299,74 +302,11 @@ namespace  Player
 		this->pos = pos;
 	}
 	//-------------------------------------------------------------------
-	//マップとの接触判定
-	//引数：（マップの矩形, プレイヤの矩形, マップのチップサイズ）
-	bool Object::Map_CheckHit(const ML::Box3D& pHit)
-	{
-		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
-		//読み込んだ矩形の最大、最小頂点の座標
-		struct Box3D_2Point
-		{
-			int fx, fy, fz;//値が小さい側の点
-			int bx, by, bz;//値が大きい側の点
-		};
-		//プレイヤの判定用頂点を設定
-		Box3D_2Point r =
-		{
-			pHit.x,			pHit.y,			pHit.z,
-			pHit.x + pHit.w,pHit.y + pHit.h,pHit.z + pHit.d
-		};
-		//マップの判定用頂点を設定
-		Box3D_2Point m =
-		{
-			mp->arr[0][0].Get_HitBase().x,
-			mp->arr[0][0].Get_HitBase().y,
-			mp->arr[0][0].Get_HitBase().z,
-			mp->arr[0][0].Get_HitBase().x + mp->arr[0][0].Get_HitBase().w * mp->maxSizeX,
-			mp->arr[0][0].Get_HitBase().y + mp->arr[0][0].Get_HitBase().h,
-			mp->arr[0][0].Get_HitBase().z + mp->arr[0][0].Get_HitBase().d * mp->maxSizeZ
-		};
-
-		//キャラクタの矩形をマップ範囲内に丸め込む
-		if (r.fx < m.fx) { r.fx = m.fx; }
-		if (r.fz < m.fz) { r.fz = m.fz; }
-		if (r.bx > m.bx) { r.bx = m.bx; }
-		if (r.bz > m.bz) { r.bz = m.bz; }
-
-		//キャラクタがマップ範囲外にっ完全に出ていたら判定終了
-		if (r.bx <= r.fx) { return false; }
-		if (r.bz <= r.fz) { return false; }
-		//ループ範囲を特定
-		int sx, sz, ex, ez;
-		sx = r.fx / (int)mp->arr[0][0].Get_ChipSizeX();
-		sz = r.fz / (int)mp->arr[0][0].Get_ChipSizeZ();
-		ex = (r.bx - 1) / (int)mp->arr[0][0].Get_ChipSizeX();
-		ez = (r.bz - 1) / (int)mp->arr[0][0].Get_ChipSizeZ();
-		//接触判定開始
-		for (int z = sz; z <= ez; ++z) {
-			for (int x = sx; x <= ex; ++x) {
-				if (mp->arr[z][x].Get_Type() == Type::box) {
-					return true;
-				}
-				this->Check_Clear();
-			}
-		}
-		//auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
-		//for (auto it = d->begin(); it != d->end(); it++)
-		//{
-		//	if ((*it)->Hit_Check(pHit))
-		//	{
-		//		return true;
-		//	}
-		//}
-		return false;//接触するものが検出されなかった
-	}
-	//-------------------------------------------------------------------
 	//めり込まない処理
 	//引数：（プレイヤの移動量）
 	void Object::Player_CheckMove(ML::Vec3& est_)
 	{
-
+		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
 		//水平方向（x平面)に対する移動
 		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preX = this->pos.x;//移動前の座標を保持
@@ -384,8 +324,7 @@ namespace  Player
 
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
-			//hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit)) {
+			if (true == mp->Map_CheckHit(hit)) {
 				this->pos.x = preX;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
@@ -409,8 +348,7 @@ namespace  Player
 
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
-			//hit.Offset((int)this->pos.x, (int)this->pos.y, (int)this->pos.z);
-			if (true == this->Map_CheckHit(hit)) {
+			if (true == mp->Map_CheckHit(hit)) {
 				this->pos.z = preZ;		//接触していたので、元に戻す
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
@@ -421,11 +359,13 @@ namespace  Player
 	void Object::Touch()
 	{
 		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
+		auto aim = ge->GetTask_One_G<Aiming::Object>("エイム");
 		for (auto it = b->begin(); it != b->end(); it++)
 		{
-			if ((*it)->Hit_Check(this->hitBase.OffsetCopy(this->pos)))
+			if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy(this->pos)))
 			{
 				(*it)->ActivateBreaker();
+				this->breakerOnCnt++;
 				break;
 			}
 		}
@@ -434,14 +374,10 @@ namespace  Player
 	//クリアしているか判定
 	void Object::Check_Clear()
 	{
-		auto m = ge->GetTask_Group_G<Map::Object>("フィールド");
-		for (auto it = m->begin(); it != m->end(); ++it)
+		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
+		if (mp->Goal_CheckHit(this->hitBase.OffsetCopy(this->pos)) == true)
 		{
-			if ((*it)->goal.Map_Hit_Check(this->hitBase.OffsetCopy(this->pos)))
-			{
-				//this->clearFlag = true;
-				ge->state = ge->clear;
-			}
+			ge->state = ge->clear;
 		}
 	}
 	//-------------------------------------------------------------------

@@ -48,7 +48,6 @@ namespace Map
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		string		chipName;			//マップチップ名
 		int			sizeX, sizeZ;		//マップtxt毎の範囲サイズ
@@ -60,8 +59,14 @@ namespace Map
 		string		fileName;			//読み取るマップの名前
 		string		filePath;			//マップファイル読み取り時のパス
 
+	public:
 		//メソッド------------------------------------------------------
 		//マップの読み込み
 		bool  Load();
+		//当たり判定
+		//引数(マップとの判定を行う相手の当たり判定範囲)
+		bool Map_CheckHit(const ML::Box3D& pHit);
+		//ゴールに接触しているかを返す
+		bool Goal_CheckHit(const ML::Box3D& pHit);
 	};
 }

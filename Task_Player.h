@@ -110,13 +110,14 @@ namespace Player
 		float stamina;
 		//スタミナ回復フラグ
 		bool recovery_Flag;
+
+		int breakerOnCnt;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す
 		int Get_PointView();
 		//注視点の高さ(adJust_TG)を返す
-		int Get_Adjust();
-		
+		int Get_Adjust();		
 		//プレイヤの座標をML::Vec3型で返す
 		ML::Vec3 Get_Pos();
 		//プレイヤの向きをML::Vec3型で返す
@@ -127,15 +128,9 @@ namespace Player
 		float Get_MoveSpeed();
 		//プレイヤの初期値指定
 		void Ini_Pos(const ML::Vec3& pos);
-		//チップサイズをML::Vec3型に変換
-		//引数：（チップサイズX, チップサイズY, チップサイズZ）
-		//ML::Vec3 Chip_Size(/*const float& cSizeX, const float& cSizeY, const float& cSizeZ*/);
-		//マップとの接触判定
-		//引数：（マップの矩形, プレイヤの矩形, マップのチップサイズ）
-		bool Map_CheckHit(/*const ML::Box3D& mHit, */const ML::Box3D& pHit/*, ML::Vec3& cSize*/);
 		//めり込まない処理
-		//引数：（プレイヤの座標, プレイヤの矩形, プレイヤの移動量）
-		void Player_CheckMove(/*const ML::Vec3& pPos, const ML::Box3D& pHit,*/ML::Vec3& est_);
+		//引数：（プレイヤの移動量）
+		void Player_CheckMove(ML::Vec3& est_);
 		//ギミックへの干渉
 		void Touch();
 		//クリアしているか判定

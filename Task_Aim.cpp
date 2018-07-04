@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Aim.h"
 #include  "Task_Player.h"
+#include  "Task_Map.h"
 
 namespace  Aiming
 {
@@ -12,17 +13,24 @@ namespace  Aiming
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//エイムの画像
 		this->imageName[0] = "AimCenterImg";
 		DG::Image_Create(this->imageName[0], "./data/image/AimCenter.png");
 		this->imageName[1] = "AimUDImg";
 		DG::Image_Create(this->imageName[1], "./data/image/aimTB.png");
 		this->imageName[2] = "AimLRImg";
 		DG::Image_Create(this->imageName[2], "./data/image/aimLR.png");
+		//通常時の操作説明
+		this->normalModeImg[0] = "Nomal01Img";
+		DG::Image_Create(this->normalModeImg[0], "./data/image/NormalImg00.png");
+		this->normalModeImg[1] = "Nomal02Img";
+		DG::Image_Create(this->normalModeImg[1], "./data/image/NormalImg01.png");
+		//タブレット時の操作説明
+		this->tabletModeImg[0] = "Tablet01Img";
+		DG::Image_Create(this->tabletModeImg[0], "./data/image/TabletImg01.png");
+		this->tabletModeImg[1] = "Tablet02Img";
+		DG::Image_Create(this->tabletModeImg[1], "./data/image/TabletImg00.png");
 
-		this->controrlImg[0] = "NomalImg";
-		DG::Image_Create(this->controrlImg[0], "./data/image/NormalImg.png");
-		this->controrlImg[1] = "TabletImg";
-		DG::Image_Create(this->controrlImg[1], "./data/image/TabletImg.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -35,7 +43,8 @@ namespace  Aiming
 		}
 		for (int i = 0; i < 2; ++i)
 		{
-			DG::Image_Erase(this->controrlImg[i]);
+			DG::Image_Erase(this->normalModeImg[i]);
+			DG::Image_Erase(this->tabletModeImg[i]);
 		}
 		return true;
 	}
@@ -50,7 +59,7 @@ namespace  Aiming
 
 		//★データ初期化
 		this->render2D_Priority[1] = 0.2f;
-		this->hitBase = ML::Box3D(0, 0, 0, 100, 10, 10);
+		this->hitBase = ML::Box3D(-150, 100, -150, 300, 100, 300);
 		this->aimPosC = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2);
 		this->aimPosT = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 - 15);
 		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
@@ -83,16 +92,17 @@ namespace  Aiming
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (pl->Is_Used_Tablet() == false)
 		{
-			this->aimPosT.y = -sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosB.y =  sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosL.x = -sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosR.x =  sin(ML::ToRadian(this->timeCnt)) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->timeCnt++;
+			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosB.y =  sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->aimPosR.x =  sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			this->moveCnt++;
 			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f )
 			{
-				this->timeCnt = 0;
+				this->moveCnt = 0;
 			}
 		}
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -105,6 +115,34 @@ namespace  Aiming
 			return;
 		}
 		this->NormalMode();
+		this->AimingRender();
+	}
+	//-------------------------------------------------------------------
+	//「3Ｄ描画」１フレーム毎に行う処理
+	void  Object::Render3D_L0()
+	{
+	}
+
+	//-------------------------------------------------------------------
+	//通常時の操作説明
+	void Object::NormalMode()
+	{
+		ML::Box2D draw(0, 1020, 1920, 60);
+		ML::Box2D src(0, 0, 1920, 60);
+		DG::Image_Draw(this->res->normalModeImg[(this->timeCnt / 20) % 2], draw, src);
+	}
+	//-------------------------------------------------------------------
+	//タブレット時の操作説明
+	void Object::TabletMode()
+	{
+		ML::Box2D draw(0, 1020, 1920, 60);
+		ML::Box2D src(0, 0, 1920, 60);
+		DG::Image_Draw(this->res->tabletModeImg[(this->timeCnt / 20) % 2], draw, src);
+	}
+	//-------------------------------------------------------------------
+	//エイムのアニメーション
+	void Object::AimingRender()
+	{
 		//注視点
 		ML::Box2D draw(-5, -5, 9, 9);
 		ML::Box2D src(0, 0, 9, 9);
@@ -129,22 +167,15 @@ namespace  Aiming
 		draw.Offset(this->aimPosL);
 		DG::Image_Draw(this->res->imageName[2], draw, src);
 	}
-
-	void  Object::Render3D_L0()
+	//-------------------------------------------------------------------
+	//ブレーカーとの接触判定
+	ML::Box3D Object::Get_HitBase()
 	{
-	}
-
-	void Object::NormalMode()
-	{
-		ML::Box2D draw(0, 1020, 1920, 60);
-		ML::Box2D src(0, 0, 1920, 60);
-		DG::Image_Draw(this->res->controrlImg[0], draw, src);
-	}
-	void Object::TabletMode() 
-	{
-		ML::Box2D draw(0, 1020, 1920, 60);
-		ML::Box2D src(0, 0, 1920, 60);
-		DG::Image_Draw(this->res->controrlImg[1], draw, src);
+		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//switch (ML::ToDegree(pl->Get_Angle().y) / 90 % 4)
+		//{
+		//}
+		return this->hitBase;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
