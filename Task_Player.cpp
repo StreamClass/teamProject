@@ -72,6 +72,7 @@ namespace  Player
 		this->tremor = 4.0f;
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
+		this->debugMode = false;
 
 		this->breakerOnCnt = 0;
 
@@ -115,6 +116,11 @@ namespace  Player
 		//タブレットオフ
 		if (!this->tab->Is_Used_Now())
 		{
+
+			if (in.S0.down)
+			{
+				this->debugMode = !this->debugMode;
+			}
 			if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
 			{
 				//走る途中はスタミナ減少
@@ -176,6 +182,10 @@ namespace  Player
 				this->stamina = MAX_STAMINA;
 			}
 
+			if (this->debugMode == true)
+			{
+				this->stamina = MAX_STAMINA;
+			}
 			//リカバリーモードに切り替え
 			if (this->recovery_Flag == false && this->stamina <= 0)
 			{
@@ -198,23 +208,12 @@ namespace  Player
 			//画面揺れ
 			//カウンタスタート
 			this->cnt_TG++;
-			//sin()の頂点が一定以上なら反映しない(息を吸っていったん止める)
-			if (this->speed != DASHSPEED)
-			{
-				float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG))*this->speed;
-				float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG))*this->speed + this->add_adjust;
+			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)
+			float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG))*this->speed;
+			float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG))*this->speed + this->add_adjust;
 
-				if (!(headY > this->heightMax || targetY > this->heightMax))
-				{
-					this->headHeight = headY;
-					this->adjust_TG = targetY;
-				}
-			}
-			else
-			{
-				this->headHeight = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG*this->speed))*this->speed;
-				this->adjust_TG = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG*this->speed))*this->speed + this->add_adjust;
-			}
+			this->headHeight = headY;
+			this->adjust_TG = targetY;
 			this->moveVecRec = this->moveVec.Length();
 			this->Player_CheckMove(this->moveVec);
 
@@ -255,6 +254,10 @@ namespace  Player
 		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
 			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG) + "\n" +
 			to_string(this->breakerOnCnt);
+		if (this->debugMode)
+		{
+			text += "  Debug";
+		}
 		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
@@ -404,6 +407,12 @@ namespace  Player
 	float Object::Get_MoveSpeed()
 	{
 		return this->moveVecRec;
+	}
+
+
+	bool Object::Get_DebugOnOff()
+	{
+		return debugMode;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

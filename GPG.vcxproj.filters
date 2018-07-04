@@ -92,6 +92,12 @@
     <Filter Include="MyPG\Class\Breaker">
       <UniqueIdentifier>{75f866e2-be60-4f33-bc7e-e8cb1a794d41}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Namespace">
+      <UniqueIdentifier>{b429129b-a664-4b11-9503-d7944e600b13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Namespace\Motion">
+      <UniqueIdentifier>{a0bde344-570a-4c90-84d3-95c8311c530d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -326,6 +332,9 @@
     </ClInclude>
     <ClInclude Include="Task_Aim.h">
       <Filter>MyPG\Game\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="Motion.h">
+      <Filter>MyPG\Namespace\Motion</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

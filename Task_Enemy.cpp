@@ -147,7 +147,9 @@ namespace  Enemy
 		{
 			//this->angle.y = atan2(this->toVec.z, this->toVec.x);
 		}
-		this->Player_HitCheck();
+
+		if(!pl->Get_DebugOnOff())
+			this->Player_HitCheck();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理

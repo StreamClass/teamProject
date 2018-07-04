@@ -141,6 +141,7 @@
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
     <ClInclude Include="MapBox.h" />
+    <ClInclude Include="Motion.h" />
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyPG.h" />
     <ClInclude Include="ObjManeger.h" />

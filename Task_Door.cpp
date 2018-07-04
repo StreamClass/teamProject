@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Door.h"
+#include  "MapBox.h"
 
 namespace Task_Door
 {
@@ -78,7 +79,7 @@ namespace Task_Door
 	void  Object::Render3D_L0()
 	{		
 		ML::Mat4x4 matT, matS;
-		matS.Scaling(ML::Vec3(150,100,150));
+		matS.Scaling(ML::Vec3(chipX,100,chipZ));
 		matT.Translation(this->circuit->Get_Pos());
 
 		DG::EffectState().param.matWorld = matS * matT;

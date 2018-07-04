@@ -59,7 +59,7 @@ namespace  Aiming
 
 		//★データ初期化
 		this->render2D_Priority[1] = 0.2f;
-		this->hitBase = ML::Box3D(-150, 100, -150, 300, 100, 300);
+		this->hitBase = ML::Box3D(0, 100, 0, 300, 100, 150);
 		this->aimPosC = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2);
 		this->aimPosT = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 - 15);
 		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
@@ -171,10 +171,26 @@ namespace  Aiming
 	//ブレーカーとの接触判定
 	ML::Box3D Object::Get_HitBase()
 	{
-		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		//switch (ML::ToDegree(pl->Get_Angle().y) / 90 % 4)
-		//{
-		//}
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		int angle = (int)(ML::ToDegree(pl->Get_Angle().y)) / 90 % 4;
+		switch (angle)
+		{
+		case 0:
+			this->hitBase = ML::Box3D(0, 100, 0, 300, 100, 150);
+			break;
+		case 3:
+		case -1:
+			this->hitBase = ML::Box3D(0, 100, 0, 150, 100, 300);
+			break;
+		case 2:
+		case -2:
+			this->hitBase = ML::Box3D(100, 100, 0, -300, 100, 150);
+			break;
+		case 1:
+		case -3:
+			this->hitBase = ML::Box3D(0, 100, 100, 150, 100, -300); 
+			break;
+		}
 		return this->hitBase;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

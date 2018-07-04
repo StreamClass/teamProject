@@ -5,6 +5,7 @@
 #include  "Task_MiniMap.h"
 #include  "Task_Player.h"
 #include  "Task_Enemy.h"
+#include  "MapBox.h"
 
 namespace  MiniMap
 {
@@ -51,7 +52,7 @@ namespace  MiniMap
 		//タブレットは使っていない
 		this->tab_use_now = false;
 		//座標参照用倍率
-		this->magni = 30;
+		this->magni = chipX / 5;
 
 		//エネミーの座標
 		this->epos = ML::Vec2(0, 0);

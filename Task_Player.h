@@ -111,6 +111,8 @@ namespace Player
 		//スタミナ回復フラグ
 		bool recovery_Flag;
 
+		bool debugMode;
+
 		int breakerOnCnt;
 	public:
 		//追加メソッド
@@ -139,5 +141,7 @@ namespace Player
 		bool Get_ClearFlag();
 		//タブレットを使用中を確認する関数
 		bool Is_Used_Tablet();
+
+		bool Get_DebugOnOff();
 	};
 }

@@ -1,4 +1,5 @@
 #include "Door.h"
+#include "MapBox.h"
 
 #define DOOR_OPEN_SPEED 5
 
@@ -15,7 +16,7 @@ Door::Door()
 Door::Door(ML::Vec3 pos, std::vector<Breaker*> b, LR a)
 {
 	this->pos = pos;
-	this->hitBase = ML::Box3D(-75, -150, -25, 150, 300, 50);
+	this->hitBase = ML::Box3D(-chipX / 2, -chipY / 2, -25, chipX, chipY, 50);
 	this->timeCnt = 0;
 	this->openFlag = false;
 	this->cunnected_Breaker = b;

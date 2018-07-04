@@ -12,7 +12,7 @@ namespace MyPG
 		1080,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		true,							//	フルスクリーンモード
+		false,							//	フルスクリーンモード
 		1920,							//	2D描画用解像度X(現在非対応）
 		1080,							//	2D描画用解像度Y(現在非対応）
 		"微笑の追跡者",					//	ウインドウタイトル
@@ -69,6 +69,7 @@ namespace MyPG
 			{ DIK_R, DI::But::R2 },{ DIK_D, DI::But::L3 },{ DIK_NUMPAD5, DI::But::R3 },
 			{ DIK_U, DI::But::HU },{ DIK_J, DI::But::HD },
 			{ DIK_H, DI::But::HL },{ DIK_L, DI::But::HR },
+			{ DIK_LSHIFT, DI::But::S0},
 		};
 		//ゲームパッドパラメータ
 		DI::KeyDatas_GP	but = {
