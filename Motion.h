@@ -1,13 +1,35 @@
 #pragma once
 #include "myLib.h"
 
+#define JOINT_ON_HUMAN 14
+
 namespace Motion
 {
 	struct Motion_Data
 	{
+		/*
+		各関節に番号を割り当てて管理する
+		0 = 腰
+		1 = 首
+		2 = 左肩
+		3 = 左肘
+		4 = 左手首
+		5 = 右肩
+		6 = 右肘
+		7 =  右手首
+		8 = 左お尻
+		9 = 左膝
+		10 = 左足首
+		11 = 右お尻
+		12 = 右膝
+		13 = 右足首
+		*/
 		//各軸の回転データをベクトルに宣言
-		ML::Vec3 neck_Rot;
-		ML::Vec3 waist_Rot;
+		ML::Vec3 joint[JOINT_ON_HUMAN];
+
+		//名前を別々に持っていたver0.1
+		/*ML::Vec3 waist_Rot;
+		ML::Vec3 neck_Rot;		
 
 		ML::Vec3 left_Sholder_Rot;
 		ML::Vec3 left_Elbow_Rot;
@@ -23,7 +45,7 @@ namespace Motion
 		
 		ML::Vec3 right_Hip_Rot;
 		ML::Vec3 right_Knee_Rot;
-		ML::Vec3 right_Ankle_Rot;
+		ML::Vec3 right_Ankle_Rot;*/
 
 		//上の回転量データまでたどり着く時間
 		const int duration;

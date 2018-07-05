@@ -2,7 +2,6 @@
 #include "Cube.h"
 #include "MyMath.h"
 
-
 //コンストラクタ
 
 Bone::Bone(const float& tall)
@@ -109,49 +108,153 @@ Bone::Bone(const float& tall)
 	Joint* right_wrist = new Joint(right_center_of_wrist, ML::ToRadian(-30), ML::ToRadian(5), ML::ToRadian(0), ML::ToRadian(0), ML::ToRadian(-90), ML::ToRadian(90), right_hand);
 
 	//メンバーに割り当てる
-	this->waist = Waist;
-	this->neck = tmpneck;
-	this->left_Sholder = left_sholder;
-	this->left_Elbow = left_elbow;
-	this->left_Wrist = left_wrist;
-	this->left_Hip = left_hip;
-	this->left_Knee = left_knee;
-	this->left_Ankle = left_ankle;
-	this->right_Sholder = right_sholder;
-	this->right_Elbow = right_elbow;
-	this->right_Wrist = right_wrist;
-	this->right_Hip = right_hip;
-	this->right_Knee = right_knee;
-	this->right_Ankle = right_ankle;
+	this->joint[0] = Waist;
+	this->joint[1] = tmpneck;
 
+	this->joint[2] = left_sholder;
+	this->joint[3] = left_elbow;
+	this->joint[4] = left_wrist;
+
+	this->joint[5] = right_sholder;
+	this->joint[6] = right_elbow;
+	this->joint[7] = right_wrist;
+
+	this->joint[8] = left_hip;
+	this->joint[9] = left_knee;
+	this->joint[10] = left_ankle;
+
+	this->joint[11] = right_hip;
+	this->joint[12] = right_knee;
+	this->joint[13] = right_ankle;
+
+	
+	
+	
 	//関係性指定
 	//腰からのど
-	this->waist->Set_Next_Joint(this->neck);
+	this->joint[0]->Set_Next_Joint(this->joint[1]);
 
 	//肩から手首
 	//左
-	this->left_Sholder->Set_Next_Joint(this->left_Elbow);
-	this->left_Elbow->Set_Next_Joint(this->left_Wrist);
+	this->joint[2]->Set_Next_Joint(this->joint[3]);
+	this->joint[3]->Set_Next_Joint(this->joint[4]);
 	//右
-	this->right_Sholder->Set_Next_Joint(this->right_Elbow);
-	this->right_Elbow->Set_Next_Joint(this->right_Wrist);
+	this->joint[5]->Set_Next_Joint(this->joint[6]);
+	this->joint[6]->Set_Next_Joint(this->joint[7]);
 
 	//お尻から足首
 	//左
-	this->left_Hip->Set_Next_Joint(this->left_Knee);
-	this->left_Knee->Set_Next_Joint(this->left_Ankle);
+	this->joint[8]->Set_Next_Joint(this->joint[9]);
+	this->joint[9]->Set_Next_Joint(this->joint[10]);
 	//右
-	this->right_Hip->Set_Next_Joint(this->right_Knee);
-	this->right_Knee->Set_Next_Joint(this->right_Ankle);
+	this->joint[11]->Set_Next_Joint(this->joint[12]);
+	this->joint[12]->Set_Next_Joint(this->joint[13]);
 
 	//モーション関係変数初期化
 	this->motions.clear();
 	this->motionCnt = 0.0f;
 	this->motion_Index = 0;
 	this->now_Motion = "";
+	this->repeat_Flag = false;
 }
 
+
+//getter
 ML::Vec3 Bone::Get_Center()
 {
 	return this->center_of_Body;
+}
+
+void Bone::Bone_RotateY_All(const float& radian)
+{
+	//アフィン変換で回転行列作成
+	ML::Mat4x4 matR;
+	ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), radian);
+	D3DXMatrixAffineTransformation(&matR, 1.0f, &this->center_of_Body, &qtY, NULL);
+
+	//関節全体を回転させる
+	this->joint[0]->Rotated_by_Prev_Joint(&matR);
+	this->joint[2]->Rotated_by_Prev_Joint(&matR);
+	this->joint[5]->Rotated_by_Prev_Joint(&matR);
+	this->joint[8]->Rotated_by_Prev_Joint(&matR);
+	this->joint[11]->Rotated_by_Prev_Joint(&matR);
+
+}
+
+void Bone::UpDate()
+{
+	//現在モーションが空でない場合
+	if (this->now_Motion != "")
+	{
+		//持っているモーションを検索
+		auto& now = this->motions.find(this->now_Motion)->second;
+
+		//現在カウントが持続時間内なら
+		if (this->motionCnt <= now[this->motion_Index].duration)
+		{
+			//データに従い回転を行う
+			ML::Mat4x4 matR;
+			//X軸クォータニオン、Y軸クォータニオン、Z軸クォータニオン、全体を合成するクォータニオン
+			ML::QT qtx, qty, qtz, qtA;
+			
+			for (int i = 0; i < JOINT_ON_HUMAN; i++)
+			{
+				//クォータニオン作成
+				qtx = ML::QT(ML::Vec3(1, 0, 0), (now[this->motion_Index].joint[i].x) / now[this->motion_Index].duration);
+				qty = ML::QT(ML::Vec3(0, 1, 0), (now[this->motion_Index].joint[i].y) / now[this->motion_Index].duration);
+				qtz = ML::QT(ML::Vec3(0, 0, 1), (now[this->motion_Index].joint[i].z) / now[this->motion_Index].duration);
+				//クォータニオン合成
+				qtA = qtx * qty * qtz;
+
+				//回転行列作成
+				matR.Identity();
+				D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &qtA, NULL);
+				//各関節を回転
+				this->joint[i]->Rotate_Bone(&matR);
+			}
+		}
+		//カウントが遅速時間を超えた場合
+		else
+		{
+			//一回り終わった
+			if (this->motion_Index == now.size() - 1 )
+			{
+				//連続行動フラグが立っている場合
+				if (this->repeat_Flag == true)
+				{
+					//インデクスとカウントをゼロにする
+					this->motion_Index = 0;
+					this->motionCnt = -1.0f;
+				}
+				//連続行動フラグが立っていない場合
+				else
+				{
+					//モーションを空にする
+					this->now_Motion == "";
+					this->motion_Index = 0;
+				}
+			}
+			//つずきがある場合
+			else
+			{
+				this->motion_Index++;
+				this->motionCnt = -1.0f;
+			}
+		}
+
+	}
+	//空の時にスタンディングに戻せる
+	else
+	{
+		//未実装
+	}
+	//モーションが空かになかに関わらずカウントは進む
+	this->motionCnt += 1.0f;
+	//連続行動フラグは毎回falseに戻す(一回りしてすぐ止まるように)
+	this->repeat_Flag = false;
+}
+
+void Bone::Repeat_Now_Motioin()
+{
+	this->repeat_Flag = true;
 }

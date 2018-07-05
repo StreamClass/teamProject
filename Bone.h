@@ -7,6 +7,7 @@
 //idleは直立
 //視線の正面はZ+
 
+//モーションデータと同じく関節を番号で割り当てて管理する
 
 class Bone
 {
@@ -17,20 +18,29 @@ private:
 	const float tall;
 
 	//全関節のアドレス値
+	Joint* joint[JOINT_ON_HUMAN];
+
+	//名前を別々に持っていたver0.1
+	/*
 	Joint* waist;
 	Joint* neck;
+
 	Joint* left_Sholder;	
 	Joint* left_Elbow;
 	Joint* left_Wrist;
-	Joint* left_Hip;
-	Joint* left_Knee;
-	Joint* left_Ankle;
+
 	Joint* right_Sholder;
 	Joint* right_Elbow;
 	Joint* right_Wrist;
+
+	Joint* left_Hip;
+	Joint* left_Knee;
+	Joint* left_Ankle;
+	
 	Joint* right_Hip;
 	Joint* right_Knee;
 	Joint* right_Ankle;
+	*/
 
 	//モーション用カウンタ
 	float motionCnt;
@@ -38,17 +48,23 @@ private:
 	int motion_Index;
 	//今何のモーションなのかを確認するキー
 	string now_Motion;
+	//モーションが一回り終わっても繰り返すフラグ(走るモーションとかに利用)
+	bool repeat_Flag;
 
 	//モーションデータのマッピング
+	//実体持ち？ヒープに宣言？(2018/07/05)
 	std::map < string, std::vector<Motion::Motion_Data> > motions;
+
+
+	//メソッド
 
 	//動きのプリセット
 	//歩き
-	void Walking();
+	void Make_Walking();
 	//走り
-	void Running();
+	void Make_Running();
 	//相互作用
-	void Interaction();
+	void Make_Interaction();
 
 public:
 	//ゲッター
@@ -57,8 +73,12 @@ public:
 	//体全体をY軸回転を行う
 	//ほかの軸も必要に応じて追加可能性あり(2018/07/04)
 	//引数 : (Y軸回転量)
-	void Bone_RotateY_All(float radian);
+	void Bone_RotateY_All(const float& radian);
 
+	//連続行動フラグを立てる
+	void Repeat_Now_Motioin();
+	//アニメーションアップデート
+	void UpDate();
 	
 
 	//コンストラクタ
@@ -67,7 +87,8 @@ public:
 		tall(0.0f)
 	{
 		this->center_of_Body = ML::Vec3(0, 0, 0);
-		this->neck = nullptr;
+
+		/*this->neck = nullptr;
 		this->waist = nullptr;
 		this->left_Sholder = nullptr;
 		this->left_Elbow = nullptr;
@@ -80,12 +101,18 @@ public:
 		this->right_Wrist = nullptr;
 		this->right_Hip = nullptr;
 		this->right_Knee = nullptr;
-		this->right_Ankle = nullptr;
+		this->right_Ankle = nullptr;*/
+
+		for (int i = 0; i < JOINT_ON_HUMAN; i++)
+		{
+			this->joint[i] = nullptr;
+		}
 
 		this->motions.clear();
 		this->motionCnt = 0.0f;
 		this->motion_Index = 0;
 		this->now_Motion = "";
+		this->repeat_Flag = false;
 	}
 	//引数 : (身長)
 	Bone(const float& tall);
@@ -94,7 +121,7 @@ public:
 	~Bone()
 	{
 		//ヒープ領域から開放
-		delete this->waist;
+		/*delete this->waist;
 		delete this->neck;
 		delete this->left_Ankle;
 		delete this->left_Elbow;
@@ -107,7 +134,12 @@ public:
 		delete this->right_Hip;
 		delete this->right_Knee;
 		delete this->right_Sholder;
-		delete this->right_Wrist;
+		delete this->right_Wrist;*/
+
+		for (int i = 0; i < JOINT_ON_HUMAN; i++)
+		{
+			delete this->joint[i];
+		}
 
 		this->motions.clear();
 	}
