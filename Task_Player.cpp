@@ -365,11 +365,18 @@ namespace  Player
 		auto aim = ge->GetTask_One_G<Aiming::Object>("エイム");
 		for (auto it = b->begin(); it != b->end(); it++)
 		{
-			if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy(this->pos)))
+			ML::Vec3 move = (ge->camera[0]->target - ge->camera[0]->pos);
+			move = move.Normalize();
+			for (int i = 0; i < 10; ++i)
 			{
-				(*it)->ActivateBreaker();
-				this->breakerOnCnt++;
-				break;
+				ML::Vec3 setPos = (this->pos + ML::Vec3(0,this->headHeight,0)) + (move * i * 15);
+				aim->Set_Pos(setPos);
+				if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+				{
+					(*it)->ActivateBreaker();
+					this->breakerOnCnt++;
+					break;
+				}
 			}
 		}
 	}
@@ -413,6 +420,11 @@ namespace  Player
 	bool Object::Get_DebugOnOff()
 	{
 		return debugMode;
+	}
+
+	bool Object::Is_Tired()
+	{
+		return this->recovery_Flag;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

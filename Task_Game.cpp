@@ -49,7 +49,7 @@ namespace  Game
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		//環境光の強さを設定する
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.4f, 0.4f, 0.4f);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.5f, 0.5f, 0.5f);
 		////平行光源の設定
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類

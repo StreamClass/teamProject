@@ -73,3 +73,8 @@ float Joint::Get_Limit_Z_Plus()
 {
 	return this->limit_Z_Plus;
 }
+
+ML::Vec3 Joint::Get_To_Bone()
+{
+	return (this->area->GetCenter() - this->pos);
+}

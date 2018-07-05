@@ -1,5 +1,6 @@
 #pragma once
 #include "Shape.h"
+#include "GameEngine_Ver3_7.h"
 
 //関節クラス
 
@@ -20,6 +21,9 @@ private:
 	//下の関節(存在しない場合はnullptr)
 	Joint* next;
 
+	//描画するメッシュの名前
+	string mesh_Name;
+
 public:
 	//移動
 	//引数 : (移動ベクトル)
@@ -32,6 +36,12 @@ public:
 	void Rotated_by_Prev_Joint(ML::Mat4x4*);
 	//次の関節をセット
 	void Set_Next_Joint(Joint*);
+	//レンダリング
+	void Render();
+
+	//現在関節とボーンまでのベクトルを返す
+	ML::Vec3 Get_To_Bone();
+
 
 	//ゲッター
 	ML::Vec3 Get_Pos();
@@ -55,9 +65,10 @@ public:
 		this->pos = ML::Vec3(0, 0, 0);		
 		this->area = nullptr;
 		this->next = nullptr;
+		this->mesh_Name = "";
 	}
-	//引数 : (関節の位置、回転量の限界X-,X+,Y-,Y+,Z-,Z+,つながっている骨のアドレス値)
-	Joint(const ML::Vec3& p, const float& xm, const float& xp, const float& ym, const float& yp, const float& zm, const float& zp, Shape* bone) :
+	//引数 : (関節の位置、回転量の限界X-,X+,Y-,Y+,Z-,Z+,つながっている骨のアドレス値,メッシュ名)
+	Joint(const ML::Vec3& p, const float& xm, const float& xp, const float& ym, const float& yp, const float& zm, const float& zp, Shape* bone,const string& name) :
 		limit_X_Minus(xm),
 		limit_X_Plus(xp),
 		limit_Y_Minus(ym),
@@ -67,6 +78,8 @@ public:
 	{
 		this->pos = p;
 		this->area = bone;
+		this->mesh_Name = name;
+		DG::Mesh_CreateFromSOBFile(this->mesh_Name, "./data/mesh/bone_test/" + this->mesh_Name + ".sob");
 	}
 
 	//デストラクタ
@@ -74,6 +87,8 @@ public:
 	{
 		//ヒープ領域から開放
 		delete this->area;
+		//メッシュ開放
+		DG::Mesh_Erase(this->mesh_Name);
 		//つながっている次の関節は
 		//ボーンから開放される
 	}

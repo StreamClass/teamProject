@@ -1,4 +1,5 @@
 #include "Breaker.h"
+#include "MapBox.h"
 
 Breaker::Breaker()
 {
@@ -10,7 +11,7 @@ Breaker::Breaker()
 Breaker::Breaker(ML::Vec3 pos)
 {
 	this->pos = pos;
-	this->active_Base = ML::Box3D(-100, -100, -100, 200, 200, 200);
+	this->active_Base = ML::Box3D(-chipX / 2,-chipY / 2,-chipZ / 2,chipX,chipY,chipZ);
 	this->active_Falg = false;
 }
 

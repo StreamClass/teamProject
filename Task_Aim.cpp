@@ -30,7 +30,11 @@ namespace  Aiming
 		DG::Image_Create(this->tabletModeImg[0], "./data/image/TabletImg01.png");
 		this->tabletModeImg[1] = "Tablet02Img";
 		DG::Image_Create(this->tabletModeImg[1], "./data/image/TabletImg00.png");
-
+		//スタミナの画像
+		this->staminaImgName[0] = "StaminaMax";
+		DG::Image_Create(this->staminaImgName[0], "./data/image/StaminaMax.png");
+		this->staminaImgName[1] = "StaminaGage";
+		DG::Image_Create(this->staminaImgName[1], "./data/image/StaminaGage.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -45,6 +49,7 @@ namespace  Aiming
 		{
 			DG::Image_Erase(this->normalModeImg[i]);
 			DG::Image_Erase(this->tabletModeImg[i]);
+			DG::Image_Erase(this->staminaImgName[i]);
 		}
 		return true;
 	}
@@ -59,7 +64,7 @@ namespace  Aiming
 
 		//★データ初期化
 		this->render2D_Priority[1] = 0.2f;
-		this->hitBase = ML::Box3D(0, 100, 0, 300, 100, 150);
+		this->hitBase = ML::Box3D(0, 0, 0, 1, 1, 1);
 		this->aimPosC = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2);
 		this->aimPosT = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 - 15);
 		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
@@ -67,6 +72,9 @@ namespace  Aiming
 		this->aimPosR = ML::Vec2(ge->screen2DWidth / 2 + 15, ge->screen2DHeight / 2);
 		this->aimMoveMax = 20.0f;
 		this->timeCnt = 0;
+		this->pos = ML::Vec3(0, 0, 0);
+		this->aimMoveSpeed = 0;
+		DG::Mesh_CreateFromSOBFile("t", "./data/mesh/box1.sob");
 		//★タスクの生成
 
 		return  true;
@@ -76,7 +84,7 @@ namespace  Aiming
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		DG::Mesh_Erase("t");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -92,12 +100,20 @@ namespace  Aiming
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (pl->Is_Used_Tablet() == false)
 		{
-			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosB.y =  sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DHeight / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f - (15 + (pl->Get_MoveSpeed() + 5.0f)));
-			this->aimPosR.x =  sin(ML::ToRadian(this->moveCnt) * 2.0f) * (pl->Get_MoveSpeed() + 5.0f) + (ge->screen2DWidth / 2.0f + (15 + (pl->Get_MoveSpeed() + 5.0f)));
+			if (pl->Is_Tired() == false)
+			{
+				this->aimMoveSpeed = pl->Get_MoveSpeed() + 5.0f;
+			}
+			else
+			{
+				this->aimMoveSpeed = (pl->Get_MoveSpeed() + 5.0f) * 5.0f;
+			}
+			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DHeight / 2.0f - (15 + this->aimMoveSpeed)));
+			this->aimPosB.y = sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DHeight / 2.0f + (15 + this->aimMoveSpeed)));
+			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DWidth / 2.0f - (15 + this->aimMoveSpeed)));
+			this->aimPosR.x = sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DWidth / 2.0f + (15 + this->aimMoveSpeed)));
 			this->moveCnt++;
-			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f )
+			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && pl->Is_Tired() == false)
 			{
 				this->moveCnt = 0;
 			}
@@ -116,13 +132,19 @@ namespace  Aiming
 		}
 		this->NormalMode();
 		this->AimingRender();
+		this->StaminaRender();
 	}
 	//-------------------------------------------------------------------
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		ML::Mat4x4 matT, matS;
+		matT.Translation(this->pos + ML::Vec3(pl->Get_Pos().x,0,pl->Get_Pos().z));
+		matS.Scaling(ML::Vec3(this->hitBase.w / 100, this->hitBase.h / 100, this->hitBase.d / 100));
+		DG::EffectState().param.matWorld = matS * matT;
+		DG::Mesh_Draw("t");
 	}
-
 	//-------------------------------------------------------------------
 	//通常時の操作説明
 	void Object::NormalMode()
@@ -168,30 +190,23 @@ namespace  Aiming
 		DG::Image_Draw(this->res->imageName[2], draw, src);
 	}
 	//-------------------------------------------------------------------
+	//スタミナの描画
+	void Object::StaminaRender()
+	{
+		ML::Box2D draw(ge->screen2DWidth - 250, ge->screen2DHeight - 700, 100, 250);
+		ML::Box2D src(0, 0, 200, 500);
+		DG::Image_Draw(this->res->staminaImgName[0], draw, src);
+	}
+	//-------------------------------------------------------------------
 	//ブレーカーとの接触判定
 	ML::Box3D Object::Get_HitBase()
 	{
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		int angle = (int)(ML::ToDegree(pl->Get_Angle().y)) / 90 % 4;
-		switch (angle)
-		{
-		case 0:
-			this->hitBase = ML::Box3D(0, 100, 0, 300, 100, 150);
-			break;
-		case 3:
-		case -1:
-			this->hitBase = ML::Box3D(0, 100, 0, 150, 100, 300);
-			break;
-		case 2:
-		case -2:
-			this->hitBase = ML::Box3D(100, 100, 0, -300, 100, 150);
-			break;
-		case 1:
-		case -3:
-			this->hitBase = ML::Box3D(0, 100, 100, 150, 100, -300); 
-			break;
-		}
 		return this->hitBase;
+	}
+	//
+	void Object::Set_Pos(ML::Vec3& pos_)
+	{
+		this->pos = pos_;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -141,7 +141,9 @@ namespace Player
 		bool Get_ClearFlag();
 		//タブレットを使用中を確認する関数
 		bool Is_Used_Tablet();
-
+		//疲れているかを渡す
+		bool Is_Tired();
+		//デバッグ用無敵モードのオンオフ
 		bool Get_DebugOnOff();
 	};
 }

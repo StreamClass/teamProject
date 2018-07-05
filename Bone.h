@@ -66,6 +66,9 @@ private:
 	//相互作用
 	void Make_Interaction();
 
+	//直立に整頓
+	void To_Standing();
+
 public:
 	//ゲッター
 	ML::Vec3 Get_Center();
@@ -79,6 +82,8 @@ public:
 	void Repeat_Now_Motioin();
 	//アニメーションアップデート
 	void UpDate();
+	//アニメーションレンダリング
+	void Render();
 	
 
 	//コンストラクタ

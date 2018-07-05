@@ -26,6 +26,7 @@ namespace Aiming
 		string imageName[3];
 		string normalModeImg[2];
 		string tabletModeImg[2];
+		string staminaImgName[2];
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -58,13 +59,19 @@ namespace Aiming
 		ML::Vec2 aimPosL; 
 		ML::Vec2 aimPosR;
 		float aimMoveMax;
+		ML::Vec3 pos;
+		float aimMoveSpeed;
 	public:
 		//各状態での操作説明
 		void TabletMode();
 		void NormalMode();
 		//エイムのアニメーション
 		void AimingRender();
+		//スタミナの描画
+		void StaminaRender();
 		//当たり判定を渡す
 		ML::Box3D Get_HitBase();
+		//
+		void Set_Pos(ML::Vec3& pos_);
 	};
 }

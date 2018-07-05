@@ -113,6 +113,7 @@ namespace  Map
 
 	void  Object::Render3D_L0()
 	{
+		DG::EffectState().param.light[0].enable = false;
 		//壁の描画
 		ML::Mat4x4 matS,matT;
 		//描画する範囲をカメラを中心に前後左右18マス分に指定
@@ -138,6 +139,7 @@ namespace  Map
 				DG::Mesh_Draw(this->chipName);
 			}
 		}
+		DG::EffectState().param.light[0].enable = true;
 		//床の描画
 		ML::Mat4x4 fmatT, fmatS;
 		fmatS.Scaling(this->floor.Get_Scaling());

@@ -71,23 +71,27 @@ namespace Motion
 		const int& du)
 		: duration(du)
 	{
-		this->neck_Rot = neck;
-		this->waist_Rot = waist;
+		this->joint[0] = waist;
+		this->joint[1] = neck;
 
-		this->left_Sholder_Rot = l_sholder;
-		this->left_Elbow_Rot = l_elbow;
-		this->left_Wrist_Rot = l_wrist;
+		this->joint[2] = l_sholder;
+		this->joint[3] = l_elbow;
+		this->joint[4] = l_wrist;
 
-		this->right_Sholder_Rot = r_sholder;
-		this->right_Elbow_Rot = r_elbow;
-		this->right_Wrist_Rot = r_wrist;
+		this->joint[5] = r_sholder;
+		this->joint[6] = r_elbow;
+		this->joint[7] = r_wrist;
 
-		this->left_Hip_Rot = l_hip;
-		this->left_Knee_Rot = l_knee;
-		this->left_Ankle_Rot = l_ankle;
+		this->joint[8] = l_hip;
+		this->joint[9] = l_knee;
+		this->joint[10] = l_ankle;
 		
-		this->right_Hip_Rot = r_hip;
-		this->right_Knee_Rot = r_knee;
-		this->right_Ankle_Rot = r_ankle;
+		this->joint[11] = r_hip;
+		this->joint[12] = r_knee;
+		this->joint[13] = r_ankle;
 	}
+
+	//モーション生成関数
+	//引数 : (モーションの名前、登録させるボーンのアドレス値、外部ファイルパス）
+	void Make_Motion(const string& motion_Name, Bone* b, const string& file_Path);
 }
