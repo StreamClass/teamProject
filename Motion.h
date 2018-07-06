@@ -90,8 +90,7 @@ namespace Motion
 		this->joint[12] = r_knee;
 		this->joint[13] = r_ankle;
 	}
-
 	//モーション生成関数
 	//引数 : (モーションの名前、登録させるボーンのアドレス値、外部ファイルパス）
-	void Make_Motion(const string& motion_Name, Bone* b, const string& file_Path);
+	//void Make_Motion(const string& motion_Name, Bone* b, const string& file_Path);
 }

@@ -78,3 +78,19 @@ ML::Vec3 Joint::Get_To_Bone()
 {
 	return (this->area->GetCenter() - this->pos);
 }
+
+void Joint::Quartanion_Update(const ML::QT& uqt)
+{
+	this->rotated *= uqt;
+}
+
+void Joint::Render()
+{
+	//表示用ワールド行列作成
+	ML::Mat4x4 matW;
+	D3DXMatrixAffineTransformation(&matW, 1.0f, &this->pos, &this->rotated, &this->area->GetCenter());
+	//行列適用
+	DG::EffectState().param.matWorld = matW;
+	//レンダリング
+	DG::Mesh_Draw(this->mesh_Name);
+}

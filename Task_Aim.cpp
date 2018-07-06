@@ -74,6 +74,7 @@ namespace  Aiming
 		this->timeCnt = 0;
 		this->pos = ML::Vec3(0, 0, 0);
 		this->aimMoveSpeed = 0;
+		this->aimMovetremor = 5.0f;
 		DG::Mesh_CreateFromSOBFile("t", "./data/mesh/box1.sob");
 		//★タスクの生成
 
@@ -100,19 +101,17 @@ namespace  Aiming
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (pl->Is_Used_Tablet() == false)
 		{
-			if (pl->Is_Tired() == false)
+			this->aimMoveSpeed = 5.0f;
+			this->aimMovetremor = pl->Get_MoveSpeed() + 5.0f;
+			if (pl->Is_Tired())
 			{
-				this->aimMoveSpeed = pl->Get_MoveSpeed() + 5.0f;
+				this->aimMoveSpeed = 8.0f/*(MAX_STAMINA / 3 - pl->Get_Stamina()) / 10.0f*/;
+				this->aimMovetremor =  (pl->Get_MoveSpeed() + 5.0f) * 5.0f;
 			}
-			else
-			{
-				this->aimMoveSpeed = (pl->Get_MoveSpeed() + 5.0f) * 5.0f;
-			}
-			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DHeight / 2.0f - (15 + this->aimMoveSpeed)));
-			this->aimPosB.y = sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DHeight / 2.0f + (15 + this->aimMoveSpeed)));
-			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DWidth / 2.0f - (15 + this->aimMoveSpeed)));
-			this->aimPosR.x = sin(ML::ToRadian(this->moveCnt) * 10.0f) * (this->aimMoveSpeed + (ge->screen2DWidth / 2.0f + (15 + this->aimMoveSpeed)));
-			this->moveCnt++;
+			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f - (15 + this->aimMovetremor));
+			this->aimPosB.y = sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f + (15 + this->aimMovetremor));
+			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f - (15 + this->aimMovetremor));
+			this->aimPosR.x = sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f + (15 + this->aimMovetremor));
 			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && pl->Is_Tired() == false)
 			{
 				this->moveCnt = 0;
@@ -127,10 +126,10 @@ namespace  Aiming
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		if (pl->Is_Used_Tablet() == true)
 		{
-			this->TabletMode();
+			this->TabletModeRrender();
 			return;
 		}
-		this->NormalMode();
+		this->NormalModeRrender();
 		this->AimingRender();
 		this->StaminaRender();
 	}
@@ -147,7 +146,7 @@ namespace  Aiming
 	}
 	//-------------------------------------------------------------------
 	//通常時の操作説明
-	void Object::NormalMode()
+	void Object::NormalModeRrender()
 	{
 		ML::Box2D draw(0, 1020, 1920, 60);
 		ML::Box2D src(0, 0, 1920, 60);
@@ -155,7 +154,7 @@ namespace  Aiming
 	}
 	//-------------------------------------------------------------------
 	//タブレット時の操作説明
-	void Object::TabletMode()
+	void Object::TabletModeRrender()
 	{
 		ML::Box2D draw(0, 1020, 1920, 60);
 		ML::Box2D src(0, 0, 1920, 60);
@@ -193,9 +192,14 @@ namespace  Aiming
 	//スタミナの描画
 	void Object::StaminaRender()
 	{
-		ML::Box2D draw(ge->screen2DWidth - 250, ge->screen2DHeight - 700, 100, 250);
+		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		
+		ML::Box2D draw(ge->screen2DWidth - 100, ge->screen2DHeight - 300, 50, 240);
 		ML::Box2D src(0, 0, 200, 500);
 		DG::Image_Draw(this->res->staminaImgName[0], draw, src);
+
+		draw = ML::Box2D(ge->screen2DWidth - 100, ge->screen2DHeight - 300 + (MAX_STAMINA -  pl->Get_Stamina()), 50, pl->Get_Stamina());
+		DG::Image_Draw(this->res->staminaImgName[1], draw, src);
 	}
 	//-------------------------------------------------------------------
 	//ブレーカーとの接触判定

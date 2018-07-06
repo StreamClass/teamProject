@@ -67,6 +67,8 @@ namespace MiniMap
 		bool tab_use_now;
 		//座標参照用倍率
 		float magni;
+		//
+		bool debugMode;
 	public:
 
 		//メソッド
@@ -74,7 +76,8 @@ namespace MiniMap
 		bool MiniMap_View();
 		//プレイヤからミニマップを出すか指定
 		void Set_MiniMap_View();
-
+		//
+		void MiniMap_Render();
 
 		//デバッグ時用変数
 		//エネミーの座標

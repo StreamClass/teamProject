@@ -69,7 +69,7 @@ namespace  Player
 		this->moveVecRec = 0.0f;
 		this->speed = 10.0f;
 		this->clearFlag = false;
-		this->tremor = 4.0f;
+		this->tremor = 1.0f;
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
 		this->debugMode = false;
@@ -147,7 +147,7 @@ namespace  Player
 				{
 					//cnt++;
 					//if (cnt >= 10) {
-						this->speed = min(DASHSPEED, this->speed + 0.5f);
+					this->speed = min(DASHSPEED, this->speed + 0.5f);
 					//}
 					//this->speed = DASHSPEED;
 				}
@@ -160,7 +160,7 @@ namespace  Player
 			{
 				if (this->recovery_Flag == false)
 				{
-//					this->speed = NORMALSPEED;
+					//					this->speed = NORMALSPEED;
 					this->speed = max(NORMALSPEED, this->speed - 0.5f);
 
 				}
@@ -171,7 +171,7 @@ namespace  Player
 				//スタミナ回復
 				this->stamina += 0.3f;
 			}
-//			ge->Dbg_FileOut("speed = %0.2f", this->speed);
+			//			ge->Dbg_FileOut("speed = %0.2f", this->speed);
 			//スタミナ範囲
 			if (this->stamina < 0)
 			{
@@ -208,12 +208,30 @@ namespace  Player
 			//画面揺れ
 			//カウンタスタート
 			this->cnt_TG++;
-			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)
-			float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG))*this->speed;
-			float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG))*this->speed + this->add_adjust;
-
+			//視点揺れ速度
+			if (in.R1.off && !this->recovery_Flag)
+			{
+				this->cnt_SP = 2;
+				this->tremor = 0.5f;
+			}
+			//ダッシュ時
+			else if (in.R1.on && in.LStick.volume > 0)
+			{
+				this->cnt_SP = 14;
+				this->tremor = 1.0f;
+			}
+			//疲労時
+			if(this->recovery_Flag)
+			{
+				this->cnt_SP = 8;
+				this->tremor = 6.0f;
+			}
+			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)*(スピード*揺れ幅)
+			float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor);
+			float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor) + this->add_adjust;
 			this->headHeight = headY;
 			this->adjust_TG = targetY;
+
 			this->moveVecRec = this->moveVec.Length();
 			this->Player_CheckMove(this->moveVec);
 
@@ -250,15 +268,18 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		ML::Box2D draw(500, 0, 580, 300);
-		string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
-			+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG) + "\n" +
-			to_string(this->breakerOnCnt);
-		if (this->debugMode)
+		if(this->debugMode)
 		{
-			text += "  Debug";
+			ML::Box2D draw(500, 0, 580, 300);
+			string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
+				+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG) + "\n" +
+				to_string(this->breakerOnCnt);
+			if (this->debugMode)
+			{
+				text += "  Debug";
+			}
+			DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 		}
-		DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 	}
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
@@ -415,13 +436,17 @@ namespace  Player
 	{
 		return this->moveVecRec;
 	}
-
-
+	//
+	float Object::Get_Stamina()
+	{
+		return this->stamina;
+	}
+	//
 	bool Object::Get_DebugOnOff()
 	{
 		return debugMode;
 	}
-
+	//
 	bool Object::Is_Tired()
 	{
 		return this->recovery_Flag;

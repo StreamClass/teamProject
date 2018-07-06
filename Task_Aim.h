@@ -61,10 +61,11 @@ namespace Aiming
 		float aimMoveMax;
 		ML::Vec3 pos;
 		float aimMoveSpeed;
+		float aimMovetremor;
 	public:
 		//各状態での操作説明
-		void TabletMode();
-		void NormalMode();
+		void TabletModeRrender();
+		void NormalModeRrender();
 		//エイムのアニメーション
 		void AimingRender();
 		//スタミナの描画

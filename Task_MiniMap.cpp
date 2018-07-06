@@ -54,6 +54,8 @@ namespace  MiniMap
 		//座標参照用倍率
 		this->magni = chipX / 5;
 
+		//
+		this->debugMode = false;
 		//エネミーの座標
 		this->epos = ML::Vec2(0, 0);
 		//エネミーの向き
@@ -85,6 +87,7 @@ namespace  MiniMap
 	{
 		//プレイヤの変数等を使えるように呼び出す
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		this->debugMode = pl->Get_DebugOnOff();
 		//プレイヤ本体からミニマップ上の情報を参照
 		this->plpos = ML::Vec2((int)pl->Get_Pos().x / this->magni, 500 - (int)pl->Get_Pos().z / this->magni);
 		this->plAngle = (float)pl->Get_Angle().y + ML::ToRadian(90);
@@ -101,9 +104,12 @@ namespace  MiniMap
 
 		//デバック用
 		//エネミーからミニマップ上での情報を参照
-		auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
-		this->epos = ML::Vec2((int)e->pos.x / this->magni, 500 - (int)e->pos.z / this->magni);
-		this->eangle = e->angle.y + ML::ToRadian(90);
+		if (this->debugMode)
+		{
+			auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
+			this->epos = ML::Vec2((int)e->pos.x / this->magni, 500 - (int)e->pos.z / this->magni);
+			this->eangle = e->angle.y + ML::ToRadian(90);
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -113,24 +119,10 @@ namespace  MiniMap
 		if (this->MiniMap_View() == true)
 		{
 			//ミニマップ
-			ML::Box2D draw(60,60, 500, 500);
-			ML::Box2D src(0, 0, 500, 500);
-			//draw.Offset(this->plpos);
-			//src.Offset(this->plpos);
-			//src.w += this->plpos.x;
-			//src.h += this->plpos.y;
-			//if (src.w > 500)
-			//{
-			//	src.w = 500;
-			//}
-			//if (src.h > 500)
-			//{
-			//	src.h = 500;
-			//}
-			DG::Image_Draw(this->imageName, draw, src);
+			this->MiniMap_Render();
 			//プレイヤ位置
-			draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
-			src = ML::Box2D(0, 0, 50, 50);
+			ML::Box2D draw(-5 + 60, -7 + 60, 9, 13);
+			ML::Box2D src(0, 0, 50, 50);
 			draw.Offset(this->plpos);
 			DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
 			DG::Image_Draw(this->plImgName, draw, src);
@@ -145,10 +137,13 @@ namespace  MiniMap
 
 			//デバッグ用
 			//エネミー描画
-			draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
-			draw.Offset(this->epos);
-			DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
-			DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
+			if (this->debugMode)
+			{
+				draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
+				draw.Offset(this->epos);
+				DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
+				DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
+			}
 		}
 	}
 	//-------------------------------------------------------------------
@@ -166,7 +161,16 @@ namespace  MiniMap
 	{
 		this->viewFlag = !this->viewFlag;
 	}
+	//
+	void Object::MiniMap_Render()
+	{
+		ML::Box2D draw(60, 60, 500, 500);
+		ML::Box2D src(0, 0, 500, 500);
+		//描画位置の変更
 
+		//リソースの参照位置を変更
+		DG::Image_Draw(this->imageName, draw, src);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

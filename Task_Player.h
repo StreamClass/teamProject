@@ -143,6 +143,8 @@ namespace Player
 		bool Is_Used_Tablet();
 		//疲れているかを渡す
 		bool Is_Tired();
+		//スタミナの残量を渡す
+		float Get_Stamina();
 		//デバッグ用無敵モードのオンオフ
 		bool Get_DebugOnOff();
 	};

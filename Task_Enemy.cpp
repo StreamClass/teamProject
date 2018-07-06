@@ -120,7 +120,7 @@ namespace  Enemy
 				//目的地設定
 				this->toVec = this->system.NextRoute();
 			}
-			else if (this->timeCnt % 30 == 0)
+			else if (this->timeCnt % 10 == 0)
 			{
 				//センサーチェック
 				this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);

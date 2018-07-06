@@ -13,6 +13,7 @@ Bone::Bone(const float& tall)
 	float length_of_hand = (tall / 2.0f)*(4.0f / 14.0f);
 
 
+	// TODO 後で直す
 	//頭の初期化
 	ML::Vec3 center_of_head = ML::Vec3(this->center_of_Body + (this->center_of_Body*(12.0f / 14.0f)));
 	Shape* head = new Cube(center_of_head, (center_of_head + ML::Vec3(-length_of_hand / 2.0f, -length_of_hand / 2.0f, -length_of_hand * (3.0f / 8.0f))), length_of_hand, length_of_hand, length_of_hand*(3.0f / 4.0f));
@@ -155,6 +156,7 @@ Bone::Bone(const float& tall)
 	this->motionCnt = 0.0f;
 	this->motion_Index = 0;
 	this->now_Motion = "";
+	this->next_Motion = "";
 	this->repeat_Flag = false;
 }
 
@@ -206,6 +208,8 @@ void Bone::UpDate()
 				//クォータニオン合成
 				qtA = qtx * qty * qtz;
 
+				//関節のクォータニオン更新
+				this->joint[i]->Quartanion_Update(qtA);
 				//回転行列作成
 				matR.Identity();
 				D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &qtA, NULL);
@@ -229,9 +233,19 @@ void Bone::UpDate()
 				//連続行動フラグが立っていない場合
 				else
 				{
-					//モーションを空にする
-					this->now_Motion == "";
-					this->motion_Index = 0;
+					//予約モーションがある場合現在モーションに置き換える
+					if (this->next_Motion != "")
+					{
+						this->now_Motion = this->next_Motion;
+						//予約は空にする
+						this->next_Motion = "";
+					}
+					else
+					{
+						//モーションを空にする
+						this->now_Motion == "";
+						this->motion_Index = 0;
+					}
 				}
 			}
 			//つずきがある場合
@@ -254,6 +268,16 @@ void Bone::UpDate()
 	this->repeat_Flag = false;
 }
 
+void Bone::Set_Next_Motion(const string& next)
+{
+	//念のために登録されてるものかを確認
+	if (this->motions.count(next) >= 1)
+	{
+		//次のモーションを予約
+		this->next_Motion = next;
+	}
+}
+
 void Bone::Repeat_Now_Motioin()
 {
 	this->repeat_Flag = true;
@@ -261,18 +285,56 @@ void Bone::Repeat_Now_Motioin()
 
 void Bone::To_Standing()
 {
-	//スタンディングの時に関節から骨までベクトルを宣言
-	//Y+(腰と首)
-	ML::Vec3 yplus(0, 1, 0);
-	//Y-(その他)
-	ML::Vec3 yminus(0, -1, 0);
-
 	for (int i = 0; i < JOINT_ON_HUMAN; i++)
 	{
-		float sin = 0.0f;
+		ML::Vec3 standing_Vec;
+		//スタンディングの時に関節から骨までベクトルを宣言
+		if (i < 2)
+		{
+			//Y+(腰と首)
+			standing_Vec = ML::Vec3(0, 1, 0);
+		}
+		else
+		{
+			//Y-(その他)
+			standing_Vec = ML::Vec3(0, -1, 0);
+		}
+		float s = 0.0f;
 
 		ML::Vec3 bone_Vec = this->joint[i]->Get_To_Bone();
 		//ボーン情報と外積でsin値を取る
-		MyMath::Vector_Cross(&sin, bone_Vec, yplus);
+		MyMath::Vector_Cross(&s, bone_Vec, standing_Vec);
+
+		//関節一個ずつ戻せた後に次の関節を整頓
+		if (abs(s) <= sinf(ML::ToRadian(2)))
+		{
+			continue;
+		}
+		else
+		{
+			//回転軸宣言
+			ML::Vec3 anker;
+			MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);
+
+			//残り回転量の半分ずつ回転を巻き返す
+			//クォータニオン宣言
+			ML::QT remain = ML::QT(anker, -s / 2.0f);
+			//回転行列宣言
+			ML::Mat4x4 matR;
+			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remain, NULL);
+			//回転
+			this->joint[i]->Rotate_Bone(&matR);
+
+			return;
+		}
+	}
+}
+
+void Bone::Render()
+{
+	//関節全体にレンダリング命令する
+	for (int i = 0; i < JOINT_ON_HUMAN; i++)
+	{
+		this->joint[i]->Render();
 	}
 }

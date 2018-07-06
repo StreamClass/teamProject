@@ -16,6 +16,8 @@ private:
 	const float limit_Y_Plus;
 	const float limit_Z_Minus;
 	const float limit_Z_Plus;
+	//現在までの回転量クォータニオン
+	ML::QT rotated;
 	//繋がれた骨のアドレス値(仮の名前)
 	Shape* area;
 	//下の関節(存在しない場合はnullptr)
@@ -36,9 +38,13 @@ public:
 	void Rotated_by_Prev_Joint(ML::Mat4x4*);
 	//次の関節をセット
 	void Set_Next_Joint(Joint*);
+	//回転量アップデート
+	void Quartanion_Update(const ML::QT&);
+
 	//レンダリング
 	void Render();
 
+	
 	//現在関節とボーンまでのベクトルを返す
 	ML::Vec3 Get_To_Bone();
 
@@ -62,6 +68,7 @@ public:
 		limit_Z_Minus(0.0f),
 		limit_Z_Plus(0.0f)
 	{
+		this->rotated = ML::QT();
 		this->pos = ML::Vec3(0, 0, 0);		
 		this->area = nullptr;
 		this->next = nullptr;
@@ -76,6 +83,7 @@ public:
 		limit_Z_Minus(zm),
 		limit_Z_Plus(zp)
 	{
+		this->rotated = ML::QT();
 		this->pos = p;
 		this->area = bone;
 		this->mesh_Name = name;

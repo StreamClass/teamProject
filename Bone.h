@@ -48,6 +48,8 @@ private:
 	int motion_Index;
 	//今何のモーションなのかを確認するキー
 	string now_Motion;
+	//予約かけてる次に動くモーションを確認するキー
+	string next_Motion;
 	//モーションが一回り終わっても繰り返すフラグ(走るモーションとかに利用)
 	bool repeat_Flag;
 
@@ -78,6 +80,8 @@ public:
 	//引数 : (Y軸回転量)
 	void Bone_RotateY_All(const float& radian);
 
+	//次のモーション予約
+	void Set_Next_Motion(const string& next);
 	//連続行動フラグを立てる
 	void Repeat_Now_Motioin();
 	//アニメーションアップデート
@@ -117,6 +121,7 @@ public:
 		this->motionCnt = 0.0f;
 		this->motion_Index = 0;
 		this->now_Motion = "";
+		this->next_Motion = "";
 		this->repeat_Flag = false;
 	}
 	//引数 : (身長)
