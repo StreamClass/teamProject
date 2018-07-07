@@ -244,24 +244,20 @@ namespace  Player
 				auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
 				mm->Set_MiniMap_View();
 			}
-			//デバッグ用
-			//if (in.L1.on)
-			//{
-			//	this->pos.y += 8;
-			//}
-			//if (in.R1.on)
-			//{
-			//	this->pos.y -= 8;
-			//}
 		}
 		else
 		{
 			this->tab->Select_Camera();
 		}
-
 		if (in.B4.down)
 		{
 			this->tab->Open_or_Close_Tablet();
+		}
+
+		//デバッグ用
+		if (in.S1.down)
+		{
+			this->stamina = 0;
 		}
 	}
 	//-------------------------------------------------------------------

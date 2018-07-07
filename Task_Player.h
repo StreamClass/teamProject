@@ -111,8 +111,8 @@ namespace Player
 		//スタミナ回復フラグ
 		bool recovery_Flag;
 
+		//デバッグ用
 		bool debugMode;
-
 		int breakerOnCnt;
 	public:
 		//追加メソッド

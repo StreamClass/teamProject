@@ -58,7 +58,6 @@ namespace Aiming
 		ML::Vec2 aimPosB; 
 		ML::Vec2 aimPosL; 
 		ML::Vec2 aimPosR;
-		float aimMoveMax;
 		ML::Vec3 pos;
 		float aimMoveSpeed;
 		float aimMovetremor;

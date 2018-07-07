@@ -70,7 +70,6 @@ namespace  Aiming
 		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
 		this->aimPosL = ML::Vec2(ge->screen2DWidth / 2 - 15, ge->screen2DHeight / 2);
 		this->aimPosR = ML::Vec2(ge->screen2DWidth / 2 + 15, ge->screen2DHeight / 2);
-		this->aimMoveMax = 20.0f;
 		this->timeCnt = 0;
 		this->pos = ML::Vec3(0, 0, 0);
 		this->aimMoveSpeed = 0;
@@ -105,13 +104,14 @@ namespace  Aiming
 			this->aimMovetremor = pl->Get_MoveSpeed() + 5.0f;
 			if (pl->Is_Tired())
 			{
-				this->aimMoveSpeed = 8.0f/*(MAX_STAMINA / 3 - pl->Get_Stamina()) / 10.0f*/;
+				this->aimMoveSpeed = (MAX_STAMINA / 3 - pl->Get_Stamina()) / 10.0f;
 				this->aimMovetremor =  (pl->Get_MoveSpeed() + 5.0f) * 5.0f;
 			}
-			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f - (15 + this->aimMovetremor));
-			this->aimPosB.y = sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f + (15 + this->aimMovetremor));
-			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f - (15 + this->aimMovetremor));
-			this->aimPosR.x = sin(ML::ToRadian(this->moveCnt * this->aimMoveSpeed)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f + (15 + this->aimMovetremor));
+			this->moveCnt += this->aimMoveSpeed;
+			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f - (15 + this->aimMovetremor));
+			this->aimPosB.y =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f + (15 + this->aimMovetremor));
+			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f - (15 + this->aimMovetremor));
+			this->aimPosR.x =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f + (15 + this->aimMovetremor));
 			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && pl->Is_Tired() == false)
 			{
 				this->moveCnt = 0;

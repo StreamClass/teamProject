@@ -69,7 +69,8 @@ namespace MyPG
 			{ DIK_R, DI::But::R2 },{ DIK_D, DI::But::L3 },{ DIK_NUMPAD5, DI::But::R3 },
 			{ DIK_U, DI::But::HU },{ DIK_J, DI::But::HD },
 			{ DIK_H, DI::But::HL },{ DIK_L, DI::But::HR },
-			{ DIK_LSHIFT, DI::But::S0},
+			//デバッグ用に追加
+			{ DIK_LSHIFT, DI::But::S0},{ DIK_LCONTROL, DI::But::S1},
 		};
 		//ゲームパッドパラメータ
 		DI::KeyDatas_GP	but = {
