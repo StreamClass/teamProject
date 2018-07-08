@@ -74,6 +74,9 @@ namespace  Player
 		this->recovery_Flag = false;
 		this->debugMode = false;
 
+		this->plBone = new Bone(180);		
+
+
 		this->breakerOnCnt = 0;
 
 		this->tab = ge->OM.Create_Tablet();
@@ -98,6 +101,9 @@ namespace  Player
 	{
 		//★データ＆タスク解放
 		ge->KillAll_G("エイム");
+
+		//ボーン開放
+		delete this->plBone;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -280,17 +286,18 @@ namespace  Player
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		if (this->Is_Used_Tablet() == true)
-		{
-			ML::Mat4x4 matT;
-			matT.Translation(this->pos);
-			//回転行列の生成
-			ML::Mat4x4 matR;
-			matR.RotationY(this->angle.y);
-			//モデル表示
-			DG::EffectState().param.matWorld = matR * matT;;
-			DG::Mesh_Draw(this->res->meshName);
-		}
+		//if (this->Is_Used_Tablet() == true)
+		//{
+		//	ML::Mat4x4 matT;
+		//	matT.Translation(this->pos);
+		//	//回転行列の生成
+		//	ML::Mat4x4 matR;
+		//	matR.RotationY(this->angle.y);
+		//	//モデル表示
+		//	DG::EffectState().param.matWorld = matR * matT;;
+		//	DG::Mesh_Draw(this->res->meshName);
+		//}
+		this->plBone->Render();
 	}
 	//-------------------------------------------------------------------
 	//プレイヤの座標をML::Vec3型で返す
@@ -320,6 +327,7 @@ namespace  Player
 	void Object::Ini_Pos(const ML::Vec3& pos)
 	{
 		this->pos = pos;
+		this->plBone->Moving(pos);
 	}
 	//-------------------------------------------------------------------
 	//めり込まない処理
@@ -333,13 +341,16 @@ namespace  Player
 
 			//1cmもしくはそれ以下の残り分移動させる
 			if (est_.x >= 1.0f) {
-				this->pos.x += 1.0f;		est_.x -= 1.0f;
+				this->pos.x += 1.0f;
+				est_.x -= 1.0f;
 			}//+方向
 			else if (est_.x <= -1.0f) {
-				this->pos.x -= 1.0f;		est_.x += 1.0f;
+				this->pos.x -= 1.0f;	
+				est_.x += 1.0f;
 			}//-方向
 			else {
-				this->pos.x += est_.x;		est_.x = 0.0f;
+				this->pos.x += est_.x;	
+				est_.x = 0.0f;
 			}
 
 			//接触判定を試みる
@@ -357,13 +368,16 @@ namespace  Player
 
 									 //1cmもしくはそれ以下の残り分移動させる
 			if (est_.z >= 1.0f) {
-				this->pos.z += 1.0f;		est_.z -= 1.0f;
+				this->pos.z += 1.0f;		
+				est_.z -= 1.0f;
 			}//+方向
 			else if (est_.z <= -1.0f) {
-				this->pos.z -= 1.0f;		est_.z += 1.0f;
+				this->pos.z -= 1.0f;	
+				est_.z += 1.0f;
 			}//-方向
 			else {
-				this->pos.z += est_.z;		est_.z = 0.0f;
+				this->pos.z += est_.z;	
+				est_.z = 0.0f;
 			}
 
 			//接触判定を試みる

@@ -75,6 +75,9 @@ public:
 	//ゲッター
 	ML::Vec3 Get_Center();
 
+	//座標移動
+	void Moving(const ML::Vec3& vec);
+
 	//体全体をY軸回転を行う
 	//ほかの軸も必要に応じて追加可能性あり(2018/07/04)
 	//引数 : (Y軸回転量)

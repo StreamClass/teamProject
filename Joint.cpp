@@ -5,6 +5,7 @@
 void Joint::Move(const ML::Vec3& vec)
 {
 	this->pos += vec;
+	this->area->Move(vec);
 }
 
 void Joint::Set_Next_Joint(Joint* next)
@@ -88,7 +89,7 @@ void Joint::Render()
 {
 	//表示用ワールド行列作成
 	ML::Mat4x4 matW;
-	D3DXMatrixAffineTransformation(&matW, 1.0f, &this->pos, &this->rotated, &this->area->GetCenter());
+	D3DXMatrixAffineTransformation(&matW, 100.0f, &this->pos, &this->rotated, &this->area->GetCenter());
 	//行列適用
 	DG::EffectState().param.matWorld = matW;
 	//レンダリング

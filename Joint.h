@@ -87,7 +87,7 @@ public:
 		this->pos = p;
 		this->area = bone;
 		this->mesh_Name = name;
-		DG::Mesh_CreateFromSOBFile(this->mesh_Name, "./data/mesh/bone_test/" + this->mesh_Name + ".sob");
+		DG::Mesh_CreateFromSOBFile(this->mesh_Name, "./data/mesh/bone/" + this->mesh_Name + ".sob");
 	}
 
 	//デストラクタ

@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 #include "Tablet.h"
+#include "Bone.h"
 
 #define NORMALSPEED 10
 #define TIRED_SPEED 3
@@ -105,6 +106,9 @@ namespace Player
 		bool		clearFlag;
 		//タブレット
 		Tablet* tab;
+
+		//ボーンアニメーション用
+		Bone* plBone;
 
 		//スタミナ
 		float stamina;
