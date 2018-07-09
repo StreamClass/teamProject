@@ -86,6 +86,7 @@ public:
 		this->rotated = ML::QT();
 		this->pos = p;
 		this->area = bone;
+		this->next = nullptr;
 		this->mesh_Name = name;
 		DG::Mesh_CreateFromSOBFile(this->mesh_Name, "./data/mesh/bone/" + this->mesh_Name + ".sob");
 	}

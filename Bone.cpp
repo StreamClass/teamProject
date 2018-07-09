@@ -9,6 +9,8 @@ Bone::Bone(const float& tall)
 {
 	//中心指定
 	this->center_of_Body = ML::Vec3(0, tall / 2.0f, 0);
+	//回転値初期化
+	this->All_RotY = 0.0f;
 	//比率の基準になる手の長さ
 	float length_of_hand = (tall / 2.0f)*(4.0f / 14.0f);
 
@@ -169,18 +171,32 @@ ML::Vec3 Bone::Get_Center()
 
 void Bone::Bone_RotateY_All(const float& radian)
 {
-	//アフィン変換で回転行列作成
-	ML::Mat4x4 matR;
-	ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), radian);
-	D3DXMatrixAffineTransformation(&matR, 1.0f, &this->center_of_Body, &qtY, NULL);
+	//全体回転値との差分だけ回転する
+	float def = this->All_RotY - radian;
+	if (def != 0.0f)
+	{
+		//アフィン変換で回転行列作成
+		ML::Mat4x4 matR;
+		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), def);
+		//this->All_Qt *= ML::QT(ML::Vec3(0, 1, 0), radian);
+		D3DXMatrixAffineTransformation(&matR, 1.0f, &this->center_of_Body, &qtY, NULL);
 
-	//関節全体を回転させる
-	this->joint[0]->Rotated_by_Prev_Joint(&matR);
-	this->joint[2]->Rotated_by_Prev_Joint(&matR);
-	this->joint[5]->Rotated_by_Prev_Joint(&matR);
-	this->joint[8]->Rotated_by_Prev_Joint(&matR);
-	this->joint[11]->Rotated_by_Prev_Joint(&matR);
+		//関節全体を回転させる
+		this->joint[0]->Rotated_by_Prev_Joint(&matR);
+		this->joint[2]->Rotated_by_Prev_Joint(&matR);
+		this->joint[5]->Rotated_by_Prev_Joint(&matR);
+		this->joint[8]->Rotated_by_Prev_Joint(&matR);
+		this->joint[11]->Rotated_by_Prev_Joint(&matR);
 
+		//全関節のクォータニオンを更新
+		for (int i = 0; i < JOINT_ON_HUMAN; i++)
+		{
+			this->joint[i]->Quartanion_Update(qtY);
+		}
+	}
+	
+	this->All_RotY = radian;
+	
 }
 
 void Bone::Moving(const ML::Vec3& vec)

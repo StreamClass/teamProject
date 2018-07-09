@@ -42,6 +42,9 @@ private:
 	Joint* right_Ankle;
 	*/
 
+	//全体のY回転値
+	float All_RotY;
+
 	//モーション用カウンタ
 	float motionCnt;
 	//ヴェクターの[]演算子で利用する識別子
@@ -99,7 +102,7 @@ public:
 		tall(0.0f)
 	{
 		this->center_of_Body = ML::Vec3(0, 0, 0);
-
+		this->All_RotY = 0.0f;
 		/*this->neck = nullptr;
 		this->waist = nullptr;
 		this->left_Sholder = nullptr;

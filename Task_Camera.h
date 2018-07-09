@@ -58,6 +58,9 @@ namespace Camera
 		//ノイズの動き用のカウント
 		int noise_Cnt;
 
+		//test flag
+		bool test_flag;
+
 	public:
 		//追加メソッド
 		void Noise_Reset();

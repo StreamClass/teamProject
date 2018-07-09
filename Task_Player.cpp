@@ -140,12 +140,15 @@ namespace  Player
 				this->moveVec.z = -this->speed * in.LStick.axis.x;
 				//頂点を座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
+				//ボーン全体をY軸回転
+				this->plBone->Bone_RotateY_All(this->angle.y);
 			}
 			else
 			{
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
 			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
+			
 			//速度指定
 			if (in.R1.on)
 			{
@@ -270,12 +273,13 @@ namespace  Player
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
+		ML::Vec3 bonepos = this->plBone->Get_Center();
 		if(this->debugMode)
 		{
 			ML::Box2D draw(500, 0, 580, 300);
 			string text = "X=" + to_string(this->pos.x) + "Y=" + to_string(this->pos.y) + "Z=" + to_string(this->pos.z) + "\n"
 				+ "this->angle.y=" + to_string(ML::ToDegree(this->angle.y)) + "注視点の高さ" + to_string(this->adjust_TG) + "\n" +
-				to_string(this->breakerOnCnt);
+				to_string(this->breakerOnCnt)+ "\n";
 			if (this->debugMode)
 			{
 				text += "  Debug";
@@ -342,14 +346,17 @@ namespace  Player
 			//1cmもしくはそれ以下の残り分移動させる
 			if (est_.x >= 1.0f) {
 				this->pos.x += 1.0f;
+				this->plBone->Moving(ML::Vec3(1.0f, 0, 0));
 				est_.x -= 1.0f;
 			}//+方向
 			else if (est_.x <= -1.0f) {
 				this->pos.x -= 1.0f;	
+				this->plBone->Moving(ML::Vec3(-1.0f, 0, 0));
 				est_.x += 1.0f;
 			}//-方向
 			else {
-				this->pos.x += est_.x;	
+				this->pos.x += est_.x;
+				this->plBone->Moving(ML::Vec3(est_.x, 0, 0));
 				est_.x = 0.0f;
 			}
 
@@ -368,15 +375,18 @@ namespace  Player
 
 									 //1cmもしくはそれ以下の残り分移動させる
 			if (est_.z >= 1.0f) {
-				this->pos.z += 1.0f;		
+				this->pos.z += 1.0f;
+				this->plBone->Moving(ML::Vec3(0, 0, 1.0f));
 				est_.z -= 1.0f;
 			}//+方向
 			else if (est_.z <= -1.0f) {
 				this->pos.z -= 1.0f;	
+				this->plBone->Moving(ML::Vec3(0, 0, -1.0f));
 				est_.z += 1.0f;
 			}//-方向
 			else {
 				this->pos.z += est_.z;	
+				this->plBone->Moving(ML::Vec3(0, 0, est_.z));
 				est_.z = 0.0f;
 			}
 

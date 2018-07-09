@@ -63,6 +63,8 @@ namespace  Camera
 		//ノイズのスクロールカウント
 		this->noise_Cnt = 0;
 
+		this->test_flag = false;
+
 		//★タスクの生成
 
 		return  true;
@@ -98,9 +100,21 @@ namespace  Camera
 		{
 			return;
 		}
+		
+		if (DI::GPad_GetState("P1").SE.down)
+		{
+			this->test_flag ? this->test_flag = false : this->test_flag = true;
+		}
 		//注視点の距離
 		//カメラマンの座標にプレイヤ座標を代入
-		this->pos = pl->Get_Pos();
+		if (this->test_flag == false)
+		{
+			this->pos = pl->Get_Pos();
+		}
+		else
+		{
+			this->pos = pl->Get_Pos() - ML::Vec3(0, 0, 500);
+		}
 		//カメラマンのアングルにプレイヤのアングルを代入
 		this->angle = pl->Get_Angle();
 		//注視点
