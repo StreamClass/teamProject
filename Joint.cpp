@@ -1,4 +1,5 @@
 #include "Joint.h"
+#include <iostream>
 
 //移動
 
@@ -36,50 +37,51 @@ void Joint::Rotated_by_Prev_Joint(ML::Mat4x4* matR)
 //getter
 
 //関節の現在位置を返す(絶対座標)
-ML::Vec3 Joint::Get_Pos()
+ML::Vec3 Joint::Get_Pos() const
 {
 	return this->pos;
 }
 
 //各回転量の限界値を返す
 //X
-float Joint::Get_Limit_X_Minus()
+float Joint::Get_Limit_X_Minus() const
 {
 	return this->limit_X_Minus;
 }
 
-float Joint::Get_Limit_X_Plus()
+float Joint::Get_Limit_X_Plus() const
 {
 	return this->limit_X_Plus;
 }
 
 //Y
-float Joint::Get_Limit_Y_Minus()
+float Joint::Get_Limit_Y_Minus() const
 {
 	return this->limit_Y_Minus;
 }
 
-float Joint::Get_Limit_Y_Plus()
+float Joint::Get_Limit_Y_Plus() const
 {
 	return this->limit_Y_Plus;
 }
 
 //Z
-float Joint::Get_Limit_Z_Minus()
+float Joint::Get_Limit_Z_Minus() const
 {
 	return this->limit_Z_Minus;
 }
 
-float Joint::Get_Limit_Z_Plus()
+float Joint::Get_Limit_Z_Plus() const
 {
 	return this->limit_Z_Plus;
 }
 
-ML::Vec3 Joint::Get_To_Bone()
+ML::Vec3 Joint::Get_To_Bone() const
 {
 	return (this->area->GetCenter() - this->pos);
 }
 
+//-----------------------------------------------------------------------------------------
 void Joint::Quartanion_Update(const ML::QT& uqt)
 {
 	this->rotated *= uqt;
@@ -88,10 +90,18 @@ void Joint::Quartanion_Update(const ML::QT& uqt)
 void Joint::Render()
 {
 	//表示用ワールド行列作成
-	ML::Mat4x4 matW;
-	D3DXMatrixAffineTransformation(&matW, 100.0f, &this->pos, &this->rotated, &this->area->GetCenter());
+	ML::Mat4x4 matW;	
+	D3DXMatrixAffineTransformation(&matW, 100.0f, NULL, &this->rotated, &this->area->GetCenter());
 	//行列適用
-	DG::EffectState().param.matWorld = matW;
+	DG::EffectState().param.matWorld = matW ;
 	//レンダリング
 	DG::Mesh_Draw(this->mesh_Name);
+}
+
+void Joint::DEBUG()
+{
+	ML::Vec3 devec = this->area->GetCenter();
+	cout <<this->mesh_Name +" " << "X : " <<devec.x << " Y ; " << devec.y << " Z : " << devec.z << endl;
+	cout << this->mesh_Name + " " << "X : " << this->pos.x << " Y ; " << this->pos.y << " Z : " << this->pos.z << endl;
+	
 }

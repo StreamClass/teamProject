@@ -46,17 +46,22 @@ public:
 
 	
 	//現在関節とボーンまでのベクトルを返す
-	ML::Vec3 Get_To_Bone();
+	ML::Vec3 Get_To_Bone() const;
+
+
+
+	//デバッグ用
+	void DEBUG();
 
 
 	//ゲッター
-	ML::Vec3 Get_Pos();
-	float Get_Limit_X_Plus();
-	float Get_Limit_X_Minus();
-	float Get_Limit_Y_Plus();
-	float Get_Limit_Y_Minus();
-	float Get_Limit_Z_Plus();
-	float Get_Limit_Z_Minus();
+	ML::Vec3 Get_Pos() const;
+	float Get_Limit_X_Plus() const;
+	float Get_Limit_X_Minus()const;
+	float Get_Limit_Y_Plus()const;
+	float Get_Limit_Y_Minus()const;
+	float Get_Limit_Z_Plus()const;
+	float Get_Limit_Z_Minus()const;
 
 	//コンストラクタ
 	//ゼロクリア
@@ -83,7 +88,8 @@ public:
 		limit_Z_Minus(zm),
 		limit_Z_Plus(zp)
 	{
-		this->rotated = ML::QT();
+		//左手法右手法を治すために
+		this->rotated = ML::QT(ML::Vec3(0,1,0),ML::ToRadian(180));
 		this->pos = p;
 		this->area = bone;
 		this->next = nullptr;

@@ -1,5 +1,6 @@
 #pragma once
 #include "myLib.h"
+#include "Joint.h"
 
 #define JOINT_ON_HUMAN 14
 
@@ -52,7 +53,7 @@ namespace Motion
 
 		//コンストラクタ
 		//引数 : (各関節がたどり着く回転量 首、腰、左肩、左肘、左手首、右肩、右肘、右手首、左お尻、左膝、左足首、右お尻、右膝、右足首、たどり着くまでの時間)
-		Motion_Data(const ML::Vec3& neck, const ML::Vec3& waist,
+		Motion_Data(const ML::Vec3& waist, const ML::Vec3& neck,
 			const ML::Vec3& l_sholder, const ML::Vec3& l_elbow, const ML::Vec3& l_wrist,
 			const ML::Vec3& r_sholder, const ML::Vec3& r_elbow, const ML::Vec3& r_wrist,
 			const ML::Vec3& l_hip, const ML::Vec3& l_knee, const ML::Vec3& l_ankle,
@@ -79,10 +80,75 @@ namespace Motion
 			this->joint[12] = r_knee;
 			this->joint[13] = r_ankle;
 		}
-	};
+	}; 
 
 	
-	//モーション生成関数
-	//引数 : (モーションの名前、登録させるボーンのアドレス値、外部ファイルパス）
-	//void Make_Motion(const string& motion_Name, Bone* b, const string& file_Path);
+	////生成されているモーションデータの上限下限を確認する
+	//void Set_Upper_Lower_Limits(const Joint* j, Motion_Data* md, const int index)
+	//{
+	//	//もしもの不貞アクセスを防ぐために
+	//	if (index >= JOINT_ON_HUMAN)
+	//	{
+	//		return;
+	//	}
+	//	//回転量が書き込まれたもののみ比べる
+	//	if (md->joint[index].Is_Zero_Vec())
+	//	{
+	//		return;
+	//	}
+
+	//	//最大値最小値を超える場合は上書きする
+	//	//X比べ
+	//	if (md->joint[index].x < 0.0f)
+	//	{
+
+	//		if (md->joint[index].x < j->Get_Limit_X_Minus())
+	//		{
+	//			md->joint[index].x = j->Get_Limit_X_Minus();
+	//		}
+	//	}
+	//	else if (md->joint[index].x > 0.0f)
+	//	{
+	//		if (md->joint[index].x > j->Get_Limit_X_Plus())
+	//		{
+	//			md->joint[index].x = j->Get_Limit_X_Plus();
+	//		}
+	//	}
+
+	//	//Y比べ
+	//	if (md->joint[index].y < 0.0f)
+	//	{
+
+	//		if (md->joint[index].y < j->Get_Limit_Y_Minus())
+	//		{
+	//			md->joint[index].y = j->Get_Limit_Y_Minus();
+	//		}
+	//	}
+	//	else if (md->joint[index].y > 0.0f)
+	//	{
+	//		if (md->joint[index].y > j->Get_Limit_Y_Plus())
+	//		{
+	//			md->joint[index].y = j->Get_Limit_Y_Plus();
+	//		}
+	//	}
+
+	//	//Z比べ
+	//	if (md->joint[index].z < 0.0f)
+	//	{
+
+	//		if (md->joint[index].z < j->Get_Limit_Z_Minus())
+	//		{
+	//			md->joint[index].z = j->Get_Limit_Z_Minus();
+	//		}
+	//	}
+	//	else if (md->joint[index].z > 0.0f)
+	//	{
+	//		if (md->joint[index].z > j->Get_Limit_Z_Plus())
+	//		{
+	//			md->joint[index].z = j->Get_Limit_Z_Plus();
+	//		}
+	//	
+	//	}
+	//}
+
 }

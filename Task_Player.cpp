@@ -140,14 +140,16 @@ namespace  Player
 				this->moveVec.z = -this->speed * in.LStick.axis.x;
 				//頂点を座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
-				//ボーン全体をY軸回転
-				this->plBone->Bone_RotateY_All(this->angle.y);
+				
+				
 			}
 			else
 			{
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
 			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
+			//ボーン全体をY軸回転
+			this->plBone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
 			
 			//速度指定
 			if (in.R1.on)
@@ -263,6 +265,9 @@ namespace  Player
 			this->tab->Open_or_Close_Tablet();
 		}
 
+		//タブレット使用とは別にボーンアニメーションアップデートは進む
+		this->plBone->UpDate();
+
 		//デバッグ用
 		if (in.S1.down)
 		{
@@ -331,7 +336,7 @@ namespace  Player
 	void Object::Ini_Pos(const ML::Vec3& pos)
 	{
 		this->pos = pos;
-		this->plBone->Moving(pos);
+		this->plBone->Moving(pos+ML::Vec3(0,30,0));
 	}
 	//-------------------------------------------------------------------
 	//めり込まない処理
@@ -342,7 +347,8 @@ namespace  Player
 		//水平方向（x平面)に対する移動
 		while (est_.x != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preX = this->pos.x;//移動前の座標を保持
-
+			float bone_Pre_X = this->plBone->Get_Center().x;
+									 
 			//1cmもしくはそれ以下の残り分移動させる
 			if (est_.x >= 1.0f) {
 				this->pos.x += 1.0f;
@@ -363,7 +369,11 @@ namespace  Player
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
 			if (true == mp->Map_CheckHit(hit)) {
-				this->pos.x = preX;		//接触していたので、元に戻す
+				//接触していたので、元に戻す
+				this->pos.x = preX;		
+				bone_Pre_X -= this->plBone->Get_Center().x;
+				this->plBone->Moving(ML::Vec3(bone_Pre_X, 0, 0));
+
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
 		}
@@ -372,7 +382,7 @@ namespace  Player
 		//水平方向（x平面)に対する移動
 		while (est_.z != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preZ = this->pos.z;//移動前の座標を保持
-
+			float bone_Pre_Z = this->plBone->Get_Center().z;
 									 //1cmもしくはそれ以下の残り分移動させる
 			if (est_.z >= 1.0f) {
 				this->pos.z += 1.0f;
@@ -393,7 +403,11 @@ namespace  Player
 			//接触判定を試みる
 			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
 			if (true == mp->Map_CheckHit(hit)) {
-				this->pos.z = preZ;		//接触していたので、元に戻す
+				//接触していたので、元に戻す
+				this->pos.z = preZ;
+				bone_Pre_Z -= this->plBone->Get_Center().z;
+				this->plBone->Moving(ML::Vec3(0, 0, bone_Pre_Z));
+
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
 		}
@@ -415,6 +429,8 @@ namespace  Player
 				if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
 				{
 					(*it)->ActivateBreaker();
+					//ボタン操作モーション実行
+					this->plBone->Set_Next_Motion("InterAction");
 					this->breakerOnCnt++;
 					break;
 				}

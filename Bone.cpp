@@ -43,10 +43,10 @@ Bone::Bone(const float& tall)
 	ML::Vec3 left_center_of_knee = center_of_left_hip + ML::Vec3(0, -length_of_hand * 2.0f, 0);
 	Joint* left_knee = new Joint(left_center_of_knee, ML::ToRadian(-180), ML::ToRadian(0), ML::ToRadian(-15), ML::ToRadian(15), ML::ToRadian(0), ML::ToRadian(0), left_shin,"Left_Shin");
 	//足元の初期化
-	ML::Vec3 left_center_of_foot = left_center_of_shin + ML::Vec3(0, -length_of_hand*(4.0f / 3.0f), length_of_hand / 2.0f);
+	ML::Vec3 left_center_of_foot = left_center_of_shin + ML::Vec3(0, -length_of_hand * (4.0f / 3.0f), length_of_hand / 2.0f);
 	Shape* left_foot = new Cube(left_center_of_foot, left_center_of_foot + ML::Vec3(-length_of_hand / 6.0f, 0, -length_of_hand / 2.0f), length_of_hand / 3.0f, length_of_hand*(2.0f / 3.0f), length_of_hand);
 	//足首の初期化
-	ML::Vec3 left_center_of_ankle = left_center_of_knee + ML::Vec3(0, length_of_hand*2.0f, 0);
+	ML::Vec3 left_center_of_ankle = left_center_of_knee + ML::Vec3(0, -length_of_hand*2.0f, 0);
 	Joint* left_ankle = new Joint(left_center_of_ankle, ML::ToRadian(-90), ML::ToRadian(45), ML::ToRadian(-5), ML::ToRadian(5), ML::ToRadian(0), ML::ToRadian(10), left_foot,"Left_Foot");
 
 	//右足
@@ -65,7 +65,7 @@ Bone::Bone(const float& tall)
 	ML::Vec3 right_center_of_foot = right_center_of_shin + ML::Vec3(0, -length_of_hand*(4.0f / 3.0f), length_of_hand / 2.0f);
 	Shape* right_foot = new Cube(right_center_of_foot, right_center_of_foot + ML::Vec3(-length_of_hand / 6.0f, 0, -length_of_hand / 2.0f), length_of_hand / 3.0f, length_of_hand*(2.0f / 3.0f), length_of_hand);
 	//足首の初期化
-	ML::Vec3 right_center_of_ankle = right_center_of_knee + ML::Vec3(0, length_of_hand*2.0f, 0);
+	ML::Vec3 right_center_of_ankle = right_center_of_knee + ML::Vec3(0, -length_of_hand*2.0f, 0);
 	Joint* right_ankle = new Joint(right_center_of_ankle, ML::ToRadian(-90), ML::ToRadian(45), ML::ToRadian(-5), ML::ToRadian(5), ML::ToRadian(-10), ML::ToRadian(0), right_foot,"Right_Foot");
 
 
@@ -160,6 +160,9 @@ Bone::Bone(const float& tall)
 	this->now_Motion = "";
 	this->next_Motion = "";
 	this->repeat_Flag = false;
+
+	//プリセット登録
+	this->Make_Interaction();
 }
 
 
@@ -177,10 +180,9 @@ void Bone::Bone_RotateY_All(const float& radian)
 	{
 		//アフィン変換で回転行列作成
 		ML::Mat4x4 matR;
-		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), def);
+		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), -def);
 		//this->All_Qt *= ML::QT(ML::Vec3(0, 1, 0), radian);
 		D3DXMatrixAffineTransformation(&matR, 1.0f, &this->center_of_Body, &qtY, NULL);
-
 		//関節全体を回転させる
 		this->joint[0]->Rotated_by_Prev_Joint(&matR);
 		this->joint[2]->Rotated_by_Prev_Joint(&matR);
@@ -192,6 +194,8 @@ void Bone::Bone_RotateY_All(const float& radian)
 		for (int i = 0; i < JOINT_ON_HUMAN; i++)
 		{
 			this->joint[i]->Quartanion_Update(qtY);
+			//デバッグ
+			this->joint[i]->DEBUG();
 		}
 	}
 	
@@ -355,6 +359,7 @@ void Bone::To_Standing()
 			//回転行列宣言
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remain, NULL);
+			matR = matR.Inverse();
 			//回転
 			this->joint[i]->Rotate_Bone(&matR);
 
@@ -370,4 +375,66 @@ void Bone::Render()
 	{
 		this->joint[i]->Render();
 	}
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//--------------------------------------------------------------------------
+//モーションプリセット生成
+void Bone::Make_Interaction()
+{
+	//モーションデータのヴェクター生成
+	std::vector<Motion::Motion_Data> interaction;
+
+	//各モーションデータステップを生成
+	//step0
+	//右肘を上げる
+	Motion::Motion_Data step0(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, ML::ToRadian(180)), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		4
+	);
+	////どの関節かを確認するインデックス
+	//int i = 0;
+
+	//for (auto& j : this->joint)
+	//{
+	//	//生成直後に各関節の限界量と比べる
+	//	Motion::Set_Upper_Lower_Limits(j, &step0, i);
+	//	i++;
+	//}
+
+
+	//step1
+	//肘を伸ばしながら手を上げる
+	//同時に肩を前方上に
+
+	Motion::Motion_Data step1(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(ML::ToRadian(100), 0, 0), ML::Vec3(ML::ToRadian(-180), 0, 0), ML::Vec3(ML::ToRadian(90), 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		4
+	);
+
+	//ヴェクター登録及びマッピング
+	interaction.push_back(step0);
+	interaction.push_back(step1);
+
+	this->motions.insert({ "InterAction",interaction });
 }
