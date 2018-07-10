@@ -46,7 +46,7 @@ private:
 	float All_RotY;
 
 	//モーション用カウンタ
-	float motionCnt;
+	int motionCnt;
 	//ヴェクターの[]演算子で利用する識別子
 	int motion_Index;
 	//今何のモーションなのかを確認するキー
@@ -72,7 +72,10 @@ private:
 	void Make_Interaction();
 
 	//直立に整頓
-	void To_Standing();
+	void To_Standing(bool ASAP);
+
+	//予約モーションにするか空の状態にする
+	bool Next_Motion_or_None();
 
 public:
 	//ゲッター

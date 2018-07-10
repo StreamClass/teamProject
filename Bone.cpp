@@ -259,50 +259,61 @@ void Bone::UpDate()
 				{
 					//インデクスとカウントをゼロにする
 					this->motion_Index = 0;
-					this->motionCnt = -1.0f;
+					this->motionCnt = -1;
 				}
-				//連続行動フラグが立っていない場合
 				else
 				{
-					//予約モーションがある場合現在モーションに置き換える
-					if (this->next_Motion != "")
-					{
-						this->now_Motion = this->next_Motion;
-						//予約は空にする
-						this->next_Motion = "";
-						//次のモーションが入る前にスタンディングに戻せる
-						//引数ありのメソッドに仕様変更があるかもしれない(2018/07/09)
-						this->To_Standing();
-					}
-					else
-					{
-						//モーションを空にする
-						this->now_Motion == "";
-						this->motion_Index = 0;
-					}
+					//次のモーションか空か確認する
+					this->Next_Motion_or_None();
 				}
 			}
 			//つずきがある場合
 			else
 			{
 				this->motion_Index++;
-				this->motionCnt = -1.0f;
-			}
+				this->motionCnt = -1;
+			}			
 		}
 
 	}
-	//空の時にスタンディングに戻せる
+	//空の時
 	else
 	{
-		//引数ありのメソッドに仕様変更があるかもしれない(2018/07/09)
-		this->To_Standing();
+		if (!this->Next_Motion_or_None())
+		{
+			//this->To_Standing(false);
+		}
 	}
 
 
 	//モーションが空かになかに関わらずカウントは進む
-	this->motionCnt += 1.0f;
+	this->motionCnt++;
 	//連続行動フラグは毎回falseに戻す(一回りしてすぐ止まるように)
 	this->repeat_Flag = false;
+}
+
+bool Bone::Next_Motion_or_None()
+{
+	//予約モーションがある場合現在モーションに置き換える
+	if (this->next_Motion != "")
+	{
+		this->now_Motion = this->next_Motion;
+		//予約は空にする
+		this->next_Motion = "";
+		//カウントは-1に
+		this->motionCnt = -1;
+		//次のモーションが入る前にスタンディングに戻せる
+		
+		//this->To_Standing(true);
+		return true;
+	}
+	else
+	{
+		//モーションを空にする
+		this->now_Motion = "";
+		this->motion_Index = 0;
+		return false;
+	}
 }
 
 void Bone::Set_Next_Motion(const string& next)
@@ -320,7 +331,7 @@ void Bone::Repeat_Now_Motioin()
 	this->repeat_Flag = true;
 }
 
-void Bone::To_Standing()
+void Bone::To_Standing(bool ASAP)
 {
 	for (int i = 0; i < JOINT_ON_HUMAN; i++)
 	{
@@ -345,6 +356,21 @@ void Bone::To_Standing()
 		//関節一個ずつ戻せた後に次の関節を整頓
 		if (abs(s) <= sinf(ML::ToRadian(2)))
 		{
+			//直立になる回転を代入した後につずく
+			ML::Vec3 anker;
+			MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);
+
+			//残り回転量の半分ずつ回転を巻き返す						
+			//クォータニオン宣言
+			ML::QT remain = ML::QT(anker, -asin(s));
+			//回転行列宣言
+			ML::Mat4x4 matR;
+			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remain, NULL);
+			matR = matR.Inverse();
+			//回転
+			this->joint[i]->Rotate_Bone(&matR);
+			//回転量アップデート
+			this->joint[i]->Quartanion_Update(remain);
 			continue;
 		}
 		else
@@ -354,16 +380,23 @@ void Bone::To_Standing()
 			MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);
 
 			//残り回転量の半分ずつ回転を巻き返す
+			//フラグが立っていれば1フレームで済ませる
+			float progress = 0.0f;
+			ASAP ? progress = 1.0f : progress = 2.0f;
 			//クォータニオン宣言
-			ML::QT remain = ML::QT(anker, -s / 2.0f);
+			ML::QT remain = ML::QT(anker, -asin(s) / progress);
 			//回転行列宣言
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remain, NULL);
 			matR = matR.Inverse();
 			//回転
 			this->joint[i]->Rotate_Bone(&matR);
-
-			return;
+			//回転量アップデート
+			this->joint[i]->Quartanion_Update(remain);
+			if (!ASAP)
+			{
+				return;
+			}
 		}
 	}
 }
@@ -404,10 +437,10 @@ void Bone::Make_Interaction()
 	//右肘を上げる
 	Motion::Motion_Data step0(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, ML::ToRadian(180)), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(ML::ToRadian(-100),0,0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		4
+		60
 	);
 	////どの関節かを確認するインデックス
 	//int i = 0;
@@ -426,15 +459,33 @@ void Bone::Make_Interaction()
 
 	Motion::Motion_Data step1(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(100), 0, 0), ML::Vec3(ML::ToRadian(-180), 0, 0), ML::Vec3(ML::ToRadian(90), 0, 0),
+		ML::Vec3(ML::ToRadian(-100), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(ML::ToRadian(-40), 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		4
+		60
+	);
+
+	Motion::Motion_Data step2(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(ML::ToRadian(100), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(ML::ToRadian(40), 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		60
+	);
+
+	Motion::Motion_Data step3(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(ML::ToRadian(100), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		60
 	);
 
 	//ヴェクター登録及びマッピング
 	interaction.push_back(step0);
 	interaction.push_back(step1);
+	interaction.push_back(step2);
+	interaction.push_back(step3);
 
 	this->motions.insert({ "InterAction",interaction });
 }
