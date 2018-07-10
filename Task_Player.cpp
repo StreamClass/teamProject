@@ -74,7 +74,7 @@ namespace  Player
 		this->recovery_Flag = false;
 		this->debugMode = false;
 
-		this->plBone = new Bone(180);		
+		this->plBone = new Bone(175);		
 
 
 		this->breakerOnCnt = 0;
@@ -138,10 +138,12 @@ namespace  Player
 				matR.RotationY(this->angle.y);
 				this->moveVec.x = -this->speed * in.LStick.axis.y;
 				this->moveVec.z = -this->speed * in.LStick.axis.x;
-				//頂点を座標変換させる
+				//ベクトルを座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
 				
-				
+				//走るモーション
+				this->plBone->Set_Next_Motion("Running");
+				this->plBone->Repeat_Now_Motioin();
 			}
 			else
 			{
@@ -336,7 +338,7 @@ namespace  Player
 	void Object::Ini_Pos(const ML::Vec3& pos)
 	{
 		this->pos = pos;
-		this->plBone->Moving(pos+ML::Vec3(0,30,0));
+		this->plBone->Moving(pos+ML::Vec3(0,0,0));
 	}
 	//-------------------------------------------------------------------
 	//めり込まない処理

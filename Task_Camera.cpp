@@ -46,7 +46,7 @@ namespace  Camera
 			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
 			ML::Vec3(0.0f, 500.0f, -500.0f),			//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 100.0f, 8000.0f,	//	視野角・視野距離
+			ML::ToRadian(35), 15.0f, 8000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
 		
 		//フォグ(霧)の設定

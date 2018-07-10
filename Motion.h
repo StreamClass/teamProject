@@ -80,6 +80,15 @@ namespace Motion
 			this->joint[12] = r_knee;
 			this->joint[13] = r_ankle;
 		}
+
+		//‰ñ“]s—ñ‚ğ‚à‚ç‚Á‚Ä‚»‚Ì•ª‰ñ“]‚·‚é
+		void Rotation_Matrix(ML::Mat4x4* matR)
+		{
+			for (int i =0; i<JOINT_ON_HUMAN; i++)
+			{
+				this->joint[i] = matR->TransformNormal(this->joint[i]);
+			}
+		}
 	}; 
 
 	

@@ -31,18 +31,19 @@ public:
 	//引数 : (移動ベクトル)
 	void Move(const ML::Vec3&);
 	//つながれている骨を回転させる
-	//引数 : (回転行列のアドレス値)
-	void Rotate_Bone(ML::Mat4x4*);
+	//引数 : (回転行列のアドレス値, 掛け算するクォータニオン)
+	void Rotate_Bone(ML::Mat4x4*, const ML::QT&);
 	//上位の関節から命令される場合
-	//引数 : (回転行列のアドレス値)
-	void Rotated_by_Prev_Joint(ML::Mat4x4*);
+	//引数 : (回転行列のアドレス値, 掛け算するクォータニオン)
+	void Rotated_by_Prev_Joint(ML::Mat4x4*, const ML::QT&);
 	//次の関節をセット
 	void Set_Next_Joint(Joint*);
 	//回転量アップデート
 	void Quartanion_Update(const ML::QT&);
 
 	//レンダリング
-	void Render();
+	//引数 : (倍率用背の高さ)
+	void Render(const float& tall);
 
 	
 	//現在関節とボーンまでのベクトルを返す

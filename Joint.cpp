@@ -14,24 +14,25 @@ void Joint::Set_Next_Joint(Joint* next)
 	this->next = next;
 }
 
-void Joint::Rotate_Bone(ML::Mat4x4* matR)
+void Joint::Rotate_Bone(ML::Mat4x4* matR, const ML::QT& qtf)
 {
 	//自分とつながっている骨を回転
 	this->area->Rotate(matR);
+	this->Quartanion_Update(qtf);
 	//つながりを持っている間接なら次のやつも回転させる
 	if (this->next != nullptr)
 	{
-		next->Rotated_by_Prev_Joint(matR);
+		next->Rotated_by_Prev_Joint(matR, qtf);
 	}
 }
 
-void Joint::Rotated_by_Prev_Joint(ML::Mat4x4* matR)
+void Joint::Rotated_by_Prev_Joint(ML::Mat4x4* matR, const ML::QT& qtf)
 {
 	//回転応じて位置を更新
 	this->pos = matR->TransformCoord(this->pos);
 
 	//その次につながっているものを回転	
-	this->Rotate_Bone(matR);	
+	this->Rotate_Bone(matR, qtf);
 }
 
 //getter
@@ -87,11 +88,13 @@ void Joint::Quartanion_Update(const ML::QT& uqt)
 	this->rotated *= uqt;
 }
 
-void Joint::Render()
+void Joint::Render(const float& tall)
 {
 	//表示用ワールド行列作成
-	ML::Mat4x4 matW;	
-	D3DXMatrixAffineTransformation(&matW, 100.0f, NULL, &this->rotated, &this->area->GetCenter());
+	ML::Mat4x4 matW;
+	//倍率計算
+	float magnification = (tall / 180.0f) * 100.0f;
+	D3DXMatrixAffineTransformation(&matW, magnification, NULL, &this->rotated, &this->area->GetCenter());
 	//行列適用
 	DG::EffectState().param.matWorld = matW ;
 	//レンダリング
