@@ -50,6 +50,8 @@ namespace Motion
 
 		//上の回転量データまでたどり着く時間
 		const int duration;
+		//repeat flagが立っている時帰ってくる場所確認用
+		const bool repeat_Point;
 
 		//コンストラクタ
 		//引数 : (各関節がたどり着く回転量 首、腰、左肩、左肘、左手首、右肩、右肘、右手首、左お尻、左膝、左足首、右お尻、右膝、右足首、たどり着くまでの時間)
@@ -58,8 +60,9 @@ namespace Motion
 			const ML::Vec3& r_sholder, const ML::Vec3& r_elbow, const ML::Vec3& r_wrist,
 			const ML::Vec3& l_hip, const ML::Vec3& l_knee, const ML::Vec3& l_ankle,
 			const ML::Vec3& r_hip, const ML::Vec3& r_knee, const ML::Vec3& r_ankle,
-			const int& du)
-			: duration(du)
+			const int& du, bool r = false)
+			: duration(du),
+			repeat_Point(r)
 		{
 			this->joint[0] = waist;
 			this->joint[1] = neck;
@@ -88,6 +91,24 @@ namespace Motion
 			{
 				this->joint[i] = matR->TransformNormal(this->joint[i]);
 			}
+		}
+
+		//Y軸回転に対する足し算
+		Motion_Data& operator +(const float& val)
+		{
+			for (auto& j : this->joint)
+			{
+				if (!j.Is_Zero_Vec())
+				{
+					j.y += val;
+				}
+			}
+			return *this;
+		}
+
+		Motion_Data& operator +=(const float& val)
+		{
+			return *this + val;
 		}
 	}; 
 

@@ -50,6 +50,7 @@ namespace  Player
 		this->pos = ML::Vec3(0, 0, 0);
 		this->headHeight = 175;
 		this->headHeight_std = 175;
+		this->turnSpeed = 2;
 		this->adjust_TG = 175;
 		this->adjust_TG_std = 175;
 		this->cnt_TG = 0;
@@ -64,6 +65,7 @@ namespace  Player
 		this->adjust_Max = +400;
 		this->heightMax = 180;
 		this->hitBase = ML::Box3D(-50, 0, -50, 100, 200, 100);
+		this->moveBase = ML::Box3D(-70, 0, -70, 140, 200, 140);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90), 0);
 		this->moveVec = ML::Vec3(0, 0, 0);
 		this->moveVecRec = 0.0f;
@@ -149,7 +151,10 @@ namespace  Player
 			{
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
-			this->angle.y += in.RStick.axis.x * ML::ToRadian(2);
+
+			//視点の回転
+			this->angle.y += in.RStick.axis.x * ML::ToRadian(this->turnSpeed);
+
 			//ボーン全体をY軸回転
 			this->plBone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
 			
@@ -291,6 +296,10 @@ namespace  Player
 			{
 				text += "  Debug";
 			}
+			if (this->Check_Front())
+			{
+				text += "	true";
+			}
 			DG::Font_Draw("FontA", draw, text, ML::Color(1.0f, 0.0f, 0.0f, 0.0f ));
 		}
 	}
@@ -351,17 +360,17 @@ namespace  Player
 			float preX = this->pos.x;//移動前の座標を保持
 			float bone_Pre_X = this->plBone->Get_Center().x;
 									 
-			//1cmもしくはそれ以下の残り分移動させる
+			//+方向
 			if (est_.x >= 1.0f) {
 				this->pos.x += 1.0f;
 				this->plBone->Moving(ML::Vec3(1.0f, 0, 0));
 				est_.x -= 1.0f;
-			}//+方向
+			}//-方向
 			else if (est_.x <= -1.0f) {
 				this->pos.x -= 1.0f;	
 				this->plBone->Moving(ML::Vec3(-1.0f, 0, 0));
 				est_.x += 1.0f;
-			}//-方向
+			}//小数点以下の移動
 			else {
 				this->pos.x += est_.x;
 				this->plBone->Moving(ML::Vec3(est_.x, 0, 0));
@@ -369,7 +378,7 @@ namespace  Player
 			}
 
 			//接触判定を試みる
-			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
+			ML::Box3D hit = this->moveBase.OffsetCopy(this->pos);
 			if (true == mp->Map_CheckHit(hit)) {
 				//接触していたので、元に戻す
 				this->pos.x = preX;		
@@ -385,17 +394,17 @@ namespace  Player
 		while (est_.z != 0.0f) {//予定移動量が無くなるまで繰り返す
 			float preZ = this->pos.z;//移動前の座標を保持
 			float bone_Pre_Z = this->plBone->Get_Center().z;
-									 //1cmもしくはそれ以下の残り分移動させる
+			//+方向
 			if (est_.z >= 1.0f) {
 				this->pos.z += 1.0f;
 				this->plBone->Moving(ML::Vec3(0, 0, 1.0f));
 				est_.z -= 1.0f;
-			}//+方向
+			}//-方向
 			else if (est_.z <= -1.0f) {
 				this->pos.z -= 1.0f;	
 				this->plBone->Moving(ML::Vec3(0, 0, -1.0f));
 				est_.z += 1.0f;
-			}//-方向
+			}//小数点以下の移動
 			else {
 				this->pos.z += est_.z;	
 				this->plBone->Moving(ML::Vec3(0, 0, est_.z));
@@ -403,7 +412,7 @@ namespace  Player
 			}
 
 			//接触判定を試みる
-			ML::Box3D hit = this->hitBase.OffsetCopy(this->pos);
+			ML::Box3D hit = this->moveBase.OffsetCopy(this->pos);
 			if (true == mp->Map_CheckHit(hit)) {
 				//接触していたので、元に戻す
 				this->pos.z = preZ;
@@ -413,6 +422,34 @@ namespace  Player
 				break;	//これ以上試しても無駄なのでループを抜ける
 			}			
 		}
+	}
+	//-------------------------------------------------------------------
+	void Object::Turn_Angle()
+	{
+		auto in = DI::GPad_GetState("P1");
+		ML::Vec3 toAngle = ge->camera[0]->target - ge->camera[0]->pos;
+		toAngle=toAngle.Normalize();
+		//視点の回転
+		ML::Vec3 preAngle = this->angle;
+		if (in.RStick.axis.x > 0)
+		{
+
+		}
+		this->angle.y += in.RStick.axis.x * ML::ToRadian(this->turnSpeed);
+		if(this->Check_Front())
+		{
+			this->angle = preAngle;
+		}
+	}
+	//-------------------------------------------------------------------
+	bool Object::Check_Front()
+	{
+		auto mp = ge->GetTask_One_G<Map::Object>("フィールド");
+
+		ML::Vec3 toAngle = ML::Vec3(ge->camera[0]->target.x - ge->camera[0]->pos.x, 0, ge->camera[0]->target.z - ge->camera[0]->pos.z);
+		toAngle = toAngle.Normalize();
+		ML::Box3D front(0, 0, 0, 1, 1, 1);
+		return mp->Map_CheckHit(front.OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (toAngle * 150)));
 	}
 	//-------------------------------------------------------------------
 	//ギミックへの干渉

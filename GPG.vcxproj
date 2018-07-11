@@ -112,6 +112,7 @@
     <ClCompile Include="Tablet.cpp" />
     <ClCompile Include="Task_Aim.cpp" />
     <ClCompile Include="Task_Breaker.cpp" />
+    <ClCompile Include="Task_BreakerLamp.cpp" />
     <ClCompile Include="Task_Camera.cpp" />
     <ClCompile Include="Task_Door.cpp" />
     <ClCompile Include="Task_Enemy.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Tablet.h" />
     <ClInclude Include="Task_Aim.h" />
     <ClInclude Include="Task_Breaker.h" />
+    <ClInclude Include="Task_BreakerLamp.h" />
     <ClInclude Include="Task_Camera.h" />
     <ClInclude Include="Task_Door.h" />
     <ClInclude Include="Task_Enemy.h" />

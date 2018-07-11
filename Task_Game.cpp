@@ -79,6 +79,7 @@ namespace  Game
 		ge->KillAll_G("ブレーカー");
 		ge->KillAll_G("ミニマップ");
 		ge->KillAll_G("エネミー");
+		ge->KillAll_G("ランプ");
 
 		ge->OM.Finalize();
 

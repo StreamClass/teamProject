@@ -110,6 +110,9 @@
     <Filter Include="MyPG\Class\Joint">
       <UniqueIdentifier>{1cf54e49-99e8-4a97-93f7-58c507ba6d2c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Game\BreakerLamp">
+      <UniqueIdentifier>{1d1e6a4c-1fcf-4e84-a7c7-86c1e77f4915}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -244,6 +247,9 @@
     <ClCompile Include="Shape.cpp">
       <Filter>MyPG\Class\Shape</Filter>
     </ClCompile>
+    <ClCompile Include="Task_BreakerLamp.cpp">
+      <Filter>MyPG\Game\BreakerLamp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -377,6 +383,9 @@
     </ClInclude>
     <ClInclude Include="Shape.h">
       <Filter>MyPG\Class\Shape</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_BreakerLamp.h">
+      <Filter>MyPG\Game\BreakerLamp</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

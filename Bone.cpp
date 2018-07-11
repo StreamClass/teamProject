@@ -23,7 +23,7 @@ Bone::Bone(const float& tall)
 	ML::Vec3 center_of_neck = ML::Vec3(this->center_of_Body + (this->center_of_Body*(10.0f / 14.0f)));
 	Joint* tmpneck = new Joint(center_of_neck, ML::ToRadian(-90), ML::ToRadian(90), ML::ToRadian(-90), ML::ToRadian(90), ML::ToRadian(-90), ML::ToRadian(90), head,"Head");
 	//上半身の初期化
-	ML::Vec3 center_of_upper_body = this->center_of_Body + (this->center_of_Body *(5.0f / 14.0f));
+	ML::Vec3 center_of_upper_body = this->center_of_Body + (this->center_of_Body *(5.0f / 14.0f) + ML::Vec3(0,length_of_hand /5.0f,0));
 	Shape* upper_Body = new Cube(center_of_upper_body, (center_of_upper_body + ML::Vec3(-length_of_hand * (3.0f / 4.0f), -length_of_hand, -length_of_hand / 2.0f)), length_of_hand*(3.0f / 4.0f), length_of_hand, length_of_hand / 2.0f);
 	//腰の初期化
 	ML::Vec3 center_of_waist = (this->center_of_Body + (this->center_of_Body*(1.0f / 14.0f)));
@@ -182,19 +182,23 @@ void Bone::Bone_RotateY_All(const float& radian)
 	if (def != 0.0f)
 	{
 		//アフィン変換で回転行列作成
-		ML::Mat4x4 matR;
+		ML::Mat4x4 matR;		
 		ML::QT qtY = ML::QT(ML::Vec3(0, 1, 0), -def);
 		//this->All_Qt *= ML::QT(ML::Vec3(0, 1, 0), radian);
 		D3DXMatrixAffineTransformation(&matR, 1.0f, &this->center_of_Body, &qtY, NULL);
-
+		
 		//モーションデータ回転
-		for (auto& mo : this->motions)
+		//(this->now_Motion != "" && this->motion_Index == this->motions[this->now_Motion].size()-1)
+		/*if (this->now_Motion == "")
 		{
-			for (auto& m : mo.second)
+			for (auto& mo : this->motions)
 			{
-				m.Rotation_Matrix(&matR);
+				for (auto& m : mo.second)
+				{
+					m += ML::ToDegree(def);
+				}
 			}
-		}
+		}*/
 		//関節全体を回転させる
 		this->joint[0]->Rotated_by_Prev_Joint(&matR,qtY);
 		this->joint[2]->Rotated_by_Prev_Joint(&matR, qtY);
@@ -243,11 +247,15 @@ void Bone::UpDate()
 			ML::QT qtx, qty, qtz, qtA;
 			
 			for (int i = 0; i < JOINT_ON_HUMAN; i++)
-			{				
+			{
+				if (now[this->motion_Index].joint[i].Is_Zero_Vec())
+				{
+					continue;
+				}
 				//クォータニオン作成
-				qtx = ML::QT(ML::Vec3(1, 0, 0), (now[this->motion_Index].joint[i].x) / now[this->motion_Index].duration);
-				qty = ML::QT(ML::Vec3(0, 1, 0), (now[this->motion_Index].joint[i].y) / now[this->motion_Index].duration);
-				qtz = ML::QT(ML::Vec3(0, 0, 1), (now[this->motion_Index].joint[i].z) / now[this->motion_Index].duration);
+				qtx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((now[this->motion_Index].joint[i].x) / now[this->motion_Index].duration));
+				qty = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((now[this->motion_Index].joint[i].y) / now[this->motion_Index].duration));
+				qtz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((now[this->motion_Index].joint[i].z) / now[this->motion_Index].duration));
 				//クォータニオン合成
 				qtA = qtx * qty * qtz;
 
@@ -264,15 +272,26 @@ void Bone::UpDate()
 		else
 		{
 			//一回り終わった
-			if (this->motion_Index == now.size() - 1 )
+			if (this->motion_Index >= now.size() - 1 )
 			{
 				//連続行動フラグが立っている場合
 				if (this->repeat_Flag == true)
 				{
 					//一回スタンディングに戻せる
-					this->To_Standing(true);
-					//インデクスとカウントをゼロにする
-					this->motion_Index = 0;
+					//this->To_Standing(true);
+					//repeat Pointを探す
+					int repeat_Index = 0;
+					for (int n =0; n<now.size();n++)
+					{
+						if (now[n].repeat_Point)
+						{
+							repeat_Index = n;
+						}						
+					}
+					//repeat Pointが見つからなかった場合ゼロが入る
+					//後で変える可能性あり					
+					this->motion_Index = repeat_Index;
+					//カウントをゼロにする
 					this->motionCnt = 0;
 				}
 				else
@@ -316,8 +335,8 @@ bool Bone::Next_Motion_or_None()
 		this->next_Motion = "";
 		//カウントは-1に
 		this->motionCnt = 0;
-		//次のモーションが入る前にスタンディングに戻せる
-		
+		this->motion_Index = 0;
+		//次のモーションが入る前にスタンディングに戻せる		
 		this->To_Standing(true);
 		return true;
 	}
@@ -385,7 +404,7 @@ void Bone::To_Standing(bool ASAP)
 			continue;
 		}
 		//関節一個ずつ戻せた後に次の関節を整頓
-		if (abs(asin(s)) <= sinf(ML::ToRadian(2)))
+		if (abs(s) <= abs(sinf(ML::ToRadian(2))))
 		{
 			//直立になる回転を代入した後につずく			
 
@@ -460,7 +479,7 @@ void Bone::Make_Interaction()
 	//右肘を上げる
 	Motion::Motion_Data step0(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(0, ML::ToRadian(-30), 0), ML::Vec3(ML::ToRadian(-180),0,0), ML::Vec3(ML::ToRadian(-10), 0, 0),
+		ML::Vec3(0, (-30), 0), ML::Vec3((-180),0,0), ML::Vec3((-10), 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		10
@@ -471,7 +490,7 @@ void Bone::Make_Interaction()
 	//同時に肩を前方上に
 	Motion::Motion_Data step1(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-100), 0, 0), ML::Vec3(ML::ToRadian(180), 0, 0), ML::Vec3(ML::ToRadian(-20), 0, 0),
+		ML::Vec3((-100), 0, 0), ML::Vec3((180), 0, 0), ML::Vec3((-20), 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		10
@@ -480,7 +499,7 @@ void Bone::Make_Interaction()
 	//行動を巻き戻す
 	Motion::Motion_Data step2(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(100), 0, 0), ML::Vec3(ML::ToRadian(-180), 0, 0), ML::Vec3(ML::ToRadian(20), 0, 0),
+		ML::Vec3((100), 0, 0), ML::Vec3((-180), 0, 0), ML::Vec3((20), 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		10
@@ -488,7 +507,7 @@ void Bone::Make_Interaction()
 
 	Motion::Motion_Data step3(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(0, ML::ToRadian(30), 0), ML::Vec3(ML::ToRadian(180), 0, 0), ML::Vec3(ML::ToRadian(10), 0, 0),
+		ML::Vec3(0, (30), 0), ML::Vec3((180), 0, 0), ML::Vec3((10), 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		10
@@ -508,39 +527,49 @@ void Bone::Make_Running()
 	std::vector<Motion::Motion_Data> running;
 
 	//step0
-	//右足、左手を出す
+	//肘を曲げる
 	Motion::Motion_Data step0(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-30), 0, 0), ML::Vec3(ML::ToRadian(-90), 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(70), 0, 0), ML::Vec3(ML::ToRadian(-90), 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(45), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-70), 0, 0), ML::Vec3(ML::ToRadian(90), 0, 0), ML::Vec3(0, 0, 0),
-		5
+		ML::Vec3(0, 0, 0), ML::Vec3((-90), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3((-90), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-45), 0, 0), ML::Vec3((45), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((30), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
+		3
 	);
+
 	//step1
-	//肩整頓、右足着地
-	Motion::Motion_Data step1(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-15), 0, 0), ML::Vec3(ML::ToRadian(30), 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(25), 0, 0), ML::Vec3(ML::ToRadian(-45), 0, 0), ML::Vec3(0, 0, 0),
-		5
+	//右足、左手を出す
+	Motion::Motion_Data step1(ML::Vec3(0, 30, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((90), 0, 0), ML::Vec3(-45, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-100), 0, 0), ML::Vec3((60), 0, 0), ML::Vec3(0, 0, 0),
+		5, true
 	);
 	//step2
-	//左足、右手を出す
-	Motion::Motion_Data step2(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-100), 0, 0), ML::Vec3(ML::ToRadian(60), 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(90), 0, 0), ML::Vec3(ML::ToRadian(-45), 0, 0), ML::Vec3(0, 0, 0),
+	//肩整頓、右足着地
+	Motion::Motion_Data step2(ML::Vec3(0, -30, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-15), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((25), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
 		5
 	);
 	//step3
+	//左足、右手を出す
+	Motion::Motion_Data step3(ML::Vec3(0, -30, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-100), 0, 0), ML::Vec3((60), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((90), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+	//step4
 	//肩整頓、左足着地
-	Motion::Motion_Data step3(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(25), 0, 0), ML::Vec3(ML::ToRadian(-45), 0, 0), ML::Vec3(0, 0, 0),
-		ML::Vec3(ML::ToRadian(-15), 0, 0), ML::Vec3(ML::ToRadian(30), 0, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step4(ML::Vec3(0, 30, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((25), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3((-15), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
 		5
 	);
 
@@ -549,6 +578,7 @@ void Bone::Make_Running()
 	running.push_back(step1);
 	running.push_back(step2);
 	running.push_back(step3);
+	running.push_back(step4);
 
 	this->motions.insert({ "Running",running });
 }

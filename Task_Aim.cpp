@@ -74,7 +74,7 @@ namespace  Aiming
 		this->pos = ML::Vec3(0, 0, 0);
 		this->aimMoveSpeed = 0;
 		this->aimMovetremor = 5.0f;
-		DG::Mesh_CreateFromSOBFile("t", "./data/mesh/box1.sob");
+		//DG::Mesh_CreateFromSOBFile("t", "./data/mesh/box1.sob");
 		//★タスクの生成
 
 		return  true;
@@ -84,7 +84,7 @@ namespace  Aiming
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		DG::Mesh_Erase("t");
+		//DG::Mesh_Erase("t");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -137,12 +137,12 @@ namespace  Aiming
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		ML::Mat4x4 matT, matS;
-		matT.Translation(this->pos + ML::Vec3(pl->Get_Pos().x,0,pl->Get_Pos().z));
-		matS.Scaling(ML::Vec3(this->hitBase.w / 100, this->hitBase.h / 100, this->hitBase.d / 100));
-		DG::EffectState().param.matWorld = matS * matT;
-		DG::Mesh_Draw("t");
+		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+		//ML::Mat4x4 matT, matS;
+		//matT.Translation(this->pos + ML::Vec3(pl->Get_Pos().x,0,pl->Get_Pos().z));
+		//matS.Scaling(ML::Vec3(this->hitBase.w / 100, this->hitBase.h / 100, this->hitBase.d / 100));
+		//DG::EffectState().param.matWorld = matS * matT;
+		//DG::Mesh_Draw("t");
 	}
 	//-------------------------------------------------------------------
 	//通常時の操作説明

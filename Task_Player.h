@@ -60,14 +60,18 @@ namespace Player
 		ML::Vec3 pos;
 		//移動速度
 		float speed;
-		//プレイヤの矩形
+		//エネミーとの判定矩形
 		ML::Box3D hitBase;
+		//マップとの判定矩形
+		ML::Box3D moveBase;
 		//プレイやの向き
 		ML::Vec3 angle;
 		//プレイヤの視点(頭の高さ)
 		int headHeight;
 		//プレイやの視点基準
 		int headHeight_std;
+		//視点移動速度
+		int turnSpeed;
 		//注視点の高さ
 		int adjust_TG;
 		//注視点の高さ基準
@@ -137,6 +141,10 @@ namespace Player
 		//めり込まない処理
 		//引数：（プレイヤの移動量）
 		void Player_CheckMove(ML::Vec3& est_);
+		//
+		void Turn_Angle();
+		//正面が壁に近づきすぎない処理
+		bool Check_Front();
 		//ギミックへの干渉
 		void Touch();
 		//クリアしているか判定

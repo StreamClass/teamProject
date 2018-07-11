@@ -1,33 +1,35 @@
 //-------------------------------------------------------------------
-//ブレーカー
+//タイトル画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_Breaker.h"
+#include  "Task_BreakerLamp.h"
 
-namespace Task_Breaker
+namespace  Lamp
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->meshName = "Breaker_Mesh";
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/BreakerBase.SOB");
-		this->buttonMeshName = "ButtonMesh";
-		DG::Mesh_CreateFromSOBFile(this->buttonMeshName, "./data/mesh/BreakerButton.SOB");
+		//ランプベース
+		this->meshName = "LampMeshName";
+		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/LampBase.SOB");
+		//ランプガラス
+		this->lampMeshName = "LampGlassMeshName";
+		DG::Mesh_CreateFromSOBFile(this->lampMeshName, "./data/mesh/LampGlass.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
-	{		
+	{
 		DG::Mesh_Erase(this->meshName);
-		DG::Mesh_Erase(this->buttonMeshName);
+		DG::Mesh_Erase(this->lampMeshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//「初期化」タスク生成時に１回だけ行う処理
-	bool  Object::Initialize(Breaker* b, int angle)
+	bool  Object::Initialize()
 	{
 		//スーパークラス初期化
 		__super::Initialize(defGroupName, defName, true);
@@ -35,10 +37,12 @@ namespace Task_Breaker
 		this->res = Resource::Create();
 
 		//★データ初期化
-		this->circuit = b;
+		this->pos = ML::Vec3(0, 0, 0);
+		this->hitBase = ML::Box3D(0, 0, 0, 0, 0, 0);
 
-		this->angle = angle;
-		this->pos = this->circuit->Get_Pos();
+		//ライティング有効化
+		//DG::EffectState().param.lightsEnable = true;
+
 		//★タスクの生成
 
 		return  true;
@@ -61,90 +65,37 @@ namespace Task_Breaker
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		
 	}
 
+	//-------------------------------------------------------------------
+	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
-		//ブレーカーベース
-		ML::Mat4x4 matT, matS, matR;
+		ML::Mat4x4 matT, matS;
+		matT.Translation(this->pos);
 		matS.Scaling(100);
-		matT.Translation(this->circuit->Get_Pos());
-		matR.RotationY(this->RotationY_Angle(this->angle));
-		DG::EffectState().param.matWorld = matS * matR * matT;
+		DG::EffectState().param.matWorld = matS * matT;
 		DG::Mesh_Draw(this->res->meshName);
-
-		//ボタン
-		ML::Mat4x4 bmatT;
-		bmatT.Translation(this->Move_Button());
-		DG::EffectState().param.matWorld = matS * matR * bmatT;
-		DG::Mesh_Draw(this->res->buttonMeshName);
+		DG::Mesh_Draw(this->res->lampMeshName);
 	}
-	//-----------------------------------------------------------------------
-	//プレイヤとのあたり判定
-	bool Object::Hit_Check(const ML::Box3D& hit)
+	//-------------------------------------------------------------------
+	//ランプの座標・当たり判定の初期化
+	void Object::Set_Lamp(const ML::Vec3& pos, const ML::Box3D& hitBase)
 	{
-		return this->circuit->Player_Touch_Breaker(hit);
-	}
-	//-----------------------------------------------------------------------
-	//ブレーカー起動
-	void Object::ActivateBreaker()
-	{
-		this->circuit->Activate_Breaker();
-	}
-	//-----------------------------------------------------------------------
-	//向きの設定
-	float Object::RotationY_Angle(int& angle)
-	{
-		float angle_;
-		if (this->angle == 2)
-		{
-			angle_= ML::ToRadian(0);
-		}
-		else if (this->angle == 3)
-		{
-			angle_ = ML::ToRadian(180);
-		}
-		return angle_;
-	}
-	//-----------------------------------------------------------------------
-	//ボタンの移動
-	ML::Vec3 Object::Move_Button()
-	{
-		if (this->circuit->Get_Now_State())
-		{
-			if (this->angle == 2)
-			{
-				this->pos.z += 1.0f;
-				if (this->pos.z > this->circuit->Get_Pos().z + 15.0f)
-				{
-					this->pos.z = this->circuit->Get_Pos().z + 15.0f;
-				}
-			}
-			else
-			{
-				this->pos.z -= 1.0f;
-				if (this->pos.z < this->circuit->Get_Pos().z - 15.0f)
-				{
-					this->pos.z = this->circuit->Get_Pos().z - 15.0f;
-				}
-			}
-			return this->pos;
-		}
-		return this->pos;
+		this->pos = pos;
+		this->hitBase = hitBase;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//-------------------------------------------------------------------
 	//タスク生成窓口
-	Object::SP  Object::Create(bool  flagGameEnginePushBack_, Breaker* b, int angle)
+	Object::SP  Object::Create(bool  flagGameEnginePushBack_)
 	{
 		Object::SP  ob = Object::SP(new  Object());
 		if (ob) {
@@ -152,7 +103,7 @@ namespace Task_Breaker
 			if (flagGameEnginePushBack_) {
 				ge->PushBack(ob);//ゲームエンジンに登録
 			}
-			if (!ob->B_Initialize(b, angle)) {
+			if (!ob->B_Initialize()) {
 				ob->Kill();//イニシャライズに失敗したらKill
 			}
 			return  ob;
@@ -160,9 +111,9 @@ namespace Task_Breaker
 		return nullptr;
 	}
 	//-------------------------------------------------------------------
-	bool  Object::B_Initialize(Breaker* b, int angle)
+	bool  Object::B_Initialize()
 	{
-		return  this->Initialize(b, angle);
+		return  this->Initialize();
 	}
 	//-------------------------------------------------------------------
 	Object::~Object() { this->B_Finalize(); }

@@ -5,7 +5,7 @@
 #include  "Task_Map.h"
 #include  "Task_Player.h"
 #include  "Task_Door.h"
-
+#include  "Task_BreakerLamp.h"
 
 namespace  Map
 {
@@ -250,6 +250,9 @@ namespace  Map
 						//”Ô†‚ð1‘‚â‚·
 						++num;
 						break;
+					case Type::lamp:
+						auto lamp = Lamp::Object::Create(true);
+						lamp->Set_Lamp(pos, hitBase);
 					}					
 				}
 			}
