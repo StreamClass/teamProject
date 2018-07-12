@@ -1,15 +1,14 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//ドアタスク
+//ブレーカーランプ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include "Door.h"
 
-namespace Task_Door
+namespace LampBase
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("ドア");	//グループ名
+	const  string  defGroupName("ランプ基盤");	//グループ名
 	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
@@ -23,8 +22,7 @@ namespace Task_Door
 		typedef  weak_ptr<Resource>		WP;
 		static   WP  instance;
 		static  Resource::SP  Create();
-		//共有する変数はここに追加する		
-		//仮のメッシュ名
+		//共有する変数はここに追加する
 		string meshName;
 	};
 	//-------------------------------------------------------------------
@@ -36,30 +34,24 @@ namespace Task_Door
 		typedef  shared_ptr<Object>		SP;
 		typedef  weak_ptr<Object>		WP;
 		//生成窓口 引数はtrueでタスクシステムへ自動登録
-		static  Object::SP  Create(bool flagGameEnginePushBack_, Door* d);
+		static  Object::SP  Create(bool flagGameEnginePushBack_);
 		Resource::SP	res;
 	private:
 		Object();
-		bool  B_Initialize(Door* d);
+		bool  B_Initialize();
 		bool  B_Finalize();
-		bool  Initialize(Door* d);	//「初期化」タスク生成時に１回だけ行う処理
+		bool  Initialize();	//「初期化」タスク生成時に１回だけ行う処理
 		void  UpDate();		//「実行」１フレーム毎に行う処理
 		void  Render2D_AF();	//「2D描画」１フレーム毎に行う処理
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	
-		//追加したい変数・メソッドはここに追加する	
-		//変数
-		//ドアの回路
-		Door* circuit;
-		//
-
+		ML::Vec3	pos;		//座標
+		ML::Box3D	hitBase;	//当たり判定
+		ML::Color	color;
 	public:
-		//メソッド
-		//プレイヤとのあたり判定(プレイヤ側で呼ぶ処理)
-		bool Hit_Check(const ML::Box3D& hit);
-		//つながっているブレーカーの数確認
-		int How_Many_Breaker_Be_Cunnected();
+		//追加したい変数・メソッドはここに追加する
+		//ランプの初期化
+		void Set_Lamp(const ML::Vec3&, const ML::Box3D&);
 	};
 }

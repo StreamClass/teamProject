@@ -1,6 +1,8 @@
 #include "ObjManeger.h"
 #include "Task_Breaker.h"
 #include "Task_Door.h"
+#include "Task_LampBase.h"
+#include "Task_Table.h"
 
 ObjManeger::ObjManeger()
 {
@@ -46,7 +48,8 @@ void ObjManeger::Init_Door(ML::Vec3 pos, LR a)
 	this->door.push_back(d);
 
 	//ドアタスク生成
-	Task_Door::Object::Create(true, d);
+	auto door = Task_Door::Object::Create(true, d);
+	door->name = "出口";
 }
 //--------------------------------------------------------------------------------------------
 //実際に呼び出せる関数
@@ -151,6 +154,18 @@ void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 
 	//タスク生成
 	//未実装
+}
+
+void ObjManeger::Create_Lamp(ML::Vec3 pos, ML::Box3D hitBase)
+{
+	auto lb = LampBase::Object::Create(true);
+	lb->Set_Lamp(pos, hitBase);
+}
+
+void ObjManeger::Create_Table(ML::Vec3 pos)
+{
+	auto ta = Table::Object::Create(true);
+	ta->Set_Pos(pos);
 }
 
 Tablet* ObjManeger::Create_Tablet()

@@ -53,8 +53,13 @@ namespace Motion
 		//repeat flagが立っている時帰ってくる場所確認用
 		const bool repeat_Point;
 
-		//コンストラクタ
-		//引数 : (各関節がたどり着く回転量 首、腰、左肩、左肘、左手首、右肩、右肘、右手首、左お尻、左膝、左足首、右お尻、右膝、右足首、たどり着くまでの時間)
+		//コンストラクタ(反復行動フラグは0番につけないこと)
+		/*引数 : (各関節がたどり着く回転量 首、腰、
+		左肩、左肘、左手首、
+		右肩、右肘、右手首、
+		左お尻、左膝、左足首、
+		右お尻、右膝、右足首、
+		たどり着くまでの時間、反復行動を探すフラグ)*/
 		Motion_Data(const ML::Vec3& waist, const ML::Vec3& neck,
 			const ML::Vec3& l_sholder, const ML::Vec3& l_elbow, const ML::Vec3& l_wrist,
 			const ML::Vec3& r_sholder, const ML::Vec3& r_elbow, const ML::Vec3& r_wrist,
@@ -110,6 +115,7 @@ namespace Motion
 		{
 			return *this + val;
 		}
+				
 	}; 
 
 	

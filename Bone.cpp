@@ -245,22 +245,33 @@ void Bone::UpDate()
 			ML::Mat4x4 matR;
 			//X軸クォータニオン、Y軸クォータニオン、Z軸クォータニオン、全体を合成するクォータニオン
 			ML::QT qtx, qty, qtz, qtA;
-			
+			//モーションデータで回転を行う回転軸
+			ML::Vec3 ankerX, ankerY, ankerZ;
+			ankerX = ML::Vec3(1, 0, 0);
+			ankerY = ML::Vec3(0, 1, 0);
+			ankerZ = ML::Vec3(0, 0, 1);
+			//全体Y軸回転に対応するアンカー回転
+			ML::Mat4x4 matY;
+			matY.RotationY(this->All_RotY);
+			ankerX = matY.TransformCoord(ankerX);
+			ankerY = matY.TransformCoord(ankerY);
+			ankerZ = matY.TransformCoord(ankerZ);
+			//モーション開始
 			for (int i = 0; i < JOINT_ON_HUMAN; i++)
 			{
+				//無効のデータなら次へ
 				if (now[this->motion_Index].joint[i].Is_Zero_Vec())
 				{
 					continue;
-				}
+				}				
+
 				//クォータニオン作成
-				qtx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian((now[this->motion_Index].joint[i].x) / now[this->motion_Index].duration));
-				qty = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian((now[this->motion_Index].joint[i].y) / now[this->motion_Index].duration));
-				qtz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian((now[this->motion_Index].joint[i].z) / now[this->motion_Index].duration));
+				qtx = ML::QT(ankerX, ML::ToRadian((now[this->motion_Index].joint[i].x) / now[this->motion_Index].duration));
+				qty = ML::QT(ankerY, ML::ToRadian((now[this->motion_Index].joint[i].y) / now[this->motion_Index].duration));
+				qtz = ML::QT(ankerZ, ML::ToRadian((now[this->motion_Index].joint[i].z) / now[this->motion_Index].duration));
 				//クォータニオン合成
 				qtA = qtx * qty * qtz;
-
-				//関節のクォータニオン更新
-				//this->joint[i]->Quartanion_Update(qtA);
+				
 				//回転行列作成
 				matR.Identity();
 				D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &qtA, NULL);
@@ -275,10 +286,8 @@ void Bone::UpDate()
 			if (this->motion_Index >= now.size() - 1 )
 			{
 				//連続行動フラグが立っている場合
-				if (this->repeat_Flag == true)
+				if (this->repeat_Flag == true && this->next_Motion == "")
 				{
-					//一回スタンディングに戻せる
-					//this->To_Standing(true);
 					//repeat Pointを探す
 					int repeat_Index = 0;
 					for (int n =0; n<now.size();n++)
@@ -286,13 +295,17 @@ void Bone::UpDate()
 						if (now[n].repeat_Point)
 						{
 							repeat_Index = n;
-						}						
+							//repeat Pointを代入
+							this->motion_Index = repeat_Index;
+							//カウントをゼロにする
+							this->motionCnt = 0;
+						}
+					}					
+					//repeat Pointを探せなかったら次のモーションを探す
+					if (repeat_Index == 0)
+					{
+						this->Next_Motion_or_None();
 					}
-					//repeat Pointが見つからなかった場合ゼロが入る
-					//後で変える可能性あり					
-					this->motion_Index = repeat_Index;
-					//カウントをゼロにする
-					this->motionCnt = 0;
 				}
 				else
 				{
@@ -312,8 +325,10 @@ void Bone::UpDate()
 	//空の時
 	else
 	{
+		//次のモーションを探す
 		if (!this->Next_Motion_or_None())
 		{
+			//次のモーションが空の場合はゆっくりスタンディングへ
 			this->To_Standing(false);
 		}
 	}

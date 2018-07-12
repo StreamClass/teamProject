@@ -76,7 +76,7 @@ namespace  Player
 		this->recovery_Flag = false;
 		this->debugMode = false;
 
-		this->plBone = new Bone(175);		
+		this->plBone = new Bone(170);		
 
 
 		this->breakerOnCnt = 0;
@@ -347,7 +347,7 @@ namespace  Player
 	void Object::Ini_Pos(const ML::Vec3& pos)
 	{
 		this->pos = pos;
-		this->plBone->Moving(pos+ML::Vec3(0,0,0));
+		this->plBone->Moving(pos+ML::Vec3(0,20,0));
 	}
 	//-------------------------------------------------------------------
 	//ÇﬂÇËçûÇ‹Ç»Ç¢èàóù

@@ -40,6 +40,10 @@ public:
 	void Create_Door(ML::Vec3, LR);
 	//カメラの生成
 	void Create_Camera(ML::Vec3, Type);
+	//ランプの生成
+	void Create_Lamp(ML::Vec3, ML::Box3D);
+	//テーブルの生成
+	void Create_Table(ML::Vec3);
 	//タブレットのアドレス値を返す関数(プレイヤの初期化にのみ使うこと)
 	Tablet* Create_Tablet();
 	//ルーチンワークシステム生成

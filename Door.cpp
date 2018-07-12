@@ -114,3 +114,21 @@ bool Door::Is_Phase_Offset()
 	}
 	return false;
 }
+
+
+int Door::How_Many_Breaker_Be_Cunnected()
+{
+	//活動しているブレーカーの数
+	int actived_Breaker_Number = 0;
+	//繋がっているブレーカーを全部確認
+	for (auto b : this->cunnected_Breaker)
+	{
+		if (b->Get_Now_State())
+		{
+			//活動ブレーカーの数を確認する
+			actived_Breaker_Number++;
+		}
+	}
+
+	return actived_Breaker_Number;
+}

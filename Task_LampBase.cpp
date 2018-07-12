@@ -2,9 +2,11 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include  "MyPG.h"
-#include  "Task_BreakerLamp.h"
+#include  "Task_LampBase.h"
+#include  "Task_Door.h"
+#include  "Task_LampGlass.h"
 
-namespace  Lamp
+namespace  LampBase
 {
 	Resource::WP  Resource::instance;
 	//-------------------------------------------------------------------
@@ -14,9 +16,6 @@ namespace  Lamp
 		//ランプベース
 		this->meshName = "LampMeshName";
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/LampBase.SOB");
-		//ランプガラス
-		this->lampMeshName = "LampGlassMeshName";
-		DG::Mesh_CreateFromSOBFile(this->lampMeshName, "./data/mesh/LampGlass.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -24,7 +23,6 @@ namespace  Lamp
 	bool  Resource::Finalize()
 	{
 		DG::Mesh_Erase(this->meshName);
-		DG::Mesh_Erase(this->lampMeshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -39,12 +37,9 @@ namespace  Lamp
 		//★データ初期化
 		this->pos = ML::Vec3(0, 0, 0);
 		this->hitBase = ML::Box3D(0, 0, 0, 0, 0, 0);
-
-		//ライティング有効化
-		//DG::EffectState().param.lightsEnable = true;
+		this->color = ML::Color(1, 1, 0, 0);
 
 		//★タスクの生成
-
 		return  true;
 	}
 	//-------------------------------------------------------------------
@@ -52,7 +47,7 @@ namespace  Lamp
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		ge->KillAll_G("ランプ");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -65,6 +60,17 @@ namespace  Lamp
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		auto door = ge->GetTask_One_GN<Task_Door::Object>("ドア", "出口");
+		auto lamps = ge->GetTask_Group_G<LampGlass::Object>("ランプ");
+		int lampNum = 0;
+		for (auto it = lamps->begin(); it != lamps->end(); ++it,++lampNum)
+		{
+			if (lampNum >= door->How_Many_Breaker_Be_Cunnected())
+			{
+				break;
+			}
+			(*it)->Set_Color(this->color);
+		}
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -76,19 +82,26 @@ namespace  Lamp
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
+		//ランプの基盤描画
 		ML::Mat4x4 matT, matS;
 		matT.Translation(this->pos);
 		matS.Scaling(100);
 		DG::EffectState().param.matWorld = matS * matT;
 		DG::Mesh_Draw(this->res->meshName);
-		DG::Mesh_Draw(this->res->lampMeshName);
 	}
 	//-------------------------------------------------------------------
 	//ランプの座標・当たり判定の初期化
 	void Object::Set_Lamp(const ML::Vec3& pos, const ML::Box3D& hitBase)
 	{
-		this->pos = pos;
+		//基盤の初期化
+		this->pos = pos + ML::Vec3(-50.0f, 0, 0);
 		this->hitBase = hitBase;
+		//ランプの生成
+		for (int i = 0; i < 3; ++i)
+		{
+			auto lamp = LampGlass::Object::Create(true);
+			lamp->Set_Pos(this->pos + ML::Vec3((i - 1) * 60.0f, 0, 0));
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

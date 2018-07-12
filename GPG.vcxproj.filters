@@ -113,6 +113,9 @@
     <Filter Include="MyPG\Game\BreakerLamp">
       <UniqueIdentifier>{1d1e6a4c-1fcf-4e84-a7c7-86c1e77f4915}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Game\Object">
+      <UniqueIdentifier>{63da8363-a595-4d56-a307-88b3362832ad}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -247,8 +250,14 @@
     <ClCompile Include="Shape.cpp">
       <Filter>MyPG\Class\Shape</Filter>
     </ClCompile>
-    <ClCompile Include="Task_BreakerLamp.cpp">
+    <ClCompile Include="Task_LampBase.cpp">
       <Filter>MyPG\Game\BreakerLamp</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_LampGlass.cpp">
+      <Filter>MyPG\Game\BreakerLamp</Filter>
+    </ClCompile>
+    <ClCompile Include="Task_Table.cpp">
+      <Filter>MyPG\Game\Object</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,8 +393,14 @@
     <ClInclude Include="Shape.h">
       <Filter>MyPG\Class\Shape</Filter>
     </ClInclude>
-    <ClInclude Include="Task_BreakerLamp.h">
+    <ClInclude Include="Task_LampBase.h">
       <Filter>MyPG\Game\BreakerLamp</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_LampGlass.h">
+      <Filter>MyPG\Game\BreakerLamp</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_Table.h">
+      <Filter>MyPG\Game\Object</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

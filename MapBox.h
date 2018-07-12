@@ -28,6 +28,7 @@
  13: カメラ　北西
  14: コーナー
  15: ブレーカーランプ
+ 16: テーブル
 */
 
 enum Type
@@ -48,7 +49,8 @@ enum Type
 	camera_West = 12,
 	camera_North_West = 13,
 	corner = 14,
-	lamp = 15
+	lamp = 15,
+	table = 16
 };
 
 class Box

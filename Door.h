@@ -45,6 +45,9 @@ public:
 	//フェーズ移行感知
 	bool Is_Phase_Offset();
 
+	//つながっているブレーカーの数確認
+	int How_Many_Breaker_Be_Cunnected();
+
 
 	//コンストラクタ・デストラクタ
 	//ゼロクリア

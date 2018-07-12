@@ -1,11 +1,11 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//ブレーカーランプ
+//ランプ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
-namespace Lamp
+namespace LampGlass
 {
 	//タスクに割り当てるグループ名と固有名
 	const  string  defGroupName("ランプ");	//グループ名
@@ -24,7 +24,6 @@ namespace Lamp
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
 		string meshName;
-		string lampMeshName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -47,10 +46,14 @@ namespace Lamp
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-		ML::Vec3	pos;	//座標
-		ML::Box3D	hitBase;//当たり判定
+		ML::Vec3 pos;
+		ML::Box3D hitBase;
+		ML::Color color;
 	public:
 		//追加したい変数・メソッドはここに追加する
-		void Set_Lamp(const ML::Vec3&, const ML::Box3D&);
+		//座標の設定
+		void Set_Pos(const ML::Vec3& pos);
+		//色の指定
+		void Set_Color(const ML::Color& color);
 	};
 }
