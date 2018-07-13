@@ -2,7 +2,6 @@
 #include "Task_Breaker.h"
 #include "Task_Door.h"
 #include "Task_LampBase.h"
-#include "Task_Table.h"
 
 ObjManeger::ObjManeger()
 {
@@ -160,12 +159,6 @@ void ObjManeger::Create_Lamp(ML::Vec3 pos, ML::Box3D hitBase)
 {
 	auto lb = LampBase::Object::Create(true);
 	lb->Set_Lamp(pos, hitBase);
-}
-
-void ObjManeger::Create_Table(ML::Vec3 pos)
-{
-	auto ta = Table::Object::Create(true);
-	ta->Set_Pos(pos);
 }
 
 Tablet* ObjManeger::Create_Tablet()

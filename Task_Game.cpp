@@ -20,6 +20,8 @@ namespace  Game
 	//ƒŠƒ\[ƒX‚Ì‰Šú‰»
 	bool  Resource::Initialize()
 	{
+		//DM::Sound_CreateStream("", "");
+		//DM::Sound_Play("",true)
 		return true;
 	}
 	//-------------------------------------------------------------------

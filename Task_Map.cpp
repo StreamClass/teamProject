@@ -19,7 +19,6 @@ namespace  Map
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Image_Erase(this->imageName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -63,19 +62,18 @@ namespace  Map
 		);
 		ML::Box3D hitBase(0, 0, 0, chipSize.x, 50.0f, chipSize.z);
 		this->floor = Box(chipSize, pos, hitBase);
+		this->floor.Set_MeshName("MapBox");
 		//天井の数値の指定
 		//今は上に移動させるだけ
 		pos.y += 350.0f;
 		this->ceiling = Box(chipSize, pos, hitBase);
+		this->ceiling.Set_MeshName("MapBox");
 		//ゴール	の数値指定
 		chipSize = ML::Vec3(chipX * 2, chipY, chipZ / 3);
 		pos = ML::Vec3(chipX * 3 + chipSize.x / 2, chipY / 2, chipZ * 100 + chipSize.z / 2);
 		hitBase = ML::Box3D(0,0,0, chipSize.x, chipSize.y, chipSize.z);
 		this->goal = Box(chipSize, pos, hitBase);
 		//チップ名の初期化
-		this->chipName = "MapBox.SOB";
-		//マップチップを設定
-		DG::Mesh_CreateFromSOBFile(this->chipName, "./data/mesh/" + this->chipName);
 		//読み込むファイル名の初期化
 		this->fileName = "Map00.txt";
 		//ファイルパスの初期化
@@ -90,7 +88,6 @@ namespace  Map
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		DG::Mesh_Erase(this->chipName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -127,32 +124,17 @@ namespace  Map
 		{
 			for (int x = sx; x < ex; ++x)
 			{
-				//壁以外はcontinue
-				int chipNum = this->arr[z][x].Get_Type();
-				if (chipNum != Type::box) { continue; }
-
-				//各マスの情報をMapBoxから取得
-				matS.Scaling(this->arr[z][x].Get_Scaling());
-				matT.Translation(this->arr[z][x].Get_Pos());
-				DG::EffectState().param.matWorld = matS * matT;
-				DG::Mesh_Draw(this->chipName);
+				this->arr[z][x].Render3D();
 			}
 		}
-		DG::EffectState().param.light[0].enable = true;
+		
 		//床の描画
-		ML::Mat4x4 fmatT, fmatS;
-		fmatS.Scaling(this->floor.Get_Scaling());
-		fmatT.Translation(this->floor.Get_Pos());
-		DG::EffectState().param.matWorld = fmatS * fmatT;
-		DG::Mesh_Draw(this->chipName);
+		this->floor.Render3D();
 
 		//天井の描画
-		ML::Mat4x4 cmatT, cmatS;
-		cmatS.Scaling(this->ceiling.Get_Scaling());
-		cmatT.Translation(this->ceiling.Get_Pos());
-		DG::EffectState().param.matWorld = cmatS * cmatT;
-		DG::Mesh_Draw(this->chipName);
-		
+		this->ceiling.Render3D();
+		DG::EffectState().param.light[0].enable = true;
+
 		//ゴール位置確認用
 		//ML::Mat4x4 gT, gS;
 		//gS.Scaling(this->goal.Get_Scaling());
@@ -178,6 +160,17 @@ namespace  Map
 			{
 				//終了
 				return false;
+			}
+
+			//最初の読み込みならチップ名を読み込む
+			if (this->fileName == "Map00.txt")
+			{
+				string meshName = "";
+				for (int m = 0; m < 4; ++m)
+				{
+					fin >> meshName;
+					DG::Mesh_CreateFromSOBFile(meshName, "./data/mesh/" + meshName + ".SOB");
+				}
 			}
 			//ファイル１つ分のマップサイズの読み込み
 			fin >> this->sizeX >> this->sizeZ;
@@ -208,9 +201,16 @@ namespace  Map
 					this->arr[z][x] = Box(pos, hitBase);
 					//マスのタイプを設定
 					this->arr[z][x].Type_Read(in);
+					//オブジェクトのサイズ変更
+					float s = 0;
+					ML::Vec3 sca = ML::Vec3(0, 0, 0);
 					//タイプによって処理を分ける
 					switch ((Type)in)
 					{
+					//壁なら
+					case Type::box:
+						this->arr[z][x].Set_MeshName("MapBox");
+						break;
 					//ブレイカーなら
 					case Type::breakerN:
 					case Type::breakerS:
@@ -253,10 +253,48 @@ namespace  Map
 						ge->OM.Create_Lamp(pos, hitBase);
 						break;
 					case Type::table:
-						pos.y = 0;
-						ge->OM.Create_Table(pos);
+						s = 150.0f;
+						this->arr[z][x].Set_PosY(0);
+						this->arr[z][x].Set_Size(s);
+						this->arr[z][x].Set_MeshName("Table");
 						break;
-					}					
+					case Type::chair:
+						s = 150.0f;
+						this->arr[z][x].Set_PosY(0);
+						this->arr[z][x].Set_Size(s);
+						//this->arr[z][x].Set_MeshName("chair");
+						break;
+					case Type::bed:
+						sca = ML::Vec3(100, 125, 100);
+						this->arr[z][x].Set_PosY(60.0f);
+						this->arr[z][x].Set_Size(sca);
+						this->arr[z][x].Set_MeshName("bed");
+						break;
+					case Type::toilet:
+						s= 150.0f;
+						this->arr[z][x].Set_PosY(0);
+						this->arr[z][x].Set_Size(s);
+						//this->arr[z][x].Set_MeshName("toilet");
+						break;
+					case Type::torch:
+						s= 150.0f;
+						this->arr[z][x].Set_PosY(0);
+						this->arr[z][x].Set_Size(s);
+						//this->arr[z][x].Set_MeshName("torch");
+						break;
+					case Type::bookshelf:
+						s = 150.0f;
+						this->arr[z][x].Set_PosY(0);
+						this->arr[z][x].Set_Size(s);
+						//this->arr[z][x].Set_MeshName("bookshelf");
+						break;
+					case Type::bfloor:
+						s = 300.0f;
+						this->arr[z][x].Set_PosY(0.01f);
+						this->arr[z][x].Set_Size(s);
+						this->arr[z][x].Set_MeshName("BloodFloor");
+						break;
+					}
 				}
 			}
 

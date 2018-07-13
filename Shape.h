@@ -33,6 +33,8 @@ private:
 public:
 	//中心点のコピーをもらう
 	ML::Vec3 GetCenter();
+	//継承先のパラメータのコピーをもらう	
+	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
 	//回転
 	void Rotate_Center(ML::Mat4x4* matR);
 	//動く

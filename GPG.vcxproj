@@ -98,6 +98,7 @@
     <ClCompile Include="DG2014\DG2014_VertexBuffer.cpp" />
     <ClCompile Include="DG2014\DG2014_VertexContainer.cpp" />
     <ClCompile Include="DI2014_Ver3_4.cpp" />
+    <ClCompile Include="Dm2008_Ver1_3.cpp" />
     <ClCompile Include="Door.cpp" />
     <ClCompile Include="easing.cpp" />
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
@@ -124,7 +125,6 @@
     <ClCompile Include="Task_MiniMap.cpp" />
     <ClCompile Include="Task_NowLoading.cpp" />
     <ClCompile Include="Task_Player.cpp" />
-    <ClCompile Include="Task_Table.cpp" />
     <ClCompile Include="Task_Title.cpp" />
     <ClCompile Include="WinMain.cpp" />
     <ClCompile Include="xnacollision.cpp" />
@@ -146,11 +146,13 @@
     <ClInclude Include="DG2014\DG2014_VertexBuffer.h" />
     <ClInclude Include="DG2014\DG2014_VertexContainer.h" />
     <ClInclude Include="DI2014_Ver3_4.h" />
+    <ClInclude Include="Dm2008_Ver1_3.h" />
     <ClInclude Include="Door.h" />
     <ClInclude Include="easing.h" />
     <ClInclude Include="EFile.h" />
     <ClInclude Include="GameEngine_Ver3_7.h" />
     <ClInclude Include="Joint.h" />
+    <ClInclude Include="library.h" />
     <ClInclude Include="MapBox.h" />
     <ClInclude Include="Motion.h" />
     <ClInclude Include="myLib.h" />
@@ -174,7 +176,6 @@
     <ClInclude Include="Task_MiniMap.h" />
     <ClInclude Include="Task_NowLoading.h" />
     <ClInclude Include="Task_Player.h" />
-    <ClInclude Include="Task_Table.h" />
     <ClInclude Include="Task_Title.h" />
     <ClInclude Include="xnacollision.h" />
   </ItemGroup>

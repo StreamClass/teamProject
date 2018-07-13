@@ -134,7 +134,7 @@ public:
 		this->repeat_Flag = false;
 	}
 	//引数 : (身長)
-	Bone(const float& tall);
+	Bone(const float& tall,const string owner = "");
 
 	//デストラクタ
 	~Bone()

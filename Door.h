@@ -25,11 +25,8 @@ private:
 	LR open_Angle;
 	//時間
 	int timeCnt;
-
+	
 public:	
-	//ドアを開ける処理 引数 : (ブレーカのアドレス値0,ブレーカのアドレス値1,ブレーカのアドレス値2)
-	//void Door_Open(Breaker* b0, Breaker* b1, Breaker* b2);
-
 	//ドアを開ける処理 
 	void Door_Open();
 	//プレイヤとのあたり判定 引数 : (プレイヤのあたり判定範囲)

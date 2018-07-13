@@ -29,6 +29,12 @@
  14: コーナー
  15: ブレーカーランプ
  16: テーブル
+ 17: 椅子
+ 18: ベッド
+ 19: トイレ
+ 20: トーチ
+ 21: 本棚
+ 22: 血糊(床)
 */
 
 enum Type
@@ -50,7 +56,13 @@ enum Type
 	camera_North_West = 13,
 	corner = 14,
 	lamp = 15,
-	table = 16
+	table = 16,
+	chair = 17,
+	bed = 18,
+	toilet = 19,
+	torch = 20,
+	bookshelf = 21,
+	bfloor = 22
 };
 
 class Box
@@ -68,8 +80,10 @@ private:
 	float		chipSizeY_;
 	//Z方向のチップサイズ
 	float		chipSizeZ_;
-	//
+	//コーナーの番号
 	int cornerNum;
+	//メッシュ名
+	string meshName_;
 public:
 	//Boxクラスのメンバ変数の初期化(コンストラクタ) 
 	Box()
@@ -80,6 +94,7 @@ public:
 		, chipSizeY_(chipY)
 		, chipSizeZ_(chipZ)
 		, cornerNum(-1)
+		, meshName_("")
 	{}
 	//壁の座標・当たり判定矩形の指定
 	//引数：(座標 , 当たり判定矩形)
@@ -100,7 +115,14 @@ public:
 		, chipSizeY_(chipSize.y)
 		, chipSizeZ_(chipSize.z)
 	{}
-	
+	//解放処理
+	~Box()
+	{
+		if (this->meshName_ != "")
+		{
+			DG::Mesh_Erase(this->meshName_);
+		}
+	}
 	//状態読み取り
 	void Type_Read(const int& type);
 	//状態を渡す
@@ -119,4 +141,14 @@ public:
 	bool Map_Hit_Check(const ML::Box3D& hit_);
 	//曲がり角の番号を読み込んだ順に設定
 	void Ini_Corner_Num(const int num);
+	//メッシュ名を設定
+	void Set_MeshName(const string);
+	//オブジェクト用に座標指定
+	void Set_PosY(const float);
+	//オブジェクト用にサイズ指定
+	void Set_Size(const ML::Vec3&);
+	//オブジェクト用にサイズ指定
+	void Set_Size(const float&);
+	//描画処理
+	void Render3D();
 };

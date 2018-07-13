@@ -16,10 +16,10 @@ private:
 
 public:
 	//ゲッター
-	ML::Vec3 Get_LeftBottom();
-	ML::Vec3 Get_LengthX();
-	ML::Vec3 Get_LengthY();
-	ML::Vec3 Get_LengthZ();
+	//パラメータを返すメソッド
+	//引数の名前で戻せるものを決める
+	//引数 : (判明するキー、収納するコンテナ)
+	void Get_Parameter(const string key, ML::Vec3& cont) override;
 
 	//移動・回転
 	//引数 : (回転行列のアドレス値)
@@ -29,7 +29,8 @@ public:
 	//引数 : (結果を保存するML::Vec3型のvectorのアドレス値)
 	void Get_All_Points(std::vector<ML::Vec3>* result) override;
 	//引数 : (結果を保存するTriangle型のvectorのアドレス値)
-	void Get_All_Triangle(std::vector<Triangle>* resultr) override;
+	void Get_All_Triangle(std::vector<Triangle>* resultr) override;	
+	
 
 	//コンストラクタ
 	//ゼロクリア

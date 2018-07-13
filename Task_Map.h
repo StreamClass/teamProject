@@ -49,7 +49,6 @@ namespace Map
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
-		string		chipName;			//マップチップ名
 		int			sizeX, sizeZ;		//マップtxt毎の範囲サイズ
 		int			maxSizeX, maxSizeZ;	//マップのX・Zの最大サイズ
 		int			tmpX, tmpZ;			//マップを設定するときの基準値

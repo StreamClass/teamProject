@@ -5,25 +5,28 @@
 #define TRIANGLE_ON_CUBE 12
 
 //Getter
-
-ML::Vec3 Cube::Get_LeftBottom()
+void Cube::Get_Parameter(const string key, ML::Vec3& container)
 {
-	return this->leftBottom;
-}
-
-ML::Vec3 Cube::Get_LengthX()
-{
-	return this->lengthX;
-}
-
-ML::Vec3 Cube::Get_LengthY()
-{
-	return this->lengthY;
-}
-
-ML::Vec3 Cube::Get_LengthZ()
-{
-	return this->lengthZ;
+	if (key == "x" || key == "X")
+	{
+		container = this->lengthX;
+	}
+	if (key == "y" || key == "Y")
+	{
+		container = this->lengthY;
+	}
+	if (key == "z" || key == "Z")
+	{
+		container = this->lengthZ;
+	}
+	if (key == "all_length" || key == "All_Length")
+	{
+		container = (this->lengthX + this->lengthY + this->lengthZ);
+	}
+	if (key == "lb" || key == "LB")
+	{
+		container = this->leftBottom;
+	}
 }
 
 //ˆÚ“®E‰ñ“]

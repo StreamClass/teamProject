@@ -16,9 +16,6 @@ namespace  Enemy
 	{
 		this->meshName = "enemyMesh";
 		DG::Mesh_CreateFromSOBFile("enemyMesh", "./data/mesh/char_Stand.SOB");
-		//-------------------------------------------------------------------
-		this->searchMesh = "enemySearch";
-		DG::Mesh_CreateFromSOBFile("enemySearch", "./data/mesh/box1.sob");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -26,7 +23,6 @@ namespace  Enemy
 	bool  Resource::Finalize()
 	{
 		DG::Mesh_Erase(this->meshName);
-		DG::Mesh_Erase(this->searchMesh);
 		return true;
 	}
 	//-------------------------------------------------------------------
