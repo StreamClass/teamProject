@@ -88,6 +88,10 @@ namespace  Map
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		for (MapObj* mapobj : this->mapObjects)
+		{
+			delete mapobj;
+		}
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -109,6 +113,8 @@ namespace  Map
 
 	void  Object::Render3D_L0()
 	{
+		//ライト０番のライティングを無効化
+		//マップにはライティングを適応しない
 		DG::EffectState().param.light[0].enable = false;
 		//壁の描画
 		ML::Mat4x4 matS,matT;
@@ -133,6 +139,15 @@ namespace  Map
 
 		//天井の描画
 		this->ceiling.Render3D();
+
+		//オブジェクト
+		for (auto* obj : this->mapObjects)
+		{
+			//描画処理
+			obj->Render3D();
+		}
+
+		//ライト０番のライティングを有効化
 		DG::EffectState().param.light[0].enable = true;
 
 		//ゴール位置確認用
@@ -144,7 +159,7 @@ namespace  Map
 	}
 	//-------------------------------------------------------------------
 	//マップの読み込み
-	bool  Object::Load()
+	bool  Object::Load_Map()
 	{
 		int x = 0, z = 0;
 		int num = 0;
@@ -166,7 +181,7 @@ namespace  Map
 			if (this->fileName == "Map00.txt")
 			{
 				string meshName = "";
-				for (int m = 0; m < 4; ++m)
+				for (int m = 0; m < 8; ++m)
 				{
 					fin >> meshName;
 					DG::Mesh_CreateFromSOBFile(meshName, "./data/mesh/" + meshName + ".SOB");
@@ -249,50 +264,10 @@ namespace  Map
 						//番号を1増やす
 						++num;
 						break;
+					//ブレーカーランプなら
 					case Type::lamp:
+						//座標とあたり判定を指定する
 						ge->OM.Create_Lamp(pos, hitBase);
-						break;
-					case Type::table:
-						s = 150.0f;
-						this->arr[z][x].Set_PosY(0);
-						this->arr[z][x].Set_Size(s);
-						this->arr[z][x].Set_MeshName("Table");
-						break;
-					case Type::chair:
-						s = 150.0f;
-						this->arr[z][x].Set_PosY(0);
-						this->arr[z][x].Set_Size(s);
-						//this->arr[z][x].Set_MeshName("chair");
-						break;
-					case Type::bed:
-						sca = ML::Vec3(100, 125, 100);
-						this->arr[z][x].Set_PosY(60.0f);
-						this->arr[z][x].Set_Size(sca);
-						this->arr[z][x].Set_MeshName("bed");
-						break;
-					case Type::toilet:
-						s= 150.0f;
-						this->arr[z][x].Set_PosY(0);
-						this->arr[z][x].Set_Size(s);
-						//this->arr[z][x].Set_MeshName("toilet");
-						break;
-					case Type::torch:
-						s= 150.0f;
-						this->arr[z][x].Set_PosY(0);
-						this->arr[z][x].Set_Size(s);
-						//this->arr[z][x].Set_MeshName("torch");
-						break;
-					case Type::bookshelf:
-						s = 150.0f;
-						this->arr[z][x].Set_PosY(0);
-						this->arr[z][x].Set_Size(s);
-						//this->arr[z][x].Set_MeshName("bookshelf");
-						break;
-					case Type::bfloor:
-						s = 300.0f;
-						this->arr[z][x].Set_PosY(0.01f);
-						this->arr[z][x].Set_Size(s);
-						this->arr[z][x].Set_MeshName("BloodFloor");
 						break;
 					}
 				}
@@ -335,6 +310,44 @@ namespace  Map
 			}
 		}
 		return true;
+	}
+	//-------------------------------------------------------------------
+	//
+	bool Object::Load_Objects()
+	{
+		ifstream fin("./data/StageData/MapObjects.txt");
+		if (!fin)
+		{
+			return false;
+		}
+
+		//読み込む用のデータの入れ物を用意
+		ML::Vec3 p(0, 0, 0);
+		ML::Vec3 a(0, 0, 0);
+		int s = 0;
+		ML::Box3D h(0, 0, 0, 0, 0, 0);
+		string m = "";
+
+		while (true)
+		{
+			fin >> m;
+			if (m == "end")
+			{
+				break;
+			}
+			fin >> p.x >> p.y >> p.z >> a.x >> a.y >> a.z
+				>> h.w >> h.h >> h.d >> s;
+
+			p = ML::Vec3(p.x, p.y, p.z);
+			ML::QT qtx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(a.x));
+			ML::QT qty = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(a.y));
+			ML::QT qtz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(a.z));
+			ML::QT qtA = qtx * qty * qtz;
+
+			MapObj* obj = new MapObj(p, qtA, h, s, m);
+			mapObjects.push_back(obj);
+		}
+		return false;
 	}
 	//-------------------------------------------------------------------
 	//マップとの接触判定

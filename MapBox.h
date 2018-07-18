@@ -28,13 +28,6 @@
  13: カメラ　北西
  14: コーナー
  15: ブレーカーランプ
- 16: テーブル
- 17: 椅子
- 18: ベッド
- 19: トイレ
- 20: トーチ
- 21: 本棚
- 22: 血糊(床)
 */
 
 enum Type
@@ -56,13 +49,6 @@ enum Type
 	camera_North_West = 13,
 	corner = 14,
 	lamp = 15,
-	table = 16,
-	chair = 17,
-	bed = 18,
-	toilet = 19,
-	torch = 20,
-	bookshelf = 21,
-	bfloor = 22
 };
 
 class Box
@@ -84,6 +70,8 @@ private:
 	int cornerNum;
 	//メッシュ名
 	string meshName_;
+	//向き
+	float angle_;
 public:
 	//Boxクラスのメンバ変数の初期化(コンストラクタ) 
 	Box()
@@ -95,6 +83,7 @@ public:
 		, chipSizeZ_(chipZ)
 		, cornerNum(-1)
 		, meshName_("")
+		, angle_(0.0f)
 	{}
 	//壁の座標・当たり判定矩形の指定
 	//引数：(座標 , 当たり判定矩形)
@@ -105,6 +94,9 @@ public:
 		, chipSizeX_(chipX)
 		, chipSizeY_(chipY)
 		, chipSizeZ_(chipZ)
+		, cornerNum(-1)
+		, meshName_("")
+		, angle_(0.0f)
 	{}
 	//床・天井の座標・当たり判定矩形の指定
 	//引数 : (ML::vec3 チップサイズ , 座標 , 当たり判定矩形)
@@ -114,12 +106,16 @@ public:
 		, chipSizeX_(chipSize.x)
 		, chipSizeY_(chipSize.y)
 		, chipSizeZ_(chipSize.z)
+		, cornerNum(-1)
+		, meshName_("")
+		, angle_(0.0f)
 	{}
 	//解放処理
 	~Box()
 	{
-		if (this->meshName_ != "")
+		if (this->meshName_ != "")//メッシュ名が指定されている場合
 		{
+			//保持している画像を解放
 			DG::Mesh_Erase(this->meshName_);
 		}
 	}
@@ -143,12 +139,16 @@ public:
 	void Ini_Corner_Num(const int num);
 	//メッシュ名を設定
 	void Set_MeshName(const string);
-	//オブジェクト用に座標指定
+	//オブジェクト用に座標指定(Y軸のみ)
 	void Set_PosY(const float);
+	//オブジェクト用に座標指定
+	void Set_PosAdd(const ML::Vec3);
 	//オブジェクト用にサイズ指定
 	void Set_Size(const ML::Vec3&);
 	//オブジェクト用にサイズ指定
 	void Set_Size(const float&);
+	//オブジェクトの向きを指定
+	void Set_Angle(const float&);
 	//描画処理
 	void Render3D();
 };

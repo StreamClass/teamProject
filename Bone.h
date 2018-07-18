@@ -65,7 +65,7 @@ private:
 
 	//動きのプリセット
 	//歩き
-	void Make_Walking();
+	//void Make_Walking();
 	//走り
 	void Make_Running();
 	//相互作用
@@ -134,7 +134,7 @@ public:
 		this->repeat_Flag = false;
 	}
 	//引数 : (身長)
-	Bone(const float& tall,const string owner = "");
+	Bone(const float& tall);
 
 	//デストラクタ
 	~Bone()

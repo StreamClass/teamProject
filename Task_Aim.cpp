@@ -207,7 +207,8 @@ namespace  Aiming
 	{
 		return this->hitBase;
 	}
-	//
+	//-------------------------------------------------------------------
+	//‚ ‚½ƒŠ”»’è‚Ì‚RŽŸŒ³À•WÝ’è
 	void Object::Set_Pos(ML::Vec3& pos_)
 	{
 		this->pos = pos_;

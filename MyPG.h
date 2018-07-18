@@ -104,6 +104,8 @@ namespace  MyPG
 		void Dbg_TilteToMessage(const char * str, ...);
 		void Dbg_BoxToMessage(const char *str, ...);
 		void Dbg_FileOut(const char *str, ...);
+
+		string controllerName = "P1";
 	//----------------------------------------------
 	};
 }

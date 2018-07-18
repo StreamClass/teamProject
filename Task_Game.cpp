@@ -63,7 +63,8 @@ namespace  Game
 		auto cam = Camera::Object::Create(true);
 		auto en = Enemy::Object::Create(true);
 		auto map = Map::Object::Create(true);
-		map->Load();		
+		map->Load_Map();
+		map->Load_Objects();
 		auto mm = MiniMap::Object::Create(true);
 
 		

@@ -83,6 +83,12 @@ void Box::Set_PosY(const float posY)
 	this->pos_.y = posY;
 }
 
+//
+void Box::Set_PosAdd(const ML::Vec3 aPos)
+{
+	this->pos_ += aPos;
+}
+
 //オブジェクト用にサイズ指定
 void Box::Set_Size(const ML::Vec3& size)
 {
@@ -99,6 +105,12 @@ void Box::Set_Size(const float& size)
 	this->chipSizeZ_ = size;
 }
 
+//オブジェクトの向きを指定
+void Box::Set_Angle(const float& angle)
+{
+	this->angle_ = angle;
+}
+
 //3D描画処理
 void Box::Render3D()
 {
@@ -108,9 +120,13 @@ void Box::Render3D()
 		//オブジェクトではないため終了
 		return;
 	}
-	ML::Mat4x4 matT, matS;
+	//座標とサイズを設定
+	ML::Mat4x4 matT, matS, matR;
 	matS.Scaling(this->Get_Scaling());
 	matT.Translation(this->pos_);
-	DG::EffectState().param.matWorld = matS * matT;
+	matR.RotationY(this->angle_);
+	//ワールド座標に設定
+	DG::EffectState().param.matWorld = matS * matR * matT;
+	//メッシュ名に合わせて描画
 	DG::Mesh_Draw(this->meshName_);
 }

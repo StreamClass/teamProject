@@ -78,7 +78,7 @@ namespace  Over
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
+		auto in = DI::GPad_GetState(ge->controllerName);
 		easing::UpDate();
 
 		//endFlagがfalseの時にstartボタンを押すとローディングを呼び出し

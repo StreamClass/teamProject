@@ -85,6 +85,18 @@ namespace MyPG
 		};
 		DI::GPad_CreateKBGP("P1", ls, rs, key, 0, but);
 
+		//ゲームパッドパラメータ
+		but = {
+			{ DI::GPB::B01, DI::But::B1 },{ DI::GPB::B03, DI::But::B2 },
+			{ DI::GPB::B02, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },
+			{ DI::GPB::B05, DI::But::L1 },{ DI::GPB::B06, DI::But::R1 },
+			{ DI::GPB::B07, DI::But::L2 },{ DI::GPB::B08, DI::But::R2 },
+			{ DI::GPB::B09, DI::But::SE },{ DI::GPB::B10, DI::But::ST },
+			{ DI::GPB::B11, DI::But::L3 },{ DI::GPB::B12, DI::But::R3 },
+			{ DI::GPB::HSU, DI::But::HU },{ DI::GPB::HSD , DI::But::HD },
+			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR , DI::But::HR },
+		};
+		DI::GPad_CreateKBGP("P2", ls, rs, key, 0, but);
 
 		//背景色の設定（デフォルト）
 		DG::EffectState( ).param.bgColor  =  ML::Color(0,0.0f,0.8f,0.0f);

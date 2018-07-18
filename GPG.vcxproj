@@ -104,6 +104,7 @@
     <ClCompile Include="GameEngine_Ver3_7.cpp" />
     <ClCompile Include="Joint.cpp" />
     <ClCompile Include="MapBox.cpp" />
+    <ClCompile Include="MapObject.cpp" />
     <ClCompile Include="myLib.cpp" />
     <ClCompile Include="MyMath.cpp" />
     <ClCompile Include="MyPG.cpp" />
@@ -154,6 +155,7 @@
     <ClInclude Include="Joint.h" />
     <ClInclude Include="library.h" />
     <ClInclude Include="MapBox.h" />
+    <ClInclude Include="MapObject.h" />
     <ClInclude Include="Motion.h" />
     <ClInclude Include="myLib.h" />
     <ClInclude Include="MyMath.h" />

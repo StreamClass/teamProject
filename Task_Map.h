@@ -5,6 +5,7 @@
 //-------------------------------------------------------------------
 #include "MyPG.h"
 #include "MapBox.h"
+#include "MapObject.h"
 
 namespace Map
 {
@@ -58,10 +59,14 @@ namespace Map
 		string		fileName;			//読み取るマップの名前
 		string		filePath;			//マップファイル読み取り時のパス
 
+		std::vector<MapObj*> mapObjects;
+
 	public:
 		//メソッド------------------------------------------------------
 		//マップの読み込み
-		bool  Load();
+		bool  Load_Map();
+		//
+		bool  Load_Objects();
 		//当たり判定
 		//引数(マップとの判定を行う相手の当たり判定範囲)
 		bool Map_CheckHit(const ML::Box3D& pHit);

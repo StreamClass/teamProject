@@ -113,6 +113,9 @@
     <Filter Include="MyPG\Game\BreakerLamp">
       <UniqueIdentifier>{1d1e6a4c-1fcf-4e84-a7c7-86c1e77f4915}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\Class\MapObject">
+      <UniqueIdentifier>{bbfe6679-bf36-4829-8a6c-14d44d8cc294}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -255,6 +258,9 @@
     </ClCompile>
     <ClCompile Include="Dm2008_Ver1_3.cpp">
       <Filter>LIB</Filter>
+    </ClCompile>
+    <ClCompile Include="MapObject.cpp">
+      <Filter>MyPG\Class\MapObject</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -401,6 +407,9 @@
     </ClInclude>
     <ClInclude Include="library.h">
       <Filter>LIB</Filter>
+    </ClInclude>
+    <ClInclude Include="MapObject.h">
+      <Filter>MyPG\Class\MapObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
