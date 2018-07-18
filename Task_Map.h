@@ -59,13 +59,13 @@ namespace Map
 		string		fileName;			//読み取るマップの名前
 		string		filePath;			//マップファイル読み取り時のパス
 
-		std::vector<MapObj*> mapObjects;
+		std::vector<MapObj*> mapObjects;//マップオブジェクト用ベクター
 
 	public:
 		//メソッド------------------------------------------------------
 		//マップの読み込み
 		bool  Load_Map();
-		//
+		//オブジェクトの読み込み
 		bool  Load_Objects();
 		//当たり判定
 		//引数(マップとの判定を行う相手の当たり判定範囲)

@@ -181,9 +181,12 @@ namespace  Map
 			if (this->fileName == "Map00.txt")
 			{
 				string meshName = "";
+				//現在追加中のオブジェクトの数だけ回す
 				for (int m = 0; m < 8; ++m)
 				{
+					//メッシュ名を読み込み
 					fin >> meshName;
+					//画像を用意
 					DG::Mesh_CreateFromSOBFile(meshName, "./data/mesh/" + meshName + ".SOB");
 				}
 			}
@@ -312,12 +315,13 @@ namespace  Map
 		return true;
 	}
 	//-------------------------------------------------------------------
-	//
+	//オブジェクトの読み込み
 	bool Object::Load_Objects()
 	{
 		ifstream fin("./data/StageData/MapObjects.txt");
-		if (!fin)
+		if (!fin)//失敗したら
 		{
+			//終了
 			return false;
 		}
 
@@ -330,24 +334,30 @@ namespace  Map
 
 		while (true)
 		{
-			fin >> m;
-			if (m == "end")
+			fin >> m;//メッシュ名の読み込み
+			if (m == "end")//読み込んだ文字列がendなら
 			{
+				//whileから抜け出す
 				break;
 			}
+			//座標XYZ 向きXYZ　あたり判定WHD サイズ の順に読み込む
+			//テキストに抜けがあるとバグとなるので
+			//文字列と数字10個を厳守
 			fin >> p.x >> p.y >> p.z >> a.x >> a.y >> a.z
 				>> h.w >> h.h >> h.d >> s;
 
-			p = ML::Vec3(p.x, p.y, p.z);
+			//向き(度数)からクォータニオンに変換
 			ML::QT qtx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(a.x));
 			ML::QT qty = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(a.y));
 			ML::QT qtz = ML::QT(ML::Vec3(0, 0, 1), ML::ToRadian(a.z));
+			//上記を合成
 			ML::QT qtA = qtx * qty * qtz;
 
-			MapObj* obj = new MapObj(p, qtA, h, s, m);
-			mapObjects.push_back(obj);
+			//コピーコンストラクタで値を設定し、ベクターに追加
+			mapObjects.push_back(new MapObj(p, qtA, h, s, m));
 		}
-		return false;
+		//正常に終了
+		return true;
 	}
 	//-------------------------------------------------------------------
 	//マップとの接触判定
