@@ -73,7 +73,6 @@ namespace  Map
 		pos = ML::Vec3(chipX * 3 + chipSize.x / 2, chipY / 2, chipZ * 100 + chipSize.z / 2);
 		hitBase = ML::Box3D(0,0,0, chipSize.x, chipSize.y, chipSize.z);
 		this->goal = Box(chipSize, pos, hitBase);
-		//チップ名の初期化
 		//読み込むファイル名の初期化
 		this->fileName = "Map00.txt";
 		//ファイルパスの初期化
@@ -192,7 +191,6 @@ namespace  Map
 			}
 			//ファイル１つ分のマップサイズの読み込み
 			fin >> this->sizeX >> this->sizeZ;
-			//当たり判定矩形の設定
 			//ファイル１つ分の読み込み
 			for (int z = tmpZ + this->sizeZ -1 ; z >= this->tmpZ; --z)
 			{
@@ -219,9 +217,6 @@ namespace  Map
 					this->arr[z][x] = Box(pos, hitBase);
 					//マスのタイプを設定
 					this->arr[z][x].Type_Read(in);
-					//オブジェクトのサイズ変更
-					float s = 0;
-					ML::Vec3 sca = ML::Vec3(0, 0, 0);
 					//タイプによって処理を分ける
 					switch ((Type)in)
 					{
@@ -229,6 +224,7 @@ namespace  Map
 					case Type::box:
 						this->arr[z][x].Set_MeshName("MapBox");
 						break;
+
 					//ブレイカーなら
 					case Type::breakerN:
 					case Type::breakerS:
@@ -332,7 +328,7 @@ namespace  Map
 		ML::Box3D h(0, 0, 0, 0, 0, 0);
 		string m = "";
 
-		while (true)
+		while (true)//breakまで
 		{
 			fin >> m;//メッシュ名の読み込み
 			if (m == "end")//読み込んだ文字列がendなら
@@ -380,9 +376,7 @@ namespace  Map
 		//マップの判定用頂点を設定
 		Box3D_2Point m =
 		{
-			0,
-			0,
-			0,
+			0,0,0,
 			chipX * this->maxSizeX,
 			chipY,
 			chipZ * this->maxSizeZ

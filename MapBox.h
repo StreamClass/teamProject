@@ -70,8 +70,6 @@ private:
 	int cornerNum;
 	//メッシュ名
 	string meshName_;
-	//向き
-	float angle_;
 public:
 	//Boxクラスのメンバ変数の初期化(コンストラクタ) 
 	Box()
@@ -83,7 +81,6 @@ public:
 		, chipSizeZ_(chipZ)
 		, cornerNum(-1)
 		, meshName_("")
-		, angle_(0.0f)
 	{}
 	//壁の座標・当たり判定矩形の指定
 	//引数：(座標 , 当たり判定矩形)
@@ -96,10 +93,9 @@ public:
 		, chipSizeZ_(chipZ)
 		, cornerNum(-1)
 		, meshName_("")
-		, angle_(0.0f)
 	{}
 	//床・天井の座標・当たり判定矩形の指定
-	//引数 : (ML::vec3 チップサイズ , 座標 , 当たり判定矩形)
+	//引数 : (チップサイズ , 座標 , 当たり判定)
 	Box(ML::Vec3 chipSize, ML::Vec3 pos, ML::Box3D hitBase)
 		: pos_(pos)
 		, hitBase_(hitBase)
@@ -108,7 +104,6 @@ public:
 		, chipSizeZ_(chipSize.z)
 		, cornerNum(-1)
 		, meshName_("")
-		, angle_(0.0f)
 	{}
 	//解放処理
 	~Box()
@@ -119,6 +114,7 @@ public:
 			DG::Mesh_Erase(this->meshName_);
 		}
 	}
+
 	//状態読み取り
 	void Type_Read(const int& type);
 	//状態を渡す
@@ -139,16 +135,6 @@ public:
 	void Ini_Corner_Num(const int num);
 	//メッシュ名を設定
 	void Set_MeshName(const string);
-	//オブジェクト用に座標指定(Y軸のみ)
-	void Set_PosY(const float);
-	//オブジェクト用に座標指定
-	void Set_PosAdd(const ML::Vec3);
-	//オブジェクト用にサイズ指定
-	void Set_Size(const ML::Vec3&);
-	//オブジェクト用にサイズ指定
-	void Set_Size(const float&);
-	//オブジェクトの向きを指定
-	void Set_Angle(const float&);
 	//描画処理
 	void Render3D();
 };
