@@ -23,9 +23,13 @@ namespace Aiming
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//エイム用の画像名
 		string imageName[3];
+		//通常時の操作説明用画像名
 		string normalModeImg[2];
+		//監視カメラ時の操作説明画像名
 		string tabletModeImg[2];
+		//スタミナ残量描画用画像名
 		string staminaImgName[2];
 	};
 	//-------------------------------------------------------------------
@@ -50,16 +54,23 @@ namespace Aiming
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
+		//あたり判定
 		ML::Box3D hitBase;
+		//時間カウンタ
 		int timeCnt;
+		//コントローラー入力時間
 		float moveCnt;
+		//エイムの2次元座標
 		ML::Vec2 aimPosC;
 		ML::Vec2 aimPosT;
 		ML::Vec2 aimPosB; 
 		ML::Vec2 aimPosL; 
 		ML::Vec2 aimPosR;
+		//あたり判定の３次元座標
 		ML::Vec3 pos;
+		//エイムの動く速さ
 		float aimMoveSpeed;
+		//エイムの動く幅
 		float aimMovetremor;
 	public:
 		//各状態での操作説明
@@ -71,7 +82,7 @@ namespace Aiming
 		void StaminaRender();
 		//当たり判定を渡す
 		ML::Box3D Get_HitBase();
-		//
+		//あたり判定の座標設定
 		void Set_Pos(ML::Vec3& pos_);
 	};
 }

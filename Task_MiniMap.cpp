@@ -54,7 +54,7 @@ namespace  MiniMap
 		//座標参照用倍率
 		this->magni = chipX / 5;
 
-		//
+		//デバックモードの初期化(無効)
 		this->debugMode = false;
 		//エネミーの座標
 		this->epos = ML::Vec2(0, 0);
@@ -161,7 +161,8 @@ namespace  MiniMap
 	{
 		this->viewFlag = !this->viewFlag;
 	}
-	//
+	//ミニマップの描画
+	//画像描画範囲の設定を未実装
 	void Object::MiniMap_Render()
 	{
 		ML::Box2D draw(60, 60, 500, 500);

@@ -108,9 +108,12 @@ void Box::Render3D()
 		//オブジェクトではないため終了
 		return;
 	}
+	//座標とサイズを設定
 	ML::Mat4x4 matT, matS;
 	matS.Scaling(this->Get_Scaling());
 	matT.Translation(this->pos_);
+	//ワールド座標に設定
 	DG::EffectState().param.matWorld = matS * matT;
+	//メッシュ名に合わせて描画
 	DG::Mesh_Draw(this->meshName_);
 }

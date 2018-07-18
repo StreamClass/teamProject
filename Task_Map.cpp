@@ -109,6 +109,8 @@ namespace  Map
 
 	void  Object::Render3D_L0()
 	{
+		//ライト０番のライティングを無効化
+		//マップにはライティングを適応しない
 		DG::EffectState().param.light[0].enable = false;
 		//壁の描画
 		ML::Mat4x4 matS,matT;
@@ -133,6 +135,8 @@ namespace  Map
 
 		//天井の描画
 		this->ceiling.Render3D();
+
+		//ライト０番のライティングを有効化
 		DG::EffectState().param.light[0].enable = true;
 
 		//ゴール位置確認用
@@ -249,45 +253,55 @@ namespace  Map
 						//番号を1増やす
 						++num;
 						break;
+					//ブレーカーランプなら
 					case Type::lamp:
+						//座標とあたり判定を指定する
 						ge->OM.Create_Lamp(pos, hitBase);
 						break;
+					//以下マップオブジェクト--------------------------------------------
+					//机なら
 					case Type::table:
 						s = 150.0f;
 						this->arr[z][x].Set_PosY(0);
 						this->arr[z][x].Set_Size(s);
 						this->arr[z][x].Set_MeshName("Table");
 						break;
+					//椅子なら
 					case Type::chair:
 						s = 150.0f;
 						this->arr[z][x].Set_PosY(0);
 						this->arr[z][x].Set_Size(s);
 						//this->arr[z][x].Set_MeshName("chair");
 						break;
+					//ベッドなら
 					case Type::bed:
 						sca = ML::Vec3(100, 125, 100);
 						this->arr[z][x].Set_PosY(60.0f);
 						this->arr[z][x].Set_Size(sca);
 						this->arr[z][x].Set_MeshName("bed");
 						break;
+					//トイレなら
 					case Type::toilet:
 						s= 150.0f;
 						this->arr[z][x].Set_PosY(0);
 						this->arr[z][x].Set_Size(s);
 						//this->arr[z][x].Set_MeshName("toilet");
 						break;
+					//トーチなら
 					case Type::torch:
 						s= 150.0f;
 						this->arr[z][x].Set_PosY(0);
 						this->arr[z][x].Set_Size(s);
 						//this->arr[z][x].Set_MeshName("torch");
 						break;
+					//本棚なら
 					case Type::bookshelf:
 						s = 150.0f;
 						this->arr[z][x].Set_PosY(0);
 						this->arr[z][x].Set_Size(s);
 						//this->arr[z][x].Set_MeshName("bookshelf");
 						break;
+					//血の跡なら
 					case Type::bfloor:
 						s = 300.0f;
 						this->arr[z][x].Set_PosY(0.01f);

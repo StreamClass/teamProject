@@ -118,8 +118,9 @@ public:
 	//‰ð•úˆ—
 	~Box()
 	{
-		if (this->meshName_ != "")
+		if (this->meshName_ != "")//ƒƒbƒVƒ…–¼‚ªŽw’è‚³‚ê‚Ä‚¢‚éê‡
 		{
+			//•ÛŽ‚µ‚Ä‚¢‚é‰æ‘œ‚ð‰ð•ú
 			DG::Mesh_Erase(this->meshName_);
 		}
 	}

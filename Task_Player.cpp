@@ -119,7 +119,7 @@ namespace  Player
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState("P1");
+		auto in = DI::GPad_GetState(ge->controllerName);
 		//volumeが0の時は使ってはダメ
 		//タブレットオフ
 		if (!this->tab->Is_Used_Now())
