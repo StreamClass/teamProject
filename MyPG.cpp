@@ -12,7 +12,7 @@ namespace MyPG
 		1080,							//	画面サイズY
 		1,								//	表示倍率
 		1,								//	マルチサンプル(1or2or4)
-		false,							//	フルスクリーンモード
+		true,							//	フルスクリーンモード
 		1920,							//	2D描画用解像度X(現在非対応）
 		1080,							//	2D描画用解像度Y(現在非対応）
 		"微笑の追跡者",					//	ウインドウタイトル
@@ -70,14 +70,13 @@ namespace MyPG
 			{ DIK_U, DI::But::HU },{ DIK_J, DI::But::HD },
 			{ DIK_H, DI::But::HL },{ DIK_L, DI::But::HR },
 			//デバッグ用に追加
-			{ DIK_LSHIFT, DI::But::S0},{ DIK_LCONTROL, DI::But::S1},
+			{ DIK_LSHIFT, DI::But::S0},{ DIK_LCONTROL, DI::But::S1},{DIK_LALT,DI::But::S2},
 		};
-		//ゲームパッドパラメータ
+		//ゲームパッドパラメータ xbox
 		DI::KeyDatas_GP	but = {
 			{ DI::GPB::B03, DI::But::B1 },{ DI::GPB::B02, DI::But::B2 },
 			{ DI::GPB::B01, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },
 			{ DI::GPB::B05, DI::But::L1 },{ DI::GPB::B06, DI::But::R1 },
-			//{ DI::GPB::B07, DI::But::L2 },{ DI::GPB::B08, DI::But::R2 },
 			{ DI::GPB::B07, DI::But::SE },{ DI::GPB::B08, DI::But::ST },
 			{ DI::GPB::B09, DI::But::L3 },{ DI::GPB::B10, DI::But::R3 },
 			{ DI::GPB::HSU, DI::But::HU }, { DI::GPB::HSD , DI::But::HD},
@@ -85,7 +84,7 @@ namespace MyPG
 		};
 		DI::GPad_CreateKBGP("P1", ls, rs, key, 0, but);
 
-		//ゲームパッドパラメータ
+		//ゲームパッドパラメータ	dualshock
 		but = {
 			{ DI::GPB::B01, DI::But::B1 },{ DI::GPB::B03, DI::But::B2 },
 			{ DI::GPB::B02, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },

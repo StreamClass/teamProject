@@ -101,7 +101,7 @@ namespace  Camera
 			return;
 		}
 		
-		if (DI::GPad_GetState("P1").SE.down)
+		if (DI::GPad_GetState("P1").S2.down)
 		{
 			this->test_flag ? this->test_flag = false : this->test_flag = true;
 		}

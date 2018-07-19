@@ -135,14 +135,14 @@ namespace  Game
 		{
 			this->Start();
 		}
-		if (in.ST.down && this->pushButton == false)
-		{
-			ge->state = ge->over;
-			this->pushButton = true;
-			auto lo = Loading::Object::Create(true);
-			float color = 0.0f;
-			lo->Set_Color(color);
-		}
+		//if (in.ST.down && this->pushButton == false)
+		//{
+		//	ge->state = ge->over;
+		//	this->pushButton = true;
+		//	auto lo = Loading::Object::Create(true);
+		//	float color = 0.0f;
+		//	lo->Set_Color(color);
+		//}
 		if (ge->state == ge->clear && this->pushButton == false)
 		{
 			auto lo = Loading::Object::Create(true);
