@@ -5,7 +5,6 @@
 #include  "Task_MiniMap.h"
 #include  "Task_Player.h"
 #include  "Task_Enemy.h"
-#include  "MapBox.h"
 
 namespace  MiniMap
 {
@@ -52,8 +51,9 @@ namespace  MiniMap
 		//タブレットは使っていない
 		this->tab_use_now = false;
 		//座標参照用倍率
-		this->magni = chipX / 5;
-
+		this->magni = chipX / NORMALMAGNI;
+		//
+		this->mapSize = NORMALMAPSIZE;
 		//デバックモードの初期化(無効)
 		this->debugMode = false;
 		//エネミーの座標
@@ -76,7 +76,6 @@ namespace  MiniMap
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -87,64 +86,111 @@ namespace  MiniMap
 	{
 		//プレイヤの変数等を使えるように呼び出す
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		this->debugMode = pl->Get_DebugOnOff();
-		//プレイヤ本体からミニマップ上の情報を参照
-		this->plpos = ML::Vec2((int)pl->Get_Pos().x / this->magni, 500 - (int)pl->Get_Pos().z / this->magni);
-		this->plAngle = (float)pl->Get_Angle().y + ML::ToRadian(90);
 		//タブレットの使用状況をプレイヤから受け取る
 		this->tab_use_now = pl->Is_Used_Tablet();
-		//タブレットを使っていたら
-		if (this->tab_use_now == true)
+		//デバッグモードか否かをプレイヤーから受け取る
+		this->debugMode = pl->Get_DebugOnOff();
+		//
+		this->magni = chipX / NORMALMAGNI;
+		this->mapSize = NORMALMAPSIZE;
+		//
+		if (this->tab_use_now)
 		{
-			//カメラからミニマップ上の情報を参照
-			this->capos = ML::Vec2((int)ge->camera[0]->pos.x / this->magni, 500 - (int)ge->camera[0]->pos.z / this->magni);
-			ML::Vec2 a = ML::Vec2(ge->camera[0]->target.x - ge->camera[0]->pos.x, ge->camera[0]->target.z - ge->camera[0]->pos.z);
-			this->caAngle = -atan2(a.y,a.x) + ML::ToRadian(90);
+			this->magni = chipX / TABLETMAGNI;
+			this->mapSize = TABLETMAPSIZE;
 		}
-
-		//デバック用
+		//プレイヤ本体からミニマップ上の情報を参照
+		this->plpos = ML::Vec2((int)pl->Get_Pos().x / this->magni, this->mapSize - (int)pl->Get_Pos().z / this->magni);
+		this->plAngle = (float)pl->Get_Angle().y + ML::ToRadian(90);
+		//カメラからミニマップ上の情報を参照
+		this->capos = ML::Vec2((int)ge->camera[0]->pos.x / this->magni, this->mapSize - (int)ge->camera[0]->pos.z / this->magni);
+		ML::Vec2 a = ML::Vec2(ge->camera[0]->target.x - ge->camera[0]->pos.x, ge->camera[0]->target.z - ge->camera[0]->pos.z);
+		this->caAngle = -atan2(a.y,a.x) + ML::ToRadian(90);
 		//エネミーからミニマップ上での情報を参照
-		if (this->debugMode)
-		{
-			auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
-			this->epos = ML::Vec2((int)e->pos.x / this->magni, 500 - (int)e->pos.z / this->magni);
-			this->eangle = e->angle.y + ML::ToRadian(90);
-		}
+		auto e = ge->GetTask_One_G<Enemy::Object>("エネミー");
+		this->epos = ML::Vec2((int)e->pos.x / this->magni, this->mapSize - (int)e->pos.z / this->magni);
+		this->eangle = e->angle.y + ML::ToRadian(90);
+
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
 		//ミニマップを表示していたら
-		if (this->MiniMap_View() == true)
+		if (!this->MiniMap_View())
 		{
-			//ミニマップ
-			this->MiniMap_Render();
-			//プレイヤ位置
-			ML::Box2D draw(-5 + 60, -7 + 60, 9, 13);
-			ML::Box2D src(0, 0, 50, 50);
-			draw.Offset(this->plpos);
-			DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
-			DG::Image_Draw(this->plImgName, draw, src);
-			//タブレットを使用していたら
-			if (this->tab_use_now == true)
-			{
-				draw = ML::Box2D(-5 + 60 , -7 + 60, 9, 13);
-				draw.Offset(this->capos);
-				DG::Image_Rotation(this->caImgName, this->caAngle, ML::Vec2(5, 10));
-				DG::Image_Draw(this->caImgName, draw, src);
-			}
-
-			//デバッグ用
-			//エネミー描画
-			if (this->debugMode)
-			{
-				draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
-				draw.Offset(this->epos);
-				DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
-				DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
-			}
+			return;
 		}
+		//
+		ML::Vec2 cen(8, 8);
+		//
+		ML::Box2D pdraw(-8 + 60, -8 + 60, 16, 16);
+		ML::Box2D psrc(0, 0, 50, 50);
+		//
+		ML::Box2D cdraw = pdraw;
+		ML::Box2D csrc(0, 0, 50, 50); 
+		//
+		ML::Box2D edraw = pdraw;;
+		ML::Box2D esrc(0, 0, 50, 50);
+		//
+		float alpha = 1;
+		if (this->tab_use_now)
+		{
+			cen = ML::Vec2(10, 10);
+			pdraw = ML::Box2D(-10 + 60, -10 + 60, 20, 20);
+			cdraw = pdraw;
+			edraw = pdraw;
+			alpha = 0.4f;
+		}
+		ML::Box2D draw(60, 60, this->mapSize, this->mapSize);
+		ML::Box2D src(0, 0, 500, 500);
+		DG::Image_Draw(this->imageName, draw, src, ML::Color(alpha, 1, 1, 1));
+		//
+		pdraw.Offset(this->plpos);
+		DG::Image_Rotation(this->plImgName, this->plAngle, cen);
+		DG::Image_Draw(this->plImgName, pdraw, psrc, ML::Color(alpha, 1, 1, 1));
+		//
+		cdraw.Offset(this->capos);
+		DG::Image_Rotation(this->caImgName, this->caAngle, cen);
+		DG::Image_Draw(this->caImgName, cdraw, csrc, ML::Color(alpha, 1, 1, 1));
+		//
+		edraw.Offset(this->epos);
+		DG::Image_Rotation(this->plImgName, this->eangle, cen);
+		if (this->debugMode)
+		{
+			DG::Image_Draw(this->plImgName, edraw, esrc, ML::Color(alpha, 1, 1, 0));
+		}
+
+		////ミニマップを表示していたら
+		//if (this->MiniMap_View())
+		//{
+		//	//ミニマップ
+		//	this->MiniMap_Render();
+		//	//プレイヤ位置
+		//	ML::Box2D draw(-5 + 60, -7 + 60, 9, 13);
+		//	ML::Box2D src(0, 0, 50, 50);
+		//	draw.Offset(this->plpos);
+		//	DG::Image_Rotation(this->plImgName, this->plAngle, ML::Vec2(5, 10));
+		//	DG::Image_Draw(this->plImgName, draw, src);
+		//	//タブレットを使用していたら
+		//	if (this->tab_use_now == true)
+		//	{
+		//		draw = ML::Box2D(-5 + 60 , -7 + 60, 9, 13);
+		//		draw.Offset(this->capos);
+		//		DG::Image_Rotation(this->caImgName, this->caAngle, ML::Vec2(5, 10));
+		//		DG::Image_Draw(this->caImgName, draw, src);
+		//	}
+
+		//	//デバッグ用
+		//	//エネミー描画
+		//	if (this->debugMode)
+		//	{
+		//		draw = ML::Box2D(-5 + 60, -7 + 60, 9, 13);
+		//		draw.Offset(this->epos);
+		//		DG::Image_Rotation(this->plImgName, this->eangle, ML::Vec2(5, 10));
+		//		DG::Image_Draw(this->plImgName, draw, src,ML::Color(1,1,1,0));
+		//	}
+		//}
 	}
 	//-------------------------------------------------------------------
 	//「3Ｄ描画」１フレーム毎に行う処理

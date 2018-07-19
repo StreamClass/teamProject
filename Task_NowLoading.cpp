@@ -38,7 +38,8 @@ namespace  Loading
 		this->timeCnt = 0;
 		this->alpha = 0.0f;
 		this->color = ML::Color(0, 0, 0, 0);
-		
+		this->task01_ = "";
+		this->task02_ = "";
 		//★タスクの生成
 
 		return  true;
@@ -61,6 +62,10 @@ namespace  Loading
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//if (this->timeCnt == 0)
+		//{
+		//	this->Stop_Task();
+		//}
 		//タスク生成から2秒間かけて
 		if (this->timeCnt < 60 * 2)
 		{
@@ -73,6 +78,10 @@ namespace  Loading
 			//不透明度を0に
 			this->alpha -= (this->timeCnt - 120) / 120.0f;
 		}
+		//if (this->timeCnt == 60 * 4)
+		//{
+		//	this->Start_Task();
+		//}
 		//不透明度が0未満になったら
 		if (this->alpha < 0)
 		{
@@ -101,6 +110,27 @@ namespace  Loading
 
 	void  Object::Render3D_L0()
 	{
+	}
+	//
+	void Object::Stop_Task()
+	{
+		if (this->task01_ == "" || this->task02_ == "")
+		{
+			return;
+		}
+		ge->StopAll_G(this->task01_);
+		ge->StopAll_G(this->task02_);
+	}
+	//
+	void Object::Start_Task()
+	{
+		ge->StopAll_G(this->task02_, false);
+	}
+	//
+	void Object::Set_TaskName(const string& task01 = "", const string& task02 = "")
+	{
+		this->task01_ = task01;
+		this->task02_ = task02;
 	}
 	//他のタスクからRGB値を指定
 	void Object::Set_Color(float& rgb)

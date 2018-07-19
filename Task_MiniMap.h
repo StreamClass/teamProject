@@ -4,6 +4,12 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include  "MapBox.h"
+
+#define NORMALMAGNI 5
+#define NORMALMAPSIZE 500
+#define TABLETMAGNI 8
+#define TABLETMAPSIZE 800
 
 namespace MiniMap
 {
@@ -67,6 +73,8 @@ namespace MiniMap
 		bool tab_use_now;
 		//座標参照用倍率
 		float magni;
+		//
+		int mapSize;
 		//デバックモードの有無
 		bool debugMode;
 	public:
