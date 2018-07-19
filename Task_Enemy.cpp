@@ -40,11 +40,13 @@ namespace  Enemy
 		this->pos = ML::Vec3(chipX * 5, 50, chipZ * 13);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
-		this->angle = ML::Vec3(0, ML::ToRadian(90), ML::ToRadian(-10));
+		this->angle = ML::Vec3(0, ML::ToRadian(-90),0);
 		this->chasing_Speed = 16.0f;
 		this->final_Phase_Speed = 13.0f;
 		this->timeCnt = 0;
-
+		this->ebone = new Bone(180, "Enemy");
+		this->ebone->Moving(this->pos);
+		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(-90));
 		//★タスクの生成
 
 		return  true;
@@ -54,7 +56,7 @@ namespace  Enemy
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		delete this->ebone;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -99,10 +101,12 @@ namespace  Enemy
 			if (rou->Is_Final_Phase() == false)
 			{
 				this->pos += targetPos * this->speed;
+				this->ebone->Moving(targetPos * this->speed);
 			}
 			else
 			{
 				this->pos += targetPos * this->final_Phase_Speed;
+				this->ebone->Moving(targetPos * this->final_Phase_Speed);
 			}
 
 			
@@ -131,6 +135,7 @@ namespace  Enemy
 			targetPos = this->toVec - this->pos;
 			//移動
 			this->pos += targetPos.Normalize() * this->chasing_Speed;
+			this->ebone->Moving(targetPos.Normalize() * this->chasing_Speed);
 
 			//向きをプレイヤ側にする
 			ML::Vec3 a = pl->Get_Pos() - this->pos;
@@ -138,11 +143,12 @@ namespace  Enemy
 
 			//カウント上昇
 			this->timeCnt++;
-		}		
-		if (this->toVec != ML::Vec3(0, 0, 0))
-		{
-			//this->angle.y = atan2(this->toVec.z, this->toVec.x);
 		}
+		
+
+		//ボーンアップデート
+		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
+		this->ebone->UpDate();
 
 		if(!pl->Get_DebugOnOff())
 			this->Player_HitCheck();
@@ -156,7 +162,7 @@ namespace  Enemy
 	void  Object::Render3D_L0()
 	{
 		//エネミーのメッシュを表示
-		ML::Mat4x4 matS, matR, matRy, matRz, matT;
+		/*ML::Mat4x4 matS, matR, matRy, matRz, matT;
 		matS.Scaling(ML::Vec3(2, 1.5f, 2));
 		matRy.RotationY(this->angle.y);
 		matRz.RotationZ(this->angle.z);
@@ -165,7 +171,8 @@ namespace  Enemy
 		DG::EffectState().param.matWorld = matS * matR * matT;
 		DG::EffectState().param.objectColor = ML::Color( 1, 0.6f, 0.2f, 0.2f);
 		DG::Mesh_Draw(this->res->meshName);
-		DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+		DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);*/
+		this->ebone->Render();
 	}
 
 	//プレイヤとのあたり判定

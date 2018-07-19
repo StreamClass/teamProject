@@ -6,6 +6,7 @@
 #include "GameEngine_Ver3_7.h"
 #include "ChaseSystem.h"
 #include "Routine.h"
+#include "Bone.h"
 
 namespace Enemy
 {
@@ -65,6 +66,9 @@ namespace Enemy
 		float final_Phase_Speed;
 		//探知用矩形
 		//ML::Box3D searchBase;
+
+		//ボーンアニメ用ボーン
+		Bone* ebone;
 
 		//ルーチーンワーク
 		Routine* rou;

@@ -67,13 +67,14 @@ namespace  Game
 		map->Load_Objects();
 		auto mm = MiniMap::Object::Create(true);
 
-		
+		//DG::Mesh_CreateFromSOBFile("bbb", "./data/mesh/.SOB");
 		return  true;
 	}
 	//-------------------------------------------------------------------
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
+		//DG::Mesh_Erase("bbb");
 		//★データ＆タスク解放
 		ge->KillAll_G("フィールド");
 		ge->KillAll_G("カメラマン");
@@ -175,6 +176,11 @@ namespace  Game
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
+		//ML::Mat4x4 matT, matS;
+		//matT.Translation(ML::Vec3(825, 1, 825));
+		//matS.Scaling(100);
+		//DG::EffectState().param.matWorld = matS * matT;
+		//DG::Mesh_Draw("bbb");
 	}
 	//-------------------------------------------------------------------
 	//ゲーム開始処理

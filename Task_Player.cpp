@@ -76,7 +76,7 @@ namespace  Player
 		this->recovery_Flag = false;
 		this->debugMode = false;
 
-		this->plBone = new Bone(170);		
+		this->plBone = new Bone(170,"Player");		
 
 
 		this->breakerOnCnt = 0;
