@@ -11,7 +11,7 @@ void Joint::Move(const ML::Vec3& vec)
 
 void Joint::Set_Next_Joint(Joint* next)
 {
-	this->next = next;
+	this->next.push_back(next);
 }
 
 void Joint::Rotate_Bone(ML::Mat4x4* matR, const ML::QT& qtf)
@@ -20,9 +20,12 @@ void Joint::Rotate_Bone(ML::Mat4x4* matR, const ML::QT& qtf)
 	this->area->Rotate(matR);
 	this->Quartanion_Update(qtf);
 	//‚Â‚È‚ª‚è‚ðŽ‚Á‚Ä‚¢‚éŠÔÚ‚È‚çŽŸ‚Ì‚â‚Â‚à‰ñ“]‚³‚¹‚é
-	if (this->next != nullptr)
+	if (this->next.size() !=0)
 	{
-		next->Rotated_by_Prev_Joint(matR, qtf);
+		for (auto& n : this->next)
+		{
+			n->Rotated_by_Prev_Joint(matR, qtf);
+		}
 	}
 }
 

@@ -25,6 +25,10 @@ namespace  Player
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/char_Stand.sob");
 		//フォントの読み込み
 		DG::Font_Create("FontA", "ＭＳ ゴシック", 10, 20);
+		DM::Sound_CreateSE("standsound", "./data/sound/Stand00.wav");
+		DM::Sound_CreateSE("runsound", "./data/sound/run00.wav");
+		DM::Sound_CreateSE("tiredsound", "./data/sound/tired00.wav");
+
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -33,6 +37,9 @@ namespace  Player
 	{
 		DG::Mesh_Erase(this->meshName);
 		DG::Font_Erase("FontA");
+		DM::Sound_Erase("standsound");
+		DM::Sound_Erase("runsound");
+		DM::Sound_Erase("tiredsound");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -75,6 +82,10 @@ namespace  Player
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
 		this->debugMode = false;
+
+		this->a = false;
+		this->b = false;
+		this->c = true;
 
 		this->plBone = new Bone(170,"Player");		
 
@@ -229,18 +240,64 @@ namespace  Player
 			//視点揺れ速度
 			if (in.R1.off && !this->recovery_Flag)
 			{
+				if (!this->a && this->b || this->c)
+				{
+					if (this->b)
+					{
+						DM::Sound_Stop("runsound");
+					}
+					if (this->c)
+					{
+						DM::Sound_Stop("tiredsound");
+					}
+
+					DM::Sound_Play("standsound", true);
+					this->a = true;
+					this->b = false;
+					this->c = false;
+				}
 				this->cnt_SP = 2;
 				this->tremor = 0.5f;
 			}
 			//ダッシュ時
 			else if (in.R1.on && in.LStick.volume > 0)
 			{
+				if (!this->b && this->a || this->c)
+				{
+					if (this->a)
+					{
+						DM::Sound_Stop("standsound");
+					}
+					if (this->c)
+					{
+						DM::Sound_Stop("tiredsound");
+					}
+					DM::Sound_Play("runsound", true);
+					this->b = true;
+					this->a = false;
+					this->c = false;
+				}
 				this->cnt_SP = 14;
 				this->tremor = 1.0f;
 			}
 			//疲労時
 			if(this->recovery_Flag)
 			{
+				if (!this->c && this->a || this->b)
+				{
+					if (this->a)
+					{
+						DM::Sound_Stop("standsound");
+					}
+					if (this->b)
+					{
+						DM::Sound_Stop("runsound");
+					}
+					DM::Sound_Play("tiredsound", true);
+					this->c = true;
+					this->a = false;
+					this->b = false;
+				}
 				this->cnt_SP = 8;
 				this->tremor = 6.0f;
 			}

@@ -21,7 +21,7 @@ private:
 	//繋がれた骨のアドレス値(仮の名前)
 	Shape* area;
 	//下の関節(存在しない場合はnullptr)
-	Joint* next;
+	std::vector<Joint*> next;
 
 	//描画するメッシュの名前
 	string mesh_Name;
@@ -77,7 +77,7 @@ public:
 		this->rotated = ML::QT();
 		this->pos = ML::Vec3(0, 0, 0);		
 		this->area = nullptr;
-		this->next = nullptr;
+		this->next.clear();
 		this->mesh_Name = "";
 	}
 	//引数 : (関節の位置、回転量の限界X-,X+,Y-,Y+,Z-,Z+,つながっている骨のアドレス値,メッシュ名)
@@ -93,7 +93,7 @@ public:
 		this->rotated = ML::QT(ML::Vec3(0,1,0),ML::ToRadian(180));
 		this->pos = p;
 		this->area = bone;
-		this->next = nullptr;
+		this->next.clear();
 		this->mesh_Name = name;
 		DG::Mesh_CreateFromSOBFile(this->mesh_Name, "./data/mesh/bone/" + this->mesh_Name + ".sob");
 	}

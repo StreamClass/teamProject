@@ -44,6 +44,8 @@ private:
 
 	//全体のY回転値
 	float All_RotY;
+	//正面ベクトル(初期化の時はZ+)
+	ML::Vec3 front_Vec;
 
 	//モーション用カウンタ
 	int motionCnt;
@@ -129,6 +131,7 @@ public:
 		this->motions.clear();
 		this->motionCnt = 0.0f;
 		this->motion_Index = 0;
+		this->front_Vec = ML::Vec3(0, 0, 0);
 		this->now_Motion = "";
 		this->next_Motion = "";
 		this->repeat_Flag = false;

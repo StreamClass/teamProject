@@ -67,7 +67,7 @@ namespace Loading
 		//
 		void Start_Task();
 		//
-		void Set_TaskName(const string& task01 = "", const string& task02 = "");
+		void Set_TaskName(const string& task01, const string& task02);
 		//他のタスクからRGB値を指定
 		void Set_Color(float& rgb);
 	};

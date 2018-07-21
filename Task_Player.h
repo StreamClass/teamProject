@@ -122,6 +122,9 @@ namespace Player
 		//デバッグ用
 		bool debugMode;
 		int breakerOnCnt;
+		bool a;
+		bool b;
+		bool c;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す
