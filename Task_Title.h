@@ -52,13 +52,17 @@ namespace Title
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		//フレームカウンタ
 		int timeCnt;
 		//Startボタンを押したか判断
 		bool pushSon;
+		//
+		string titleBGM;
+		//
+		string startSE;
 
+	public:
 		//メソッド
 		//StartButtonロゴのアニメーション処理
 		bool LogoAnim();

@@ -18,6 +18,7 @@ namespace  Title
 		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
 		this->sbImgName = "StartButtonImg";
 		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
+//		DM::Sound_CreateSE("TitleBGM", "./data/sound/TitleBGM.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -27,6 +28,7 @@ namespace  Title
 		DG::Image_Erase(this->bgImgName);
 		DG::Image_Erase(this->loImgName);
 		DG::Image_Erase(this->sbImgName);
+		//DM::Sound_Erase("TitleBGM");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -45,6 +47,7 @@ namespace  Title
 		//Startボタンを押したか判断
 		this->pushSon = false;
 
+		//DM::Sound_Play("TitleBGM", true);
 		//★タスクの生成
 		
 		return  true;
@@ -54,7 +57,6 @@ namespace  Title
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
