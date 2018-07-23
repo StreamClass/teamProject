@@ -72,6 +72,8 @@ private:
 	void Make_Running();
 	//‘ŠŒİì—p
 	void Make_Interaction();
+	//•à‚­
+	void Make_Walking();
 
 	//’¼—§‚É®“Ú
 	void To_Standing(bool ASAP);

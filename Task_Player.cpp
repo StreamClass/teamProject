@@ -155,7 +155,7 @@ namespace  Player
 				this->moveVec = matR.TransformCoord(this->moveVec);
 				
 				//‘–‚éƒ‚[ƒVƒ‡ƒ“
-				this->plBone->Set_Next_Motion("Running");
+				this->plBone->Set_Next_Motion("Walking");
 				this->plBone->Repeat_Now_Motioin();
 			}
 			else

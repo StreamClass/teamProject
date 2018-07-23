@@ -37,7 +37,7 @@ namespace  Enemy
 		//★データ初期化
 		this->rou = ge->OM.Create_Routine();
 
-		this->pos = ML::Vec3(chipX * 5, 50, chipZ * 13);
+		this->pos = ML::Vec3(chipX * 5, 20, chipZ * 13);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90),0);
@@ -108,7 +108,7 @@ namespace  Enemy
 				this->pos += targetPos * this->final_Phase_Speed;
 				this->ebone->Moving(targetPos * this->final_Phase_Speed);
 			}
-
+			this->ebone->Set_Next_Motion("Walking");
 			
 			this->angle.y = -atan2(targetPos.z, targetPos.x);
 		}
@@ -136,7 +136,7 @@ namespace  Enemy
 			//移動
 			this->pos += targetPos.Normalize() * this->chasing_Speed;
 			this->ebone->Moving(targetPos.Normalize() * this->chasing_Speed);
-
+			this->ebone->Set_Next_Motion("Running");
 			//向きをプレイヤ側にする
 			ML::Vec3 a = pl->Get_Pos() - this->pos;
 			this->angle.y = -atan2(a.z, a.x);
@@ -148,6 +148,7 @@ namespace  Enemy
 
 		//ボーンアップデート
 		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
+		this->ebone->Repeat_Now_Motioin();
 		this->ebone->UpDate();
 
 		if(!pl->Get_DebugOnOff())

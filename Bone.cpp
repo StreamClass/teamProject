@@ -171,6 +171,7 @@ Bone::Bone(const float& tall, const string& owner)
 	//プリセット登録
 	this->Make_Interaction();
 	this->Make_Running();
+	this->Make_Walking();
 }
 
 
@@ -375,7 +376,7 @@ bool Bone::Next_Motion_or_None()
 void Bone::Set_Next_Motion(const string& next)
 {
 	//同じモーションを繰り返す条件は
-	//Repeat_Now_Motion()を通じてのみのする(2018/07/10)
+	//Repeat_Now_Motion()を通じてのみにする(2018/07/10)
 
 	//念のために登録されてるものかを確認
 	if (this->motions.count(next) >= 1)
@@ -430,19 +431,14 @@ void Bone::To_Standing(bool ASAP)
 		//関節一個ずつ戻せた後に次の関節を整頓
 		if (abs(sx) <= abs(sinf(ML::ToRadian(2))))
 		{
-
-			//直立になる回転を代入
-
-			//残り回転量の半分ずつ回転を巻き返す						
+			//直立になる回転を代入					
 			//クォータニオン宣言
 			ML::QT remainX = ML::QT(anker, asin(sx));
 			//回転行列宣言
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remainX, NULL);
 			//回転
-			this->joint[i]->Rotate_Bone(&matR, remainX);
-			//回転量アップデート
-			//this->joint[i]->Quartanion_Update(remain);
+			this->joint[i]->Rotate_Bone(&matR, remainX);			
 			continue;
 		}
 		else
@@ -457,9 +453,7 @@ void Bone::To_Standing(bool ASAP)
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remainX, NULL);
 			//回転
-			this->joint[i]->Rotate_Bone(&matR, remainX);
-			//回転量アップデート
-			//this->joint[i]->Quartanion_Update(remain);
+			this->joint[i]->Rotate_Bone(&matR, remainX);			
 			if (!ASAP)
 			{
 				return;
@@ -661,4 +655,104 @@ void Bone::Make_Running()
 	running.push_back(step8);
 
 	this->motions.insert({ "Running",running });
+}
+
+//歩くモーション
+void Bone::Make_Walking()
+{
+	std::vector<Motion::Motion_Data> walking;
+
+	//step0
+	//両肘を前に少し曲げる
+	Motion::Motion_Data step0(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		2
+	);
+
+	//上半身の左肩が前に
+	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(10, 0, 0), ML::Vec3(0, 0, 0),
+		2, true
+	);
+
+	//step2
+	//左腕、右足が前に
+	//右腕、左足が後ろに
+	Motion::Motion_Data step2(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(20, 0, 0), ML::Vec3(40, 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+
+	//step3
+	//腕整頓、右足着地
+	Motion::Motion_Data step3(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(20, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(10, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(-30, 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+
+	//step4
+	//上半身右肩前に
+	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		2
+	);
+
+	//step5
+	//右腕、左足前に
+	//左腕、右足後ろに
+	Motion::Motion_Data step5(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(30, 0, 0), ML::Vec3(40, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-20, 0, 0), ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+
+	//step6
+	//腕整頓
+	//左足着地
+	Motion::Motion_Data step6(ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(20, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(-30, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+
+	//step7
+	//上半身直立
+	//両足整頓
+	Motion::Motion_Data step7(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(-10, 0, 0), ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0),
+		ML::Vec3(10, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
+		5
+	);
+
+	walking.push_back(step0);
+	walking.push_back(step1);
+	walking.push_back(step2);
+	walking.push_back(step3);
+	walking.push_back(step4);
+	walking.push_back(step5);
+	walking.push_back(step6);
+	walking.push_back(step7);
+
+	this->motions.insert({ "Walking", walking });
 }
