@@ -119,10 +119,10 @@ namespace  Map
 		ML::Mat4x4 matS,matT;
 		//描画する範囲をカメラを中心に前後左右18マス分に指定
 		int  sx, sz, ex, ez;
-		sx = max(0, int(ge->camera[0]->pos.x / chipX) - 15);
-		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / chipX) + 15);
-		sz = max(0, int(ge->camera[0]->pos.z / chipZ) - 15);
-		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / chipZ) + 15);
+		sx = max(0, int(ge->camera[0]->pos.x / chipX) - RENDERRENGE);
+		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / chipX) + RENDERRENGE);
+		sz = max(0, int(ge->camera[0]->pos.z / chipZ) - RENDERRENGE);
+		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / chipZ) + RENDERRENGE);
 
 		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
@@ -142,8 +142,13 @@ namespace  Map
 		//オブジェクト
 		for (auto* obj : this->mapObjects)
 		{
-			//描画処理
-			obj->Render3D();
+			//描画する範囲を指定
+			ML::Vec3 len(obj->Get_Pos().x - ge->camera[0]->pos.x,0, obj->Get_Pos().z - ge->camera[0]->pos.z);
+			if (len.Length() <=  RENDERRENGE * chipX)
+			{
+				//範囲内のオブジェクトを描画
+				obj->Render3D();
+			}
 		}
 
 		//ライト０番のライティングを有効化

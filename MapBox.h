@@ -4,10 +4,6 @@
 //マップチップクラス
 //-----------------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-//壁のサイズ指定
-#define chipX 150
-#define chipY 300
-#define chipZ 150
 
 //マップチップの状態
 /*
@@ -72,48 +68,15 @@ private:
 	string meshName_;
 public:
 	//Boxクラスのメンバ変数の初期化(コンストラクタ) 
-	Box()
-		: pos_(0.0f, 0.0f, 0.0f)
-		, hitBase_(0, 0, 0, 0, 0, 0)
-		, type_(Type::clear_Type)
-		, chipSizeX_(chipX)
-		, chipSizeY_(chipY)
-		, chipSizeZ_(chipZ)
-		, cornerNum(-1)
-		, meshName_("")
-	{}
+	Box();
 	//壁の座標・当たり判定矩形の指定
 	//引数：(座標 , 当たり判定矩形)
-	Box(ML::Vec3 pos,ML::Box3D hitBase)
-		: pos_(pos)
-		, hitBase_(hitBase)
-		, type_(Type::clear_Type)
-		, chipSizeX_(chipX)
-		, chipSizeY_(chipY)
-		, chipSizeZ_(chipZ)
-		, cornerNum(-1)
-		, meshName_("")
-	{}
+	Box(ML::Vec3 pos, ML::Box3D hitBase);
 	//床・天井の座標・当たり判定矩形の指定
 	//引数 : (チップサイズ , 座標 , 当たり判定)
-	Box(ML::Vec3 chipSize, ML::Vec3 pos, ML::Box3D hitBase)
-		: pos_(pos)
-		, hitBase_(hitBase)
-		, chipSizeX_(chipSize.x)
-		, chipSizeY_(chipSize.y)
-		, chipSizeZ_(chipSize.z)
-		, cornerNum(-1)
-		, meshName_("")
-	{}
+	Box(ML::Vec3 chipSize, ML::Vec3 pos, ML::Box3D hitBase);
 	//解放処理
-	~Box()
-	{
-		if (this->meshName_ != "")//メッシュ名が指定されている場合
-		{
-			//保持している画像を解放
-			DG::Mesh_Erase(this->meshName_);
-		}
-	}
+	~Box();
 
 	//状態読み取り
 	void Type_Read(const int& type);

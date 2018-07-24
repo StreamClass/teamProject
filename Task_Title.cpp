@@ -18,7 +18,7 @@ namespace  Title
 		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
 		this->sbImgName = "StartButtonImg";
 		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
-//		DM::Sound_CreateSE("TitleBGM", "./data/sound/TitleBGM.wav");
+		//DM::Sound_CreateStream("TitleBGM", "./data/sound/TitleBGM.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -72,15 +72,16 @@ namespace  Title
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
 		//スタートボタンを押したら
-		if (in.ST.down && this->pushSon == false)
+		if ((in.ST.down || in.B1.down || in.B2.down || in.B3.down || in.B4.down) && this->pushSon == false)
 		{
 			this->pushSon = true;
 		}
+		//デバッグ時用
+		//else if (in.B1.down && this->pushSon == true)
+		//{
+		//	this->Kill();
+		//}
 
-		else if (in.B1.down && this->pushSon == true)
-		{
-			this->Kill();
-		}
 		//3秒後に
 		if (this->timeCnt == 60 * 3)
 		{
@@ -89,6 +90,8 @@ namespace  Title
 			//色を黒に指定
 			float color = 0.0f;
 			lo->Set_Color(color);
+
+			//DM::Sound_Stop("TitleBGM");
 		}
 		//5秒後に
 		if (this->timeCnt == 60 * 5)

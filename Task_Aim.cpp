@@ -35,6 +35,9 @@ namespace  Aiming
 		DG::Image_Create(this->staminaImgName[0], "./data/image/StaminaMax.png");
 		this->staminaImgName[1] = "StaminaGage";
 		DG::Image_Create(this->staminaImgName[1], "./data/image/StaminaGage.png");
+
+		this->pushButtonImg = "AButton";
+		DG::Image_Create(this->pushButtonImg, "./data/image/PushButton.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -51,6 +54,7 @@ namespace  Aiming
 			DG::Image_Erase(this->tabletModeImg[i]);
 			DG::Image_Erase(this->staminaImgName[i]);
 		}
+		DG::Image_Erase(this->pushButtonImg);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -132,6 +136,12 @@ namespace  Aiming
 		this->NormalModeRrender();
 		this->AimingRender();
 		this->StaminaRender();
+		if (pl->Get_Touch_Breaker())
+		{
+			ML::Box2D draw(ge->screen2DWidth / 2 + 100, ge->screen2DHeight / 2 + 100, 100, 100);
+			ML::Box2D src(0, 0, 200, 200);
+			DG::Image_Draw(this->res->pushButtonImg, draw, src);
+		}
 	}
 	//-------------------------------------------------------------------
 	//「3Ｄ描画」１フレーム毎に行う処理

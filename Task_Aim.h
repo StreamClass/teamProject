@@ -31,6 +31,7 @@ namespace Aiming
 		string tabletModeImg[2];
 		//スタミナ残量描画用画像名
 		string staminaImgName[2];
+		string pushButtonImg;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

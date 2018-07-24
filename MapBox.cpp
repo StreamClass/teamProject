@@ -4,6 +4,53 @@
 #include "MapBox.h"
 #include "MyPG.h"
 
+//Boxクラスのメンバ変数の初期化(コンストラクタ) 
+Box::Box()
+	: pos_(0.0f, 0.0f, 0.0f)
+	, hitBase_(0, 0, 0, 0, 0, 0)
+	, type_(Type::clear_Type)
+	, chipSizeX_(chipX)
+	, chipSizeY_(chipY)
+	, chipSizeZ_(chipZ)
+	, cornerNum(-1)
+	, meshName_("")
+{}
+
+//壁の座標・当たり判定矩形の指定
+//引数：(座標 , 当たり判定矩形)
+Box::Box(ML::Vec3 pos, ML::Box3D hitBase)
+	: pos_(pos)
+	, hitBase_(hitBase)
+	, type_(Type::clear_Type)
+	, chipSizeX_(chipX)
+	, chipSizeY_(chipY)
+	, chipSizeZ_(chipZ)
+	, cornerNum(-1)
+	, meshName_("")
+{}
+
+//床・天井の座標・当たり判定矩形の指定
+//引数 : (チップサイズ , 座標 , 当たり判定)
+Box::Box(ML::Vec3 chipSize, ML::Vec3 pos, ML::Box3D hitBase)
+	: pos_(pos)
+	, hitBase_(hitBase)
+	, chipSizeX_(chipSize.x)
+	, chipSizeY_(chipSize.y)
+	, chipSizeZ_(chipSize.z)
+	, cornerNum(-1)
+	, meshName_("")
+{}
+
+//解放処理
+Box::~Box()
+{
+	if (this->meshName_ != "")//メッシュ名が指定されている場合
+	{
+		//保持している画像を解放
+		DG::Mesh_Erase(this->meshName_);
+	}
+}
+
 //状態を読み込み	   (状態を数値で)
 void Box::Type_Read(const int& type)
 {

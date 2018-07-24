@@ -52,9 +52,9 @@ namespace  Camera
 		//フォグ(霧)の設定
 		DG::EffectState().param.fogEnable = true;
 		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
-		DG::EffectState().param.fogFore = 1800.0f;
+		DG::EffectState().param.fogFore = RENDERRENGE * chipX;
 		DG::EffectState().param.fogMode = true;
-		DG::EffectState().param.fogNear = 1500.0f;
+		DG::EffectState().param.fogNear = RENDERRENGE * chipX - chipX * 2;
 
 		//タブレット使用中のeasingをセット
 		easing::Set("disp_Noise_Alpha", easing::CUBICOUT, 1.0f, 0.03f, 30);

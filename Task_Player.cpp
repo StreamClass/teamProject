@@ -81,6 +81,7 @@ namespace  Player
 		this->tremor = 1.0f;
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
+		this->touch_Breaker = false;
 		this->debugMode = false;
 
 		this->a = false;
@@ -191,7 +192,6 @@ namespace  Player
 				{
 					//					this->speed = NORMALSPEED;
 					this->speed = max(NORMALSPEED, this->speed - 0.5f);
-
 				}
 				else
 				{
@@ -514,6 +514,7 @@ namespace  Player
 	{
 		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
 		auto aim = ge->GetTask_One_G<Aiming::Object>("エイム");
+		this->touch_Breaker = false;
 		for (auto it = b->begin(); it != b->end(); it++)
 		{
 			ML::Vec3 move = (ge->camera[0]->target - ge->camera[0]->pos);
@@ -528,10 +529,17 @@ namespace  Player
 					//ボタン操作モーション実行
 					this->plBone->Set_Next_Motion("InterAction");
 					this->breakerOnCnt++;
+					//this->touch_Breaker = true;
 					break;
 				}
 			}
 		}
+	}
+	//-------------------------------------------------------------------
+	//
+	bool Object::Get_Touch_Breaker()
+	{
+		return this->touch_Breaker;
 	}
 	//-------------------------------------------------------------------
 	//クリアしているか判定

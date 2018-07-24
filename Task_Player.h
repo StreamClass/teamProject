@@ -118,9 +118,10 @@ namespace Player
 		float stamina;
 		//スタミナ回復フラグ
 		bool recovery_Flag;
-
-		//デバッグ用
+		//
+		bool touch_Breaker;
 		bool debugMode;
+		//
 		int breakerOnCnt;
 		bool a;
 		bool b;
@@ -150,6 +151,8 @@ namespace Player
 		bool Check_Front();
 		//ギミックへの干渉
 		void Touch();
+		//
+		bool Get_Touch_Breaker();
 		//クリアしているか判定
 		void Check_Clear();
 		//クリア情報を渡す
