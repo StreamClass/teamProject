@@ -79,6 +79,8 @@ namespace Aiming
 		void NormalModeRrender();
 		//エイムのアニメーション
 		void AimingRender();
+		//
+		void BreakerTouchRender();
 		//スタミナの描画
 		void StaminaRender();
 		//当たり判定を渡す

@@ -5,7 +5,6 @@
 #include  "Task_GameOver.h"
 #include  "Task_Title.h"
 #include  "Task_NowLoading.h"
-#include  "easing.h"
 
 namespace  Over
 {
@@ -16,14 +15,12 @@ namespace  Over
 	{
 		//各イメージ名指定
 		//画像を読み込み
-		this->bImgName = "BGImg";
-		DG::Image_Create(this->bImgName, "./data/image/OverBG.png");
-		this->cImgName = "CharaImg";
-		DG::Image_Create(this->cImgName, "./data/image/OverChara.png");
 		this->eImgName = "BloodImg";
 		DG::Image_Create(this->eImgName, "./data/image/OverEffect.png");
 		this->lImgName = "LgImg";
 		DG::Image_Create(this->lImgName, "./data/image/OverLogo.png");
+		//this->bgMeshName = "EndingBG";
+		//DG::Mesh_CreateFromSOBFile(this->bgMeshName, "");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -31,10 +28,9 @@ namespace  Over
 	bool  Resource::Finalize()
 	{
 		//画像をすべて解放
-		DG::Image_Erase(this->bImgName);
-		DG::Image_Erase(this->cImgName);
 		DG::Image_Erase(this->eImgName);
 		DG::Image_Erase(this->lImgName);
+		DG::Mesh_Erase(this->bgMeshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -51,10 +47,28 @@ namespace  Over
 		this->al = 0.0f;
 		this->timeCnt = 0;
 		this->endCnt = 0;
-		this->cPos = ML::Vec2(ge->screen2DWidth - 800, ge->screen2DHeight - 800);
 		this->endFlag = false;
-		this->easingName = "moveEasing";
-		easing::Set(this->easingName, easing::BACKINOUT, this->cPos.x, -2000, 60 * 2);
+
+
+		//
+		this->iniFlag = true;
+
+		//カメラの設定
+		ge->camera[0] = MyPG::Camera::Create(
+			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
+			ML::Vec3(0.0f, 0.0f, -200.0f),			//	カメラ位置
+			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
+			ML::ToRadian(35), 15.0f, 8000.0f,	//	視野角・視野距離
+			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
+		DG::EffectState().param.bgColor = ML::Color(0.5f, 1, 1, 1);
+		//ライティング有効化
+		DG::EffectState().param.lightsEnable = true;
+		//
+		DG::EffectState().param.light[0].enable = true;
+		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
+		DG::EffectState().param.light[0].direction = ML::Vec3(0, 0, 1).Normalize();//照射方向
+		DG::EffectState().param.light[0].color = ML::Color(1, 0.8f, 0.5f, 0.5f);//色と強さ
+
 		//★タスクの生成
 
 		return  true;
@@ -64,7 +78,8 @@ namespace  Over
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		delete this->enBone;
+		this->enBone = nullptr;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -79,8 +94,6 @@ namespace  Over
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
-		easing::UpDate();
-
 		//endFlagがfalseの時にstartボタンを押すとローディングを呼び出し
 		if (in.ST.down && this->endFlag == false)
 		{
@@ -93,18 +106,19 @@ namespace  Over
 		//2秒後から
 		if (this->timeCnt > 60 * 2)
 		{
-			easing::Start(this->easingName);
-			//キャラクタを左に6ドットずつ移動
-			this->cPos.x = easing::GetPos(this->easingName);
+			this->enBone->Repeat_Now_Motioin();
+			this->enBone->UpDate();
+			this->pos.x -= 3;
+			this->enBone->Moving(this->pos);
 		}
 		//5秒後から
-		if (this->timeCnt > 60 * 5)
+		else if (this->timeCnt > 60 * 5)
 		{
 			//3秒かけて不透明度を1に
 			this->al = (this->timeCnt - 60 * 5) / 60.0f * 3.0f;
 		}
 		//15秒後(ロゴがすべて出てから7秒後)かつendFlagがfalseなら
-		if (this->timeCnt > 60 * 15 && this->endFlag == false)
+		else if (this->timeCnt > 60 * 15 && this->endFlag == false)
 		{
 			//ローディングを呼び出し
 			auto lo = Loading::Object::Create(true);
@@ -114,6 +128,17 @@ namespace  Over
 			//endFlagをtrueに
 			this->endFlag = true;
 		}
+		if (this->timeCnt > 60 && this->iniFlag)
+		{
+			//
+			ML::Vec3 pos(0, 0, 0);
+			this->enBone->Moving(pos);
+			float radi = ML::ToRadian(-90);
+			this->enBone->Bone_RotateY_All(radi);
+			this->enBone->Set_Next_Motion("Running");
+			this->iniFlag = false;
+		}
+
 		//endFlagがtrueなら
 		if (this->endFlag == true)
 		{
@@ -141,20 +166,12 @@ namespace  Over
 		//背景描画
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 1920, 1080);
-		DG::Image_Draw(this->res->bImgName, draw, src);
 		//キャラクタが画面左側から出て行ったら
-		if (this->cPos.x < -600)
+		if (this->timeCnt > 60 * 8)
 		{
 			//エフェクトを画面全体に描画
 			DG::Image_Draw(this->res->eImgName, draw, src);
 		}
-
-		//キャラクタ描画
-		draw = ML::Box2D(0, 0, 600, 800);
-		src = ML::Box2D(0, 0, 300, 400);
-		draw.Offset(this->cPos);
-		DG::Image_Draw(this->res->cImgName,draw,src);
-		
 		//ロゴ描画
 		draw = ML::Box2D(0, 350, 1920, 300);
 		src = ML::Box2D(0, 0, 1920, 300);
@@ -164,6 +181,7 @@ namespace  Over
 
 	void  Object::Render3D_L0()
 	{
+		this->enBone->Render();
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

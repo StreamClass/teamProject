@@ -14,15 +14,12 @@ namespace  Enemy
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		this->meshName = "enemyMesh";
-		DG::Mesh_CreateFromSOBFile("enemyMesh", "./data/mesh/char_Stand.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
-		DG::Mesh_Erase(this->meshName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -56,7 +53,6 @@ namespace  Enemy
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		delete this->ebone;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -184,6 +180,11 @@ namespace  Enemy
 		{
 			ge->state = ge->over;
 		}
+	}
+	//
+	Bone* Object::Get_EnemyBonePtr()
+	{
+		return this->ebone;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

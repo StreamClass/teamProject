@@ -4,7 +4,8 @@
 //タイトル画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include "Task_game.h"
+#include "Task_Game.h"
+#include "Bone.h"
 
 namespace Title
 {
@@ -25,7 +26,7 @@ namespace Title
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
 		//背景イメージ名
-		string bgImgName;
+		string bgMeshName;
 		//ロゴイメージ名
 		string loImgName;
 		//StartButtonイメージ名
@@ -61,6 +62,9 @@ namespace Title
 		string titleBGM;
 		//
 		string startSE;
+		//
+		Bone* eneBone;
+
 
 	public:
 		//メソッド

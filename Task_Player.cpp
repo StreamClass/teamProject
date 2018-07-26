@@ -514,32 +514,48 @@ namespace  Player
 	{
 		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
 		auto aim = ge->GetTask_One_G<Aiming::Object>("エイム");
-		this->touch_Breaker = false;
 		for (auto it = b->begin(); it != b->end(); it++)
 		{
-			ML::Vec3 move = (ge->camera[0]->target - ge->camera[0]->pos);
-			move = move.Normalize();
-			for (int i = 0; i < 10; ++i)
+			if (!(*it)->Get_Now_State())
 			{
-				ML::Vec3 setPos = (this->pos + ML::Vec3(0,this->headHeight,0)) + (move * i * 15);
-				aim->Set_Pos(setPos);
-				if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+				ML::Vec3 move = (ge->camera[0]->target - ge->camera[0]->pos);
+				move = move.Normalize();
+				for (int i = 0; i < 10; ++i)
 				{
-					(*it)->ActivateBreaker();
-					//ボタン操作モーション実行
-					this->plBone->Set_Next_Motion("InterAction");
-					this->breakerOnCnt++;
-					//this->touch_Breaker = true;
-					break;
+					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+					{
+						(*it)->ActivateBreaker();
+						//ボタン操作モーション実行
+						this->plBone->Set_Next_Motion("InterAction");
+						this->breakerOnCnt++;
+						break;
+					}
 				}
 			}
 		}
 	}
 	//-------------------------------------------------------------------
 	//
-	bool Object::Get_Touch_Breaker()
+	bool Object::Touch_AimToBreaker()
 	{
-		return this->touch_Breaker;
+		auto b = ge->GetTask_Group_G<Task_Breaker::Object>("ブレーカー");
+		auto aim = ge->GetTask_One_G<Aiming::Object>("エイム");
+		for (auto it = b->begin(); it != b->end(); it++)
+		{
+			if (!(*it)->Get_Now_State())
+			{
+				ML::Vec3 move = (ge->camera[0]->target - ge->camera[0]->pos);
+				move = move.Normalize();
+				for (int i = 0; i < 10; ++i)
+				{
+					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+					{
+						return true;
+					}
+				}
+			}
+		}
+		return false;
 	}
 	//-------------------------------------------------------------------
 	//クリアしているか判定

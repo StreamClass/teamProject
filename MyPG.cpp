@@ -79,7 +79,7 @@ namespace MyPG
 			{ DIK_LSHIFT, DI::But::S0},{ DIK_LCONTROL, DI::But::S1},{DIK_LALT,DI::But::S2},
 		};
 		//ゲームパッドパラメータ xbox
-		DI::KeyDatas_GP	but = {
+		DI::KeyDatas_GP	but00 = {
 			{ DI::GPB::B03, DI::But::B1 },{ DI::GPB::B02, DI::But::B2 },
 			{ DI::GPB::B01, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },
 			{ DI::GPB::B05, DI::But::L1 },{ DI::GPB::B06, DI::But::R1 },
@@ -88,10 +88,10 @@ namespace MyPG
 			{ DI::GPB::HSU, DI::But::HU }, { DI::GPB::HSD , DI::But::HD},
 			{ DI::GPB::HSL, DI::But::HL }, { DI::GPB::HSR , DI::But::HR},
 		};
-		DI::GPad_CreateKBGP("P1", ls, rs, key, 0, but);
+		DI::GPad_CreateKBGP("P1", ls, rs, key, 0, but00);
 
 		//ゲームパッドパラメータ	dualshock
-		but = {
+		DI::KeyDatas_GP	but01 = {
 			{ DI::GPB::B01, DI::But::B1 },{ DI::GPB::B03, DI::But::B2 },
 			{ DI::GPB::B02, DI::But::B3 },{ DI::GPB::B04, DI::But::B4 },
 			{ DI::GPB::B05, DI::But::L1 },{ DI::GPB::B06, DI::But::R1 },
@@ -101,7 +101,7 @@ namespace MyPG
 			{ DI::GPB::HSU, DI::But::HU },{ DI::GPB::HSD , DI::But::HD },
 			{ DI::GPB::HSL, DI::But::HL },{ DI::GPB::HSR , DI::But::HR },
 		};
-		DI::GPad_CreateKBGP("P2", ls, rs, key, 0, but);
+		DI::GPad_CreateKBGP("P2", ls, rs, key, 0, but01);
 
 		//背景色の設定（デフォルト）
 		DG::EffectState( ).param.bgColor  =  ML::Color(0,0.0f,0.8f,0.0f);

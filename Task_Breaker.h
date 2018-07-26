@@ -68,5 +68,7 @@ namespace Task_Breaker
 		float RotationY_Angle(int& angle);
 		//ƒ{ƒ^ƒ“‚ÌˆÚ“®
 		ML::Vec3 Move_Button();
+		//
+		bool Get_Now_State();
 	};
 }

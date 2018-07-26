@@ -4,6 +4,7 @@
 //ゲームオーバー画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
+#include  "Bone.h"
 
 namespace Over
 {
@@ -24,9 +25,7 @@ namespace Over
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
 		//背景のイメージ名 
-		string bImgName;
-		//キャラクタのイメージ名
-		string cImgName;
+		string bgMeshName;
 		//エフェクトのイメージ名
 		string eImgName;
 		//ゲームオーバーロゴのイメージ名
@@ -55,17 +54,19 @@ namespace Over
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 	public:
 		//追加したい変数・メソッドはここに追加する
-		//使用イージング名
-		string easingName;
 		//ロゴの不透明度の指定
 		float al;
 		//フレーム数カウント
 		int timeCnt;
-		//キャラクタの2次元座標
-		ML::Vec2 cPos;
+		//
+		Bone* enBone;
+		//
+		ML::Vec3 pos;
 		//エフェクトが出てロゴが出きっているか判断用
 		bool endFlag;
 		//endFlagがtrueになってからのフレーム数カウント
 		int endCnt;
+		//
+		bool iniFlag;
 	};
 }

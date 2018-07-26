@@ -50,9 +50,6 @@
     <Filter Include="MyPG\Game\Player">
       <UniqueIdentifier>{4e7bd76a-9c5e-4f46-b127-b9c134130869}</UniqueIdentifier>
     </Filter>
-    <Filter Include="MyPG\Game\Map">
-      <UniqueIdentifier>{aaba4863-8eeb-437e-8da4-e257b5889b6e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="MyPG\Class">
       <UniqueIdentifier>{d7979511-f01a-48c4-bac0-e7f3cf47a0b5}</UniqueIdentifier>
     </Filter>
@@ -115,6 +112,9 @@
     </Filter>
     <Filter Include="MyPG\Class\MapObject">
       <UniqueIdentifier>{bbfe6679-bf36-4829-8a6c-14d44d8cc294}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="MyPG\Game\Map">
+      <UniqueIdentifier>{aaba4863-8eeb-437e-8da4-e257b5889b6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

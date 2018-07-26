@@ -152,7 +152,7 @@ namespace Player
 		//ギミックへの干渉
 		void Touch();
 		//
-		bool Get_Touch_Breaker();
+		bool Touch_AimToBreaker();
 		//クリアしているか判定
 		void Check_Clear();
 		//クリア情報を渡す

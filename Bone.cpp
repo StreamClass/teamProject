@@ -570,7 +570,7 @@ void Bone::Make_Running()
 		ML::Vec3(0, 0, 0), ML::Vec3((-90), 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((-45), 0, 0), ML::Vec3((45), 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((30), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
-		3
+		6
 	);
 
 	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
@@ -578,7 +578,7 @@ void Bone::Make_Running()
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		2,true
+		4,true
 	);
 
 	//step1
@@ -588,7 +588,7 @@ void Bone::Make_Running()
 		ML::Vec3((70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((90), 0, 0), ML::Vec3(-45, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((-100), 0, 0), ML::Vec3((60), 0, 0), ML::Vec3(0, 0, 0),
-		5
+		10
 	);
 	//step2
 	//肩整頓、右足着地
@@ -597,7 +597,7 @@ void Bone::Make_Running()
 		ML::Vec3((-70), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((-15), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((25), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
-		5
+		10
 	);
 
 	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 0, 0),
@@ -605,7 +605,7 @@ void Bone::Make_Running()
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		2
+		4
 	);
 
 	/*Motion::Motion_Data step5(ML::Vec3(0, -10, 0), ML::Vec3(0, 0, 0),
@@ -623,7 +623,7 @@ void Bone::Make_Running()
 		ML::Vec3((-30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((-100), 0, 0), ML::Vec3((60), 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((90), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
-		5
+		10
 	);
 	//step4
 	//肩整頓、左足着地
@@ -632,7 +632,7 @@ void Bone::Make_Running()
 		ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((25), 0, 0), ML::Vec3((-45), 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3((-15), 0, 0), ML::Vec3((30), 0, 0), ML::Vec3(0, 0, 0),
-		5
+		10
 	);
 
 	Motion::Motion_Data step8(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
@@ -640,7 +640,7 @@ void Bone::Make_Running()
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
-		2
+		4
 	);
 
 	//ヴェクター登録及びマッピング

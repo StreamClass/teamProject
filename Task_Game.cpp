@@ -62,6 +62,7 @@ namespace  Game
 		auto pl = Player::Object::Create(true);
 		auto cam = Camera::Object::Create(true);
 		auto en = Enemy::Object::Create(true);
+		this->eBone = en->Get_EnemyBonePtr();
 		auto map = Map::Object::Create(true);
 		map->Load_Map();
 		map->Load_Objects();
@@ -98,6 +99,7 @@ namespace  Game
 			else if (ge->state == ge->over)
 			{
 				auto nextTask = Over::Object::Create(true);
+				nextTask->enBone = this->eBone;
 			}
 			else
 			{
@@ -111,7 +113,7 @@ namespace  Game
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{		
-		auto in = DI::GPad_GetState("P1");
+		auto in = DI::GPad_GetState(ge->controllerName);
 
 		if (this->stanbyCnt == 0)
 		{
@@ -119,7 +121,7 @@ namespace  Game
 			this->stanbyCnt = 1;
 		}
 		//スタンバイ時の処理
-		else if (this->stanbyCnt == 1)
+		else if (this->stanbyCnt == 1)//カメラの初期位置を設定するように1フレームのみ動かす
 		{
 			ge->StopAll_G("プレイヤ", true);
 			this->stanbyCnt++;
@@ -136,14 +138,14 @@ namespace  Game
 		{
 			this->Start();
 		}
-		//if (in.ST.down && this->pushButton == false)
-		//{
-		//	ge->state = ge->over;
-		//	this->pushButton = true;
-		//	auto lo = Loading::Object::Create(true);
-		//	float color = 0.0f;
-		//	lo->Set_Color(color);
-		//}
+		if (in.ST.down && this->pushButton == false)
+		{
+			ge->state = ge->over;
+			this->pushButton = true;
+			auto lo = Loading::Object::Create(true);
+			float color = 0.0f;
+			lo->Set_Color(color);
+		}
 		if (ge->state == ge->clear && this->pushButton == false)
 		{
 			auto lo = Loading::Object::Create(true);

@@ -139,7 +139,11 @@ namespace Task_Breaker
 		}
 		return this->pos;
 	}
-
+	//
+	bool Object::Get_Now_State()
+	{
+		return this->circuit->Get_Now_State();
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

@@ -12,7 +12,7 @@
 #define chipY 300
 #define chipZ 150
 //•`‰æ”ÍˆÍ
-#define RENDERRENGE 15
+#define RENDERRENGE 12
 
 
 //-----------------------------------------------------------------------------------------------
@@ -111,7 +111,7 @@ namespace  MyPG
 		void Dbg_FileOut(const char *str, ...);
 
 		//XBox:P1 DualShock:P2
-		string controllerName = "P1";
+		string controllerName = "P2";
 	//----------------------------------------------
 	};
 }

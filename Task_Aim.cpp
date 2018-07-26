@@ -136,11 +136,9 @@ namespace  Aiming
 		this->NormalModeRrender();
 		this->AimingRender();
 		this->StaminaRender();
-		if (pl->Get_Touch_Breaker())
+		if (pl->Touch_AimToBreaker())
 		{
-			ML::Box2D draw(ge->screen2DWidth / 2 + 100, ge->screen2DHeight / 2 + 100, 100, 100);
-			ML::Box2D src(0, 0, 200, 200);
-			DG::Image_Draw(this->res->pushButtonImg, draw, src);
+			this->BreakerTouchRender();
 		}
 	}
 	//-------------------------------------------------------------------
@@ -197,6 +195,17 @@ namespace  Aiming
 		draw = ML::Box2D(-10, -3, 19, 5);
 		draw.Offset(this->aimPosL);
 		DG::Image_Draw(this->res->imageName[2], draw, src);
+	}
+	//-------------------------------------------------------------------
+	//ブレーカーが押せる時にボタンを描画
+	void Object::BreakerTouchRender()
+	{
+		if ((this->timeCnt / 10) % 3 >= 1)
+		{
+			ML::Box2D draw(ge->screen2DWidth / 2 + 100, ge->screen2DHeight / 2 + 100, 100, 100);
+			ML::Box2D src(0, 0, 200, 200);
+			DG::Image_Draw(this->res->pushButtonImg, draw, src);
+		}
 	}
 	//-------------------------------------------------------------------
 	//スタミナの描画

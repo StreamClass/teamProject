@@ -78,5 +78,6 @@ namespace Enemy
 		int timeCnt;
 		//追加したい変数・メソッドはここに追加する
 		void Player_HitCheck();
+		Bone* Get_EnemyBonePtr();
 	};
 }
