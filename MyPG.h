@@ -111,7 +111,7 @@ namespace  MyPG
 		void Dbg_FileOut(const char *str, ...);
 
 		//XBox:P1 DualShock:P2
-		string controllerName = "P2";
+		string controllerName = "P1";
 	//----------------------------------------------
 	};
 }

@@ -632,8 +632,8 @@ namespace DI_
 		}
 		//アナログスティック対応
 		SIUpdate(ls,  js.lX * digToAnalog,  js.lY  * digToAnalog);
-		//SIUpdate(rs,  js.lRx * digToAnalog,  js.lRy * digToAnalog);//XBoxコントローラー
-		SIUpdate(rs, js.lZ * digToAnalog, js.lRz * digToAnalog);//デュアルショックコントローラー
+		SIUpdate(rs,  js.lRx * digToAnalog,  js.lRy * digToAnalog);//XBoxコントローラー
+		//SIUpdate(rs, js.lZ * digToAnalog, js.lRz * digToAnalog);//デュアルショックコントローラー
 
 		//POV対応
 		int m = 8;
