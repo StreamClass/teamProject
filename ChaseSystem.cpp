@@ -22,7 +22,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 		//マップとのあたり判定を持っているタスクをもらう
 		auto h = ge->GetTask_One_G<Map::Object>("フィールド");
 		//アングル方向にセンサー矩形発射
-		for (int i = 0; i < 1000; i += 50)
+		for (int i = 0; i < chipX*10; i += this->sensor.d/2.0f)
 		{
 			ML::Box3D s = this->sensor.OffsetCopy(pos + (a.Normalize()*i));
 			//センサーの中心に範囲1の矩形を同時に発射
@@ -56,7 +56,7 @@ ML::Vec3 ChaseSystem::NextRoute()
 		return ML::Vec3(0,0,0);
 	}
 	ML::Vec3 r = this->player_Route[this->destination];
-	r.y = 50;
+	r.y = 20;
 	this->destination++;
 	return r;
 	
