@@ -25,6 +25,7 @@ namespace Camera
 		//共有する変数はここに追加する
 		string tablet_Img_Name;
 		string display_Noise_Img_Name;
+		string hearts_Sound_Name;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -63,7 +64,9 @@ namespace Camera
 
 	public:
 		//追加メソッド
+		//
 		void Noise_Reset();
-		
+		//
+		void Change_Volume_Hearts_Sound();
 	};
 }

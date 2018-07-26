@@ -25,7 +25,7 @@ Bone::Bone(const float& tall, const string& owner)
 	ML::Vec3 center_of_neck = ML::Vec3(this->center_of_Body + (this->center_of_Body*(10.0f / 14.0f)));
 	Joint* tmpneck = new Joint(center_of_neck, ML::ToRadian(-90), ML::ToRadian(90), ML::ToRadian(-90), ML::ToRadian(90), ML::ToRadian(-90), ML::ToRadian(90), head, owner +"/Head");
 	//上半身の初期化
-	ML::Vec3 center_of_upper_body = this->center_of_Body + (this->center_of_Body *(5.0f / 14.0f) + ML::Vec3(0,length_of_hand /5.0f,0));
+	ML::Vec3 center_of_upper_body = this->center_of_Body + (this->center_of_Body *(5.0f / 14.0f) + ML::Vec3(0,length_of_hand /3.0f,0));
 	Shape* upper_Body = new Cube(center_of_upper_body, (center_of_upper_body + ML::Vec3(-length_of_hand * (3.0f / 4.0f), -length_of_hand, -length_of_hand / 2.0f)), length_of_hand*(3.0f / 4.0f), length_of_hand, length_of_hand / 2.0f);
 	//腰の初期化
 	ML::Vec3 center_of_waist = (this->center_of_Body + (this->center_of_Body*(1.0f / 14.0f)));
@@ -573,7 +573,7 @@ void Bone::Make_Running()
 		6
 	);
 
-	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, -10, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
@@ -600,7 +600,7 @@ void Bone::Make_Running()
 		10
 	);
 
-	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 20, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
@@ -635,7 +635,7 @@ void Bone::Make_Running()
 		10
 	);
 
-	Motion::Motion_Data step8(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step8(ML::Vec3(0, 10, 0), ML::Vec3(0, -10, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
@@ -673,7 +673,7 @@ void Bone::Make_Walking()
 	);
 
 	//上半身の左肩が前に
-	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step1(ML::Vec3(0, 10, 0), ML::Vec3(0, -10, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
@@ -704,7 +704,7 @@ void Bone::Make_Walking()
 
 	//step4
 	//上半身右肩前に
-	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step4(ML::Vec3(0, -20, 0), ML::Vec3(0, 20, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
@@ -737,7 +737,7 @@ void Bone::Make_Walking()
 	//step7
 	//上半身直立
 	//両足整頓
-	Motion::Motion_Data step7(ML::Vec3(0, 10, 0), ML::Vec3(0, 0, 0),
+	Motion::Motion_Data step7(ML::Vec3(0, 10, 0), ML::Vec3(0, -10, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0), ML::Vec3(0, 0, 0),
 		ML::Vec3(-10, 0, 0), ML::Vec3(-20, 0, 0), ML::Vec3(0, 0, 0),

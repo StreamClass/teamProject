@@ -48,26 +48,25 @@ namespace  Over
 		this->timeCnt = 0;
 		this->endCnt = 0;
 		this->endFlag = false;
-
-
 		//
 		this->iniFlag = true;
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
 			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
-			ML::Vec3(0.0f, 0.0f, -200.0f),			//	カメラ位置
+			ML::Vec3(0.0f, 0.0f, -500.0f),			//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
 			ML::ToRadian(35), 15.0f, 8000.0f,	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
-		DG::EffectState().param.bgColor = ML::Color(0.5f, 1, 1, 1);
+		DG::EffectState().param.bgColor = ML::Color(1, 0.5f, 0.5f, 0.5f);
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.5f, 0.5f, 0.5f);
 		//
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[0].direction = ML::Vec3(0, 0, 1).Normalize();//照射方向
-		DG::EffectState().param.light[0].color = ML::Color(1, 0.8f, 0.5f, 0.5f);//色と強さ
+		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
+		DG::EffectState().param.light[0].color = ML::Color(1, 0.6f, 0.2f, 0.2f);//色と強さ
 
 		//★タスクの生成
 
@@ -108,17 +107,17 @@ namespace  Over
 		{
 			this->enBone->Repeat_Now_Motioin();
 			this->enBone->UpDate();
-			this->pos.x -= 3;
+			this->pos.x -= 1;
 			this->enBone->Moving(this->pos);
 		}
 		//5秒後から
-		else if (this->timeCnt > 60 * 5)
+		if (this->timeCnt > 60 * 4)
 		{
 			//3秒かけて不透明度を1に
-			this->al = (this->timeCnt - 60 * 5) / 60.0f * 3.0f;
+			this->al = (this->timeCnt - 60 * 4) / 60.0f * 3.0f;
 		}
 		//15秒後(ロゴがすべて出てから7秒後)かつendFlagがfalseなら
-		else if (this->timeCnt > 60 * 15 && this->endFlag == false)
+		if (this->timeCnt > 60 * 14 && this->endFlag == false)
 		{
 			//ローディングを呼び出し
 			auto lo = Loading::Object::Create(true);
@@ -131,7 +130,9 @@ namespace  Over
 		if (this->timeCnt > 60 && this->iniFlag)
 		{
 			//
-			ML::Vec3 pos(0, 0, 0);
+			this->enBone->Moving(-this->enBone->Get_Center());
+			//
+			ML::Vec3 pos(200, 0, 0);
 			this->enBone->Moving(pos);
 			float radi = ML::ToRadian(-90);
 			this->enBone->Bone_RotateY_All(radi);
@@ -167,7 +168,7 @@ namespace  Over
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 1920, 1080);
 		//キャラクタが画面左側から出て行ったら
-		if (this->timeCnt > 60 * 8)
+		if (this->timeCnt > 60 * 3)
 		{
 			//エフェクトを画面全体に描画
 			DG::Image_Draw(this->res->eImgName, draw, src);
@@ -182,6 +183,11 @@ namespace  Over
 	void  Object::Render3D_L0()
 	{
 		this->enBone->Render();
+	}
+
+	void Object::Set_Bone_Ptr(Bone* bone)
+	{
+		this->enBone = bone;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

@@ -4,6 +4,7 @@
 #include  "MyPG.h"
 #include  "Task_Camera.h"
 #include  "Task_Player.h"
+#include  "Task_Enemy.h"
 #include  "easing.h"
 
 namespace  Camera
@@ -15,8 +16,10 @@ namespace  Camera
 	{
 		this->display_Noise_Img_Name = "noise";
 		this->tablet_Img_Name = "tablet";
+		this->hearts_Sound_Name = "HeartsSound";
 		DG::Image_Create(this->tablet_Img_Name, "./data/image/tablet.png");
 		DG::Image_Create(this->display_Noise_Img_Name, "./data/image/disp_noise.jpg");
+		DM::Sound_CreateStream(this->hearts_Sound_Name, "./data/sound/HeartSound00.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -25,6 +28,7 @@ namespace  Camera
 	{		
 		DG::Image_Erase(this->display_Noise_Img_Name);
 		DG::Image_Erase(this->tablet_Img_Name);
+		DM::Sound_Erase(this->hearts_Sound_Name);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -65,6 +69,9 @@ namespace  Camera
 
 		this->test_flag = false;
 
+		//
+		DM::Sound_Play(this->res->hearts_Sound_Name, true);
+
 		//★タスクの生成
 
 		return  true;
@@ -74,7 +81,8 @@ namespace  Camera
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		DG::EffectState().param.fogEnable = false;
+		DM::Sound_Stop(this->res->hearts_Sound_Name);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
@@ -125,6 +133,9 @@ namespace  Camera
 
 		ge->camera[0]->target = this->pos + vec;
 		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);		
+
+		//
+		this->Change_Volume_Hearts_Sound();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -168,7 +179,18 @@ namespace  Camera
 		easing::Reset("disp_Noise_Alpha");
 		easing::Start("disp_Noise_Alpha");
 	}
-
+	//
+	void Object::Change_Volume_Hearts_Sound()
+	{
+		auto ene = ge->GetTask_One_G<Enemy::Object>("エネミー");
+		ML::Vec3 len = (ge->camera[0]->pos - ene->Get_Pos());
+		int volume = 1000 - int(len.Length() / 3);
+		if (volume <= 0)
+		{
+			volume = 0;
+		}
+		DM::Sound_Volume(this->res->hearts_Sound_Name, volume);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

@@ -47,7 +47,6 @@ namespace Clear
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		int timeCnt;
 		//雲00の座標
@@ -56,5 +55,6 @@ namespace Clear
 		ML::Vec2 cloud01pos;
 		//テキストの不透明度
 		float alpha;
+	public:
 	};
 }

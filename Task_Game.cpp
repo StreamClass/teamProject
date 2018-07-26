@@ -99,7 +99,7 @@ namespace  Game
 			else if (ge->state == ge->over)
 			{
 				auto nextTask = Over::Object::Create(true);
-				nextTask->enBone = this->eBone;
+				nextTask->Set_Bone_Ptr(this->eBone);
 			}
 			else
 			{

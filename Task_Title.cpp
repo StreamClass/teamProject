@@ -76,18 +76,19 @@ namespace  Title
 		DG::EffectState().param.bgColor = ML::Color(1, 0, 0, 0);
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.2f, 0.2f, 0.2f);
 		//
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Point;//光源の種類
 		DG::EffectState().param.light[0].range = 200.0f;
 		DG::EffectState().param.light[0].attenuation = (1 / 350.0f)*(1 / 350.0f);
 		DG::EffectState().param.light[0].pos = ML::Vec3(-100, 50, 180);
-		DG::EffectState().param.light[0].color = ML::Color(1, 1.0f, 0.5f, 0.5f);//色と強さ
+		DG::EffectState().param.light[0].color = ML::Color(1, 1.0f, 0.0f, 0.0f);//色と強さ
 
-		DG::EffectState().param.light[1].enable = true;
-		DG::EffectState().param.light[1].kind = DG_::Light::Directional;//光源の種類
-		DG::EffectState().param.light[1].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
-		DG::EffectState().param.light[1].color = ML::Color(1, 0.5f, 0.2f, 0.2f);//色と強さ
+		//DG::EffectState().param.light[1].enable = true;
+		//DG::EffectState().param.light[1].kind = DG_::Light::Directional;//光源の種類
+		//DG::EffectState().param.light[1].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
+		//DG::EffectState().param.light[1].color = ML::Color(1, 0.8f, 0.2f, 0.2f);//色と強さ
 
 		//DM::Sound_Play("TitleBGM", true);
 		//★タスクの生成

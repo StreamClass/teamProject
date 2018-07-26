@@ -52,7 +52,6 @@ namespace Over
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-	public:
 		//追加したい変数・メソッドはここに追加する
 		//ロゴの不透明度の指定
 		float al;
@@ -68,5 +67,7 @@ namespace Over
 		int endCnt;
 		//
 		bool iniFlag;
+	public:
+		void Set_Bone_Ptr(Bone*);
 	};
 }
