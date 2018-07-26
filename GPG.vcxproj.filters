@@ -262,6 +262,9 @@
     <ClCompile Include="MapObject.cpp">
       <Filter>MyPG\Class\MapObject</Filter>
     </ClCompile>
+    <ClCompile Include="Bone_Motion_Preset.cpp">
+      <Filter>MyPG\Class\Bone</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
