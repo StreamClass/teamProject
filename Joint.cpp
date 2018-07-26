@@ -1,8 +1,6 @@
 #include "Joint.h"
-#include <iostream>
 
 //ˆÚ“®
-
 void Joint::Move(const ML::Vec3& vec)
 {
 	this->pos += vec;
@@ -102,12 +100,4 @@ void Joint::Render(const float& tall)
 	DG::EffectState().param.matWorld = matW ;
 	//ƒŒƒ“ƒ_ƒŠƒ“ƒO
 	DG::Mesh_Draw(this->mesh_Name);
-}
-
-void Joint::DEBUG()
-{
-	ML::Vec3 devec = this->area->GetCenter();
-	cout <<this->mesh_Name +" " << "X : " <<devec.x << " Y ; " << devec.y << " Z : " << devec.z << endl;
-	cout << this->mesh_Name + " " << "X : " << this->pos.x << " Y ; " << this->pos.y << " Z : " << this->pos.z << endl;
-	
 }

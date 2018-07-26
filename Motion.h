@@ -27,26 +27,7 @@ namespace Motion
 		*/
 		//各軸の回転データをベクトルに宣言
 		ML::Vec3 joint[JOINT_ON_HUMAN];
-
-		//名前を別々に持っていたver0.1
-		/*ML::Vec3 waist_Rot;
-		ML::Vec3 neck_Rot;		
-
-		ML::Vec3 left_Sholder_Rot;
-		ML::Vec3 left_Elbow_Rot;
-		ML::Vec3 left_Wrist_Rot;
-
-		ML::Vec3 right_Sholder_Rot;
-		ML::Vec3 right_Elbow_Rot;
-		ML::Vec3 right_Wrist_Rot;
-
-		ML::Vec3 left_Hip_Rot;
-		ML::Vec3 left_Knee_Rot;
-		ML::Vec3 left_Ankle_Rot;
 		
-		ML::Vec3 right_Hip_Rot;
-		ML::Vec3 right_Knee_Rot;
-		ML::Vec3 right_Ankle_Rot;*/
 
 		//上の回転量データまでたどり着く時間
 		const int duration;
@@ -89,6 +70,17 @@ namespace Motion
 			this->joint[13] = r_ankle;
 		}
 
+		//ゼロクリア
+		Motion_Data()
+			: duration(0)
+			, repeat_Point(false)
+		{
+			for (int i = 0; i < JOINT_ON_HUMAN; i++)
+			{
+				this->joint[i] = ML::Vec3(0, 0, 0);
+			}
+		}
+
 		//回転行列をもらってその分回転する
 		void Rotation_Matrix(ML::Mat4x4* matR)
 		{
@@ -118,73 +110,9 @@ namespace Motion
 				
 	}; 
 
-	
-	////生成されているモーションデータの上限下限を確認する
-	//void Set_Upper_Lower_Limits(const Joint* j, Motion_Data* md, const int index)
-	//{
-	//	//もしもの不貞アクセスを防ぐために
-	//	if (index >= JOINT_ON_HUMAN)
-	//	{
-	//		return;
-	//	}
-	//	//回転量が書き込まれたもののみ比べる
-	//	if (md->joint[index].Is_Zero_Vec())
-	//	{
-	//		return;
-	//	}
+	//外部ファイルからのモーションデータ生成
+	//引数 : (ファイル名 + .txt)
+	Motion_Data& Create_Step_From_File(const string&);
 
-	//	//最大値最小値を超える場合は上書きする
-	//	//X比べ
-	//	if (md->joint[index].x < 0.0f)
-	//	{
-
-	//		if (md->joint[index].x < j->Get_Limit_X_Minus())
-	//		{
-	//			md->joint[index].x = j->Get_Limit_X_Minus();
-	//		}
-	//	}
-	//	else if (md->joint[index].x > 0.0f)
-	//	{
-	//		if (md->joint[index].x > j->Get_Limit_X_Plus())
-	//		{
-	//			md->joint[index].x = j->Get_Limit_X_Plus();
-	//		}
-	//	}
-
-	//	//Y比べ
-	//	if (md->joint[index].y < 0.0f)
-	//	{
-
-	//		if (md->joint[index].y < j->Get_Limit_Y_Minus())
-	//		{
-	//			md->joint[index].y = j->Get_Limit_Y_Minus();
-	//		}
-	//	}
-	//	else if (md->joint[index].y > 0.0f)
-	//	{
-	//		if (md->joint[index].y > j->Get_Limit_Y_Plus())
-	//		{
-	//			md->joint[index].y = j->Get_Limit_Y_Plus();
-	//		}
-	//	}
-
-	//	//Z比べ
-	//	if (md->joint[index].z < 0.0f)
-	//	{
-
-	//		if (md->joint[index].z < j->Get_Limit_Z_Minus())
-	//		{
-	//			md->joint[index].z = j->Get_Limit_Z_Minus();
-	//		}
-	//	}
-	//	else if (md->joint[index].z > 0.0f)
-	//	{
-	//		if (md->joint[index].z > j->Get_Limit_Z_Plus())
-	//		{
-	//			md->joint[index].z = j->Get_Limit_Z_Plus();
-	//		}
-	//	
-	//	}
-	//}
-
+	void Make_Motion(std::vector<Motion_Data>* result, const string& motion_Name);
 }

@@ -50,11 +50,6 @@ public:
 	ML::Vec3 Get_To_Bone() const;
 
 
-
-	//デバッグ用
-	void DEBUG();
-
-
 	//ゲッター
 	ML::Vec3 Get_Pos() const;
 	float Get_Limit_X_Plus() const;
