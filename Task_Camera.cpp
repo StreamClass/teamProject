@@ -19,7 +19,7 @@ namespace  Camera
 		this->hearts_Sound_Name = "HeartsSound";
 		DG::Image_Create(this->tablet_Img_Name, "./data/image/tablet.png");
 		DG::Image_Create(this->display_Noise_Img_Name, "./data/image/disp_noise.jpg");
-		DM::Sound_CreateStream(this->hearts_Sound_Name, "./data/sound/HeartSound00.wav");
+		DM::Sound_CreateStream(this->hearts_Sound_Name, "./data/sound/HeartSound01.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -95,6 +95,9 @@ namespace  Camera
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//
+		this->Change_Volume_Hearts_Sound();
+
 		easing::UpDate();
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
 		this->noise_Cnt += 10;
@@ -134,8 +137,6 @@ namespace  Camera
 		ge->camera[0]->target = this->pos + vec;
 		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);		
 
-		//
-		this->Change_Volume_Hearts_Sound();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理

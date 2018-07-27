@@ -13,12 +13,15 @@ namespace  Title
 	bool  Resource::Initialize()
 	{
 		this->bgMeshName = "TitleBGImg";
-		DG::Mesh_CreateFromSOBFile(this->bgMeshName, "./data/mesh/TitleBG.SOB");
 		this->loImgName = "LogoImg";
-		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
 		this->sbImgName = "StartButtonImg";
+		DG::Mesh_CreateFromSOBFile(this->bgMeshName, "./data/mesh/TitleBG.SOB");
+		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
 		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
-		//DM::Sound_CreateStream("TitleBGM", "./data/sound/TitleBGM.wav");
+		this->bgmName = "TitmeBGM";
+		DM::Sound_CreateStream(this->bgmName, "./data/sound/TitleBGM.wav");
+		this->startSEName = "StartButtonPushBGM";
+		DM::Sound_CreateSE(this->startSEName, "./data/sound/StartSE.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -28,7 +31,8 @@ namespace  Title
 		DG::Mesh_Erase(this->bgMeshName);
 		DG::Image_Erase(this->loImgName);
 		DG::Image_Erase(this->sbImgName);
-		//DM::Sound_Erase("TitleBGM");
+		DM::Sound_Erase(this->bgmName);
+		DM::Sound_Erase(this->startSEName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -90,7 +94,7 @@ namespace  Title
 		//DG::EffectState().param.light[1].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
 		//DG::EffectState().param.light[1].color = ML::Color(1, 0.8f, 0.2f, 0.2f);//色と強さ
 
-		//DM::Sound_Play("TitleBGM", true);
+		DM::Sound_Play(this->res->bgmName, true);
 		//★タスクの生成
 		
 		return  true;
@@ -102,6 +106,7 @@ namespace  Title
 		//★データ＆タスク解放
 		delete this->eneBone;
 		this->eneBone = nullptr;
+		DM::Sound_Stop(this->res->bgmName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -123,6 +128,7 @@ namespace  Title
 		//スタートボタンを押したら
 		if ((in.ST.down || in.B1.down || in.B2.down || in.B3.down || in.B4.down) && this->pushSon == false)
 		{
+			DM::Sound_Play(this->res->startSEName,false);
 			this->pushSon = true;
 		}
 		//デバッグ時用

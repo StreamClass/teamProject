@@ -24,6 +24,7 @@ namespace Game
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
+		string bgmName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -53,8 +54,7 @@ namespace Game
 		int startTime;
 		Bone* eBone;
 	public:
-
-		void Stanby();
+		//
 		void Start();
 	};
 }

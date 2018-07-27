@@ -20,14 +20,16 @@ namespace  Game
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//DM::Sound_CreateStream("", "");
-		//DM::Sound_Play("",true)
+		this->bgmName = "GameBGM";
+		DM::Sound_CreateStream(this->bgmName, "./data/sound/GameBGM.wav");
+		DM::Sound_Play(this->bgmName, true);
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		DM::Sound_Erase(this->bgmName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -58,6 +60,10 @@ namespace  Game
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.2f,0.2f,0.2f);//色と強さ
 
+		//
+		DM::Sound_Play(this->res->bgmName, true);
+		DM::Sound_Volume(this->res->bgmName, 800);
+
 		//★タスクの生成
 		auto pl = Player::Object::Create(true);
 		auto cam = Camera::Object::Create(true);
@@ -87,6 +93,8 @@ namespace  Game
 		ge->KillAll_G("ランプ基盤");
 
 		ge->OM.Finalize();
+
+		DM::Sound_Stop(this->res->bgmName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{

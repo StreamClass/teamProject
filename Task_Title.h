@@ -31,6 +31,9 @@ namespace Title
 		string loImgName;
 		//StartButtonƒCƒ[ƒW–¼
 		string sbImgName;
+		//
+		string bgmName;
+		string startSEName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
