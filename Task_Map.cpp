@@ -186,7 +186,7 @@ namespace  Map
 			{
 				string meshName = "";
 				//現在追加中のオブジェクトの数だけ回す
-				for (int m = 0; m < 8; ++m)
+				for (int m = 0; m < 9; ++m)
 				{
 					//メッシュ名を読み込み
 					fin >> meshName;
@@ -347,6 +347,8 @@ namespace  Map
 			fin >> p.x >> p.y >> p.z >> a.x >> a.y >> a.z
 				>> h.w >> h.h >> h.d >> s;
 
+			//
+			h.x = -h.w / 2; h.y = -h.h / 2; h.z = -h.d / 2;
 			//向き(度数)からクォータニオンに変換
 			ML::QT qtx = ML::QT(ML::Vec3(1, 0, 0), ML::ToRadian(a.x));
 			ML::QT qty = ML::QT(ML::Vec3(0, 1, 0), ML::ToRadian(a.y));
@@ -415,6 +417,13 @@ namespace  Map
 		for (auto it = d->begin(); it != d->end(); it++)
 		{
 			if ((*it)->Hit_Check(pHit))
+			{
+				return true;
+			}
+		}
+		for (auto obj : this->mapObjects)
+		{
+			if (obj->HitCheck(pHit))
 			{
 				return true;
 			}

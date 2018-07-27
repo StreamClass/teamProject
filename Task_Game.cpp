@@ -22,7 +22,6 @@ namespace  Game
 	{
 		this->bgmName = "GameBGM";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/GameBGM.wav");
-		DM::Sound_Play(this->bgmName, true);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -59,6 +58,13 @@ namespace  Game
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//ŒõŒ¹‚ÌŽí—Þ
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//ÆŽË•ûŒü
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.2f,0.2f,0.2f);//F‚Æ‹­‚³
+
+		//DG::EffectState().param.light[1].enable = true;
+		//DG::EffectState().param.light[1].kind = DG_::Light::Point;//ŒõŒ¹‚ÌŽí—Þ
+		//DG::EffectState().param.light[1].range = 400.0f;
+		//DG::EffectState().param.light[1].attenuation = (1 / 350.0f)*(1 / 350.0f);
+		//DG::EffectState().param.light[1].pos = ML::Vec3(900,200,900);
+		//DG::EffectState().param.light[1].color = ML::Color(1, 0.6f, 0.0f, 0.0f);//F‚Æ‹­‚³
 
 		//
 		DM::Sound_Play(this->res->bgmName, true);

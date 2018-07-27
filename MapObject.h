@@ -32,6 +32,8 @@ public:
 	ML::Vec3 Get_Pos();
 	//‚ ‚½‚è”»’è‚ğ•Ô‚·
 	ML::Box3D Get_HitBase();
+	//
+	bool HitCheck(const ML::Box3D&);
 	//•`‰æˆ—
 	void Render3D();
 };

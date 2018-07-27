@@ -38,7 +38,7 @@ namespace  Enemy
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90),0);
-		this->chasing_Speed = 16.0f;
+		this->chasing_Speed = 13.0f;
 		this->final_Phase_Speed = 13.0f;
 		this->timeCnt = 0;
 		this->ebone = new Bone(180, "Enemy");

@@ -54,7 +54,14 @@ namespace Player
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-
+		//状態管理
+		enum Motion
+		{
+			neutral,//標準速度
+			dash,	//ダッシュ中
+			tired	//疲労中
+		};
+		Motion motion;
 		//追加変数
 		//プレイヤの座標
 		ML::Vec3 pos;
@@ -70,8 +77,6 @@ namespace Player
 		int headHeight;
 		//プレイやの視点基準
 		int headHeight_std;
-		//視点移動速度
-		int turnSpeed;
 		//注視点の高さ
 		int adjust_TG;
 		//注視点の高さ基準
@@ -107,7 +112,7 @@ namespace Player
 		//コントローラネーム
 		string controllerName;
 		//クリア判定
-		bool		clearFlag;
+		bool clearFlag;
 		//タブレット
 		Tablet* tab;
 
@@ -118,14 +123,13 @@ namespace Player
 		float stamina;
 		//スタミナ回復フラグ
 		bool recovery_Flag;
-		//
-		bool touch_Breaker;
 		bool debugMode;
 		//
 		int breakerOnCnt;
-		bool a;
-		bool b;
-		bool c;
+		//サウンド管理フラグ
+		bool neutralSoundFlag;
+		bool dashSoundFlag;
+		bool tiredSoundFlag;
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す

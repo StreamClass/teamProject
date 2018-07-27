@@ -6,9 +6,9 @@
 #include "GameEngine_Ver3_7.h"
 #include  "MapBox.h"
 
-#define NORMALMAGNI 5
+#define NORMALMAGNI 5.0f
 #define NORMALMAPSIZE 500
-#define TABLETMAGNI 8
+#define TABLETMAGNI 8.0f
 #define TABLETMAPSIZE 800
 
 namespace MiniMap
@@ -29,6 +29,11 @@ namespace MiniMap
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
+		//イメージ名
+		string imageName;
+		string plImgName;
+		string caImgName;
+		string anImgName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -53,10 +58,6 @@ namespace MiniMap
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
 
-		//イメージ名
-		string imageName;
-		string plImgName;
-		string caImgName;
 		//ミニマップのプレイヤ用変数
 		//座標
 		ML::Vec2 plpos;

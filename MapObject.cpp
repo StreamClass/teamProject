@@ -42,6 +42,12 @@ ML::Box3D MapObj::Get_HitBase()
 	return this->hitBase_;
 }
 
+//
+bool MapObj::HitCheck(const ML::Box3D& hit)
+{
+	return this->hitBase_.OffsetCopy(this->pos_).Hit(hit);
+}
+
 //•`‰æˆ—
 void MapObj::Render3D()
 {
