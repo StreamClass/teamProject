@@ -131,11 +131,11 @@ namespace  Camera
 		//’Ž‹“_
 		ML::Mat4x4 matR;
 		matR.RotationY(this->angle.y);
-		ML::Vec3 vec = ML::Vec3(800, pl->Get_Adjust(), 0);
+		ML::Vec3 vec = ML::Vec3(800.0f, float(pl->Get_Adjust()), 0.0f);
 		vec = matR.TransformCoord(vec);
 
 		ge->camera[0]->target = this->pos + vec;
-		ge->camera[0]->pos = this->pos + ML::Vec3(0, pl->Get_PointView(), 0);		
+		ge->camera[0]->pos = this->pos + ML::Vec3(0, float(pl->Get_PointView()), 0);		
 
 	}
 	//-------------------------------------------------------------------

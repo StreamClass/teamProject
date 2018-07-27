@@ -60,7 +60,7 @@ namespace  Map
 			-25.0f,
 			chipSize.z / 2
 		);
-		ML::Box3D hitBase(0, 0, 0, chipSize.x, 50.0f, chipSize.z);
+		ML::Box3D hitBase(0, 0, 0, int(chipSize.x), 50, int(chipSize.z));
 		this->floor = Box(chipSize, pos, hitBase);
 		this->floor.Set_MeshName("MapBox");
 		//天井の数値の指定
@@ -71,7 +71,7 @@ namespace  Map
 		//ゴール	の数値指定
 		chipSize = ML::Vec3(chipX * 2, chipY, chipZ / 3);
 		pos = ML::Vec3(chipX * 3 + chipSize.x / 2, chipY / 2, chipZ * 100 + chipSize.z / 2);
-		hitBase = ML::Box3D(0,0,0, chipSize.x, chipSize.y, chipSize.z);
+		hitBase = ML::Box3D(0,0,0, int(chipSize.x), int(chipSize.y), int(chipSize.z));
 		this->goal = Box(chipSize, pos, hitBase);
 		//読み込むファイル名の初期化
 		this->fileName = "Map00.txt";
@@ -207,9 +207,9 @@ namespace  Map
 					
 					//座標の指定
 					ML::Vec3 pos(
-						x * chipX + chipX / 2,
-						chipY / 2,
-						z * chipZ + chipZ / 2
+						float(x * chipX + chipX / 2.0f),
+						chipY / 2.0f,
+						float(z * chipZ + chipZ / 2.0f)
 					);
 					//あたり判定矩形のサイズを指定
 					ML::Box3D hitBase(

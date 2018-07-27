@@ -153,7 +153,7 @@ namespace  MiniMap
 		ML::Box2D src(0, 0, 500, 500);
 		DG::Image_Draw(this->res->imageName, draw, src, ML::Color(alpha, 1, 1, 1));
 		//
-		aDraw.Offset(this->capos - ML::Vec2(0, aDraw.h));
+		aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
 		DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
 		DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
 		//

@@ -52,7 +52,7 @@ bool MapObj::HitCheck(const ML::Box3D& hit)
 void MapObj::Render3D()
 {
 	ML::Mat4x4 matW;
-	D3DXMatrixAffineTransformation(&matW, this->scale_, NULL, &this->angle_, &this->pos_);
+	D3DXMatrixAffineTransformation(&matW, float(this->scale_), NULL, &this->angle_, &this->pos_);
 	DG::EffectState().param.matWorld = matW;
 	DG::Mesh_Draw(this->meshName_);
 }

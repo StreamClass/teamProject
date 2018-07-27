@@ -118,14 +118,14 @@ namespace  Clear
 		画面の右端に指定*/
 		if (this->cloud00pos.x < -400.0f)
 		{
-			this->cloud00pos.y = rand() % 300 + 100;
+			this->cloud00pos.y = float(rand() % 300) + 100;
 			this->cloud00pos.x = 1920;
 		}
 		/*雲01が画面の左端から出きったらY座標を100～400ドットの間で指定し
 		画面の右端に指定*/
 		if (this->cloud01pos.x < -400.0f)
 		{
-			this->cloud01pos.y = rand() % 300 + 100;
+			this->cloud01pos.y = float(rand() % 300) + 100;
 			this->cloud01pos.x = 1920;
 		}
 		//毎フレーム3ドット左に移動

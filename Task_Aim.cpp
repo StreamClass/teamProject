@@ -69,11 +69,11 @@ namespace  Aiming
 		//šƒf[ƒ^‰Šú‰»
 		this->render2D_Priority[1] = 0.2f;
 		this->hitBase = ML::Box3D(0, 0, 0, 1, 1, 1);
-		this->aimPosC = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2);
-		this->aimPosT = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 - 15);
-		this->aimPosB = ML::Vec2(ge->screen2DWidth / 2, ge->screen2DHeight / 2 + 15);
-		this->aimPosL = ML::Vec2(ge->screen2DWidth / 2 - 15, ge->screen2DHeight / 2);
-		this->aimPosR = ML::Vec2(ge->screen2DWidth / 2 + 15, ge->screen2DHeight / 2);
+		this->aimPosC = ML::Vec2(float(ge->screen2DWidth / 2.0f), float(ge->screen2DHeight / 2.0f));
+		this->aimPosT = ML::Vec2(float(ge->screen2DWidth / 2.0f), float(ge->screen2DHeight / 2.0f) - 15.0f);
+		this->aimPosB = ML::Vec2(float(ge->screen2DWidth / 2.0f), float(ge->screen2DHeight / 2.0f) + 15.0f);
+		this->aimPosL = ML::Vec2(float(ge->screen2DWidth / 2.0f) - 15, float(ge->screen2DHeight / 2.0f));
+		this->aimPosR = ML::Vec2(float(ge->screen2DWidth / 2.0f) + 15, float(ge->screen2DHeight / 2.0f));
 		this->timeCnt = 0;
 		this->pos = ML::Vec3(0, 0, 0);
 		this->aimMoveSpeed = 0;
@@ -217,7 +217,7 @@ namespace  Aiming
 		ML::Box2D src(0, 0, 200, 500);
 		DG::Image_Draw(this->res->staminaImgName[0], draw, src);
 
-		draw = ML::Box2D(ge->screen2DWidth - 100, ge->screen2DHeight - 300 + (MAX_STAMINA -  pl->Get_Stamina()), 50, pl->Get_Stamina());
+		draw = ML::Box2D(int(ge->screen2DWidth) - 100, int(ge->screen2DHeight) - 300 + (MAX_STAMINA -  int(pl->Get_Stamina())), 50, int(pl->Get_Stamina()));
 		DG::Image_Draw(this->res->staminaImgName[1], draw, src);
 	}
 	//-------------------------------------------------------------------
