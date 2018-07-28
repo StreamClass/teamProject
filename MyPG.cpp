@@ -130,6 +130,7 @@ namespace MyPG
 	{
 	//	入力装置の解放
 		DI::GPad_Erase("P1");
+		DI::GPad_Erase("P2");
 	}
 	//ゲームエンジンに追加したもののステップ処理
 	void MyGameEngine::UpDate( )

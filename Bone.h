@@ -18,29 +18,7 @@ private:
 	const float tall;
 
 	//全関節のアドレス値
-	Joint* joint[JOINT_ON_HUMAN];
-
-	//名前を別々に持っていたver0.1
-	/*
-	Joint* waist;
-	Joint* neck;
-
-	Joint* left_Sholder;	
-	Joint* left_Elbow;
-	Joint* left_Wrist;
-
-	Joint* right_Sholder;
-	Joint* right_Elbow;
-	Joint* right_Wrist;
-
-	Joint* left_Hip;
-	Joint* left_Knee;
-	Joint* left_Ankle;
-	
-	Joint* right_Hip;
-	Joint* right_Knee;
-	Joint* right_Ankle;
-	*/
+	Joint* joint[JOINT_ON_HUMAN];	
 
 	//全体のY回転値
 	float All_RotY;
@@ -93,6 +71,8 @@ public:
 	//引数 : (Y軸回転量)
 	void Bone_RotateY_All(const float& radian);
 
+	//モーションをボーンに登録
+	void Registrate_Motion(const std::vector<Motion::Motion_Data>& d, const string& motions_Name);
 	//次のモーション予約
 	void Set_Next_Motion(const string& next);
 	//連続行動フラグを立てる
@@ -100,8 +80,8 @@ public:
 	//アニメーションアップデート
 	void UpDate();
 	//アニメーションレンダリング
-	void Render();
-	
+	void Render();	
+
 
 	//コンストラクタ
 	//ゼロクリア
@@ -109,21 +89,7 @@ public:
 		tall(0.0f)
 	{
 		this->center_of_Body = ML::Vec3(0, 0, 0);
-		this->All_RotY = 0.0f;
-		/*this->neck = nullptr;
-		this->waist = nullptr;
-		this->left_Sholder = nullptr;
-		this->left_Elbow = nullptr;
-		this->left_Wrist = nullptr;
-		this->left_Hip = nullptr;
-		this->left_Knee = nullptr;
-		this->left_Ankle = nullptr;
-		this->right_Sholder = nullptr;
-		this->right_Elbow = nullptr;
-		this->right_Wrist = nullptr;
-		this->right_Hip = nullptr;
-		this->right_Knee = nullptr;
-		this->right_Ankle = nullptr;*/
+		this->All_RotY = 0.0f;		
 
 		for (int i = 0; i < JOINT_ON_HUMAN; i++)
 		{
@@ -143,22 +109,7 @@ public:
 
 	//デストラクタ
 	~Bone()
-	{
-		//ヒープ領域から開放
-		/*delete this->waist;
-		delete this->neck;
-		delete this->left_Ankle;
-		delete this->left_Elbow;
-		delete this->left_Hip;
-		delete this->left_Knee;
-		delete this->left_Sholder;
-		delete this->left_Wrist;
-		delete this->right_Ankle;
-		delete this->right_Elbow;
-		delete this->right_Hip;
-		delete this->right_Knee;
-		delete this->right_Sholder;
-		delete this->right_Wrist;*/
+	{		
 
 		for (int i = 0; i < JOINT_ON_HUMAN; i++)
 		{

@@ -69,6 +69,10 @@ namespace Enemy
 
 		//ボーンアニメ用ボーン
 		Bone* ebone;
+		//アニメーションの名前を保存するベクター
+		std::vector<string> animations_Name;
+		//アニメーション生成メソッド
+		void Init_Enemys_Animations();
 
 		//ルーチーンワーク
 		Routine* rou;

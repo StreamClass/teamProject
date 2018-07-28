@@ -82,7 +82,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Bone.cpp" />
-    <ClCompile Include="Bone_Motion_Preset.cpp" />
     <ClCompile Include="Breaker.cpp" />
     <ClCompile Include="ChaseSystem.cpp" />
     <ClCompile Include="Cube.cpp" />

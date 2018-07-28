@@ -44,6 +44,9 @@ namespace  Enemy
 		this->ebone = new Bone(180, "Enemy");
 		this->ebone->Moving(this->pos);
 		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(-90));
+		this->Init_Enemys_Animations();
+		
+
 		//★タスクの生成
 
 		return  true;
@@ -104,7 +107,7 @@ namespace  Enemy
 				this->pos += targetPos * this->final_Phase_Speed;
 				this->ebone->Moving(targetPos * this->final_Phase_Speed);
 			}
-			this->ebone->Set_Next_Motion("Walking");
+			this->ebone->Set_Next_Motion(this->animations_Name[1]);
 			
 			this->angle.y = -atan2(targetPos.z, targetPos.x);
 		}
@@ -132,7 +135,7 @@ namespace  Enemy
 			//移動
 			this->pos += targetPos.Normalize() * this->chasing_Speed;
 			this->ebone->Moving(targetPos.Normalize() * this->chasing_Speed);
-			this->ebone->Set_Next_Motion("Running");
+			this->ebone->Set_Next_Motion(this->animations_Name[0]);
 			//向きをプレイヤ側にする
 			ML::Vec3 a = pl->Get_Pos() - this->pos;
 			this->angle.y = -atan2(a.z, a.x);
@@ -191,6 +194,22 @@ namespace  Enemy
 	{
 		return this->pos;
 	}
+	//-------------------------------------------------------------------------------
+	//アニメーション生成メソッド
+	void Object::Init_Enemys_Animations()
+	{
+		//走るアニメーション
+		this->animations_Name.push_back("Running");
+		std::vector<Motion::Motion_Data> running;
+		Motion::Make_Motion(&running, this->animations_Name[0]);
+		this->ebone->Registrate_Motion(running, this->animations_Name[0]);
+		//歩くアニメーション
+		this->animations_Name.push_back("Walking");
+		std::vector<Motion::Motion_Data> walking;
+		Motion::Make_Motion(&walking, this->animations_Name[1]);
+		this->ebone->Registrate_Motion(walking, this->animations_Name[1]);
+	}
+
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

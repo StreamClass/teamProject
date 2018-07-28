@@ -81,7 +81,8 @@ namespace  Player
 		this->debugMode = false;
 		this->motion = neutral;
 
-		this->plBone = new Bone(170,"Player");		
+		this->plBone = new Bone(170,"Player");
+		this->Init_Players_Animations();
 
 		this->breakerOnCnt = 0;
 
@@ -145,7 +146,7 @@ namespace  Player
 				this->moveVec = matR.TransformCoord(this->moveVec);
 				
 				//走るモーション
-				this->plBone->Set_Next_Motion("Walking");
+				this->plBone->Set_Next_Motion(this->animations_Name[1]);
 				this->plBone->Repeat_Now_Motioin();
 			}
 			else
@@ -526,7 +527,7 @@ namespace  Player
 					{
 						(*it)->ActivateBreaker();
 						//ボタン操作モーション実行
-						this->plBone->Set_Next_Motion("InterAction");
+						this->plBone->Set_Next_Motion(this->animations_Name[0]);
 						this->breakerOnCnt++;
 						break;
 					}
@@ -606,6 +607,27 @@ namespace  Player
 	bool Object::Is_Tired()
 	{
 		return this->recovery_Flag;
+	}
+
+	//-----------------------------------------------------------------------------
+	//初期化の時アニメーション登録するメソッド
+	void Object::Init_Players_Animations()
+	{
+		//ボタン押しアニメーション
+		this->animations_Name.push_back("Interaction");
+		std::vector<Motion::Motion_Data> interaction;
+		Motion::Make_Motion(&interaction, this->animations_Name[0]);
+		this->plBone->Registrate_Motion(interaction, this->animations_Name[0]);
+		//走るアニメーション
+		this->animations_Name.push_back("Running");
+		std::vector<Motion::Motion_Data> running;
+		Motion::Make_Motion(&running, this->animations_Name[1]);
+		this->plBone->Registrate_Motion(running, this->animations_Name[1]);
+		//歩くアニメーション
+		this->animations_Name.push_back("Walking");
+		std::vector<Motion::Motion_Data> walking;
+		Motion::Make_Motion(&walking, this->animations_Name[2]);
+		this->plBone->Registrate_Motion(walking, this->animations_Name[2]);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

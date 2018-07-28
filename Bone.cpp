@@ -166,10 +166,6 @@ Bone::Bone(const float& tall, const string& owner)
 	this->next_Motion = "";
 	this->repeat_Flag = false;
 
-	//ƒvƒŠƒZƒbƒg“o˜^
-	this->Make_Interaction();
-	this->Make_Running();
-	this->Make_Walking();
 }
 
 
@@ -448,4 +444,9 @@ void Bone::Render()
 	{
 		this->joint[i]->Render(this->tall);
 	}
+}
+
+void Bone::Registrate_Motion(const std::vector<Motion::Motion_Data>& d, const string& motion_Name)
+{
+	this->motions.insert({ motion_Name,d });
 }

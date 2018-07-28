@@ -55,13 +55,13 @@ namespace Player
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//状態管理
-		enum Motion
+		enum State
 		{
 			neutral,//標準速度
 			dash,	//ダッシュ中
 			tired	//疲労中
 		};
-		Motion motion;
+		State motion;
 		//追加変数
 		//プレイヤの座標
 		ML::Vec3 pos;
@@ -118,6 +118,8 @@ namespace Player
 
 		//ボーンアニメーション用
 		Bone* plBone;
+		//アニメーション名の保存ヴェクター
+		std::vector<string> animations_Name;
 
 		//スタミナ
 		float stamina;
@@ -130,6 +132,9 @@ namespace Player
 		bool neutralSoundFlag;
 		bool dashSoundFlag;
 		bool tiredSoundFlag;
+
+		//初期化の時アニメーション登録するメソッド
+		void Init_Players_Animations();
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す

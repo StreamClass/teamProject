@@ -107,7 +107,14 @@ namespace Motion
 		{
 			return *this + val;
 		}
-				
+		
+		//無効データかを確認
+		bool Is_Zero_Data()
+		{
+			//ゼロフレーム行動なら
+			//無効データと認識する
+			return this->duration == 0 ? true : false;
+		}
 	}; 
 
 	//外部ファイルからのモーションデータ生成
