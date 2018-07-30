@@ -119,7 +119,7 @@ namespace Motion
 
 	//外部ファイルからのモーションデータ生成
 	//引数 : (ファイル名 + .txt)
-	Motion_Data& Create_Step_From_File(const string&);
+	Motion_Data Create_Step_From_File(const string&);
 
 	void Make_Motion(std::vector<Motion_Data>* result, const string& motion_Name);
 }

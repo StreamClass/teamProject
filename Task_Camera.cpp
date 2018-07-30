@@ -184,12 +184,22 @@ namespace  Camera
 	void Object::Change_Volume_Hearts_Sound()
 	{
 		auto ene = ge->GetTask_One_G<Enemy::Object>("エネミー");
+		//カメラとエネミーの距離を計算
 		ML::Vec3 len = (ge->camera[0]->pos - ene->Get_Pos());
-		int volume = 1000 - int(len.Length() / 3);
+		//音量の基準値を1000(最大値)に設定
+		int volume = 1000;
+		if (len.Length() > 1000)//距離の長さが1000以上なら
+		{
+			//音量の最大値から長さの1/3を引く
+			volume = 1000 - int(len.Length() / 3);//長さが3000以上だと音量が0になる
+		}
+		//音量が0以下だと
 		if (volume <= 0)
 		{
+			//最小値(0)に置き換える
 			volume = 0;
 		}
+		//上記から心音の大きさを設定
 		DM::Sound_Volume(this->res->hearts_Sound_Name, volume);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

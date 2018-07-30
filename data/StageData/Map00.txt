@@ -3,7 +3,7 @@ Table
 chair
 bed
 toilet
-fire
+fireModel
 torch
 BloodFloor
 SquareShadow

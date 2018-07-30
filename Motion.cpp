@@ -1,7 +1,7 @@
 #include "Motion.h"
 
 //外部ファイルからのモーションデータ生成
-Motion::Motion_Data& Motion::Create_Step_From_File(const string& fn)
+Motion::Motion_Data Motion::Create_Step_From_File(const string& fn)
 {
 	//外部ファイルからのモーションデータ生成
 	//ファイルオープン
@@ -113,7 +113,7 @@ Motion::Motion_Data& Motion::Create_Step_From_File(const string& fn)
 		{
 			flag = true;
 		}
-		else
+		else if(key_Data.at(0) == 'F' || key_Data.at(0) == 'f')
 		{
 			flag = false;
 		}
@@ -123,13 +123,12 @@ Motion::Motion_Data& Motion::Create_Step_From_File(const string& fn)
 	file.close();
 
 	//戻り値を作成して返す
-	return Motion::Motion_Data(md[0], md[1],
+	return Motion_Data(md[0], md[1],
 		md[2], md[3], md[4],
 		md[5], md[6], md[7],
 		md[8], md[9], md[10],
 		md[11], md[12], md[13],
-		du, flag
-	);
+		du, flag);
 }
 
 void Motion::Make_Motion(std::vector<Motion_Data>* result, const string& motion_Name)
@@ -139,7 +138,7 @@ void Motion::Make_Motion(std::vector<Motion_Data>* result, const string& motion_
 	while(true)
 	{	
 		//外部ファイルからの読み込み
-		Motion::Motion_Data step = Motion::Create_Step_From_File(motion_Name + "/step" + to_string(i) + ".txt");
+		Motion::Motion_Data step = Motion::Create_Step_From_File(motion_Name + "/Step" + to_string(i) + ".txt");
 		//無効データならループを抜ける
 		if (step.Is_Zero_Data())
 		{

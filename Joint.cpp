@@ -45,38 +45,38 @@ ML::Vec3 Joint::Get_Pos() const
 }
 
 //Še‰ñ“]—Ê‚ÌŒÀŠE’l‚ð•Ô‚·
-//X
-float Joint::Get_Limit_X_Minus() const
-{
-	return this->limit_X_Minus;
-}
-
-float Joint::Get_Limit_X_Plus() const
-{
-	return this->limit_X_Plus;
-}
-
-//Y
-float Joint::Get_Limit_Y_Minus() const
-{
-	return this->limit_Y_Minus;
-}
-
-float Joint::Get_Limit_Y_Plus() const
-{
-	return this->limit_Y_Plus;
-}
-
-//Z
-float Joint::Get_Limit_Z_Minus() const
-{
-	return this->limit_Z_Minus;
-}
-
-float Joint::Get_Limit_Z_Plus() const
-{
-	return this->limit_Z_Plus;
-}
+////X
+//float Joint::Get_Limit_X_Minus() const
+//{
+//	return this->limit_X_Minus;
+//}
+//
+//float Joint::Get_Limit_X_Plus() const
+//{
+//	return this->limit_X_Plus;
+//}
+//
+////Y
+//float Joint::Get_Limit_Y_Minus() const
+//{
+//	return this->limit_Y_Minus;
+//}
+//
+//float Joint::Get_Limit_Y_Plus() const
+//{
+//	return this->limit_Y_Plus;
+//}
+//
+////Z
+//float Joint::Get_Limit_Z_Minus() const
+//{
+//	return this->limit_Z_Minus;
+//}
+//
+//float Joint::Get_Limit_Z_Plus() const
+//{
+//	return this->limit_Z_Plus;
+//}
 
 ML::Vec3 Joint::Get_To_Bone() const
 {

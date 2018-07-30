@@ -132,10 +132,10 @@ namespace  Title
 			this->pushSon = true;
 		}
 		//デバッグ時用
-		else if (in.B1.down && this->pushSon == true)
-		{
-			this->Kill();
-		}
+		//else if (in.B1.down && this->pushSon == true)
+		//{
+		//	this->Kill();
+		//}
 
 		//3秒後に
 		if (this->timeCnt == 60 * 3)

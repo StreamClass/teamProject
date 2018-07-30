@@ -18,11 +18,9 @@ namespace  Player
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//メッシュの読み込み
-		this->meshName = "playerImg";
-		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/char_Stand.sob");
 		//フォントの読み込み
 		DG::Font_Create("FontA", "ＭＳ ゴシック", 10, 20);
+		//メッシュの読み込み
 		DM::Sound_CreateSE("standsound", "./data/sound/Stand00.wav");
 		DM::Sound_CreateSE("runsound", "./data/sound/run00.wav");
 		DM::Sound_CreateSE("tiredsound", "./data/sound/tired00.wav");
@@ -122,7 +120,23 @@ namespace  Player
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
-		//volumeが0の時は使ってはダメ
+		//状態管理
+		switch (this->motion)
+		{
+		case neutral:
+			if (in.R1.on && this->stamina >0 && in.LStick.volume > 0) { this->motion = dash; }
+			if (this->stamina <= 0) { this->motion = tired; }
+			break;
+		case dash:
+			if (in.R1.off&&this->stamina > 0) { this->motion = neutral; }
+			if (in.R1.on && !(in.LStick.volume > 0.1f)) { this->motion = neutral; }
+			if (this->stamina <= 0) { this->motion = tired; }
+			break;
+		case tired:
+			if (this->stamina >= MAX_STAMINA / 3 && in.R1.off) { this->motion = neutral; }
+			if (this->stamina >= MAX_STAMINA / 3 && in.R1.on && in.LStick.volume > 0) { this->motion = dash; }
+			break;
+		}
 		//タブレットオフ
 		if (!this->tab->Is_Used_Now())
 		{
@@ -133,18 +147,12 @@ namespace  Player
 			}
 			if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
 			{
-				//走る途中はスタミナ減少
-				if (in.R1.on)
-				{
-					this->stamina--;
-				}
 				ML::Mat4x4 matR;
 				matR.RotationY(this->angle.y);
 				this->moveVec.x = -this->speed * in.LStick.axis.y;
 				this->moveVec.z = -this->speed * in.LStick.axis.x;
 				//ベクトルを座標変換させる
 				this->moveVec = matR.TransformCoord(this->moveVec);
-				
 				//走るモーション
 				this->plBone->Set_Next_Motion(this->animations_Name[1]);
 				this->plBone->Repeat_Now_Motioin();
@@ -153,52 +161,10 @@ namespace  Player
 			{
 				this->moveVec = ML::Vec3(0, 0, 0);
 			}
-			//視点の回転
-			this->angle.y += in.RStick.axis.x * ML::ToRadian(TURNSPEED);
-
 			//ボーン全体をY軸回転
 			this->plBone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
-
-			//状態管理
-			switch (this->motion)
-			{
-			case neutral:
-				if (in.R1.on && this->stamina >0 && in.LStick.volume > 0) { this->motion = dash; }
-				if (this->stamina <= 0) { this->motion = tired; }
-				break;
-			case dash:
-				if (in.R1.off&&this->stamina > 0) { this->motion = neutral; }
-				if (in.R1.on&&!(in.LStick.volume > 0.1f)) { this->motion = neutral; }
-				if (this->stamina <= 0) { this->motion = tired; }
-				break;
-			case tired:
-				if (this->stamina >= MAX_STAMINA / 3 && in.R1.off) { this->motion = neutral; }
-				if (this->stamina >= MAX_STAMINA / 3 && in.R1.on && in.LStick.volume > 0) { this->motion = dash; }
-				break;
-			}
-
-			//速度指定
-			//通常時
-			if (this->motion == neutral)
-			{
-				this->speed = max(NORMALSPEED, this->speed -= 0.5f);
-			}
-			//ダッシュ時
-			else if (this->motion == dash)
-			{
-				this->speed = min(DASHSPEED, this->speed += 0.5f);
-			}
-			//疲労時
-			else if(this->motion=tired)
-			{
-				this->speed = TIRED_SPEED;
-			}
-			//スタミナ回復
-			if (this->motion != dash)
-			{
-				this->stamina += 0.3;
-			}
-			ge->Dbg_FileOut("speed = %0.2f", this->speed);
+			//現在のスピードをテキストに保存
+			/*ge->Dbg_FileOut("speed = %0.2f", this->speed);*/
 			//スタミナ範囲
 			if (this->stamina < 0)
 			{
@@ -223,6 +189,8 @@ namespace  Player
 			{
 				this->recovery_Flag = false;
 			}
+			//視点の回転
+			this->angle.y += in.RStick.axis.x * ML::ToRadian(TURNSPEED);
 			//注視点の上下移動
 			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
 			{
@@ -235,11 +203,22 @@ namespace  Player
 			//画面揺れ
 			//カウンタスタート
 			this->cnt_TG++;
+			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)*(スピード*揺れ幅)
+			float headY = this->headHeight_std +
+				sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor);
+			float targetY = this->adjust_TG_std +
+				sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor) + this->add_adjust;
+			//頭の高さを更新
+			this->headHeight = headY;
+			//注視点の高さを更新
+			this->adjust_TG = targetY;
 			//視点揺れ速度を選択
 			//サウンドを選択
 			switch (this->motion)
 			{
 			case neutral:
+				//速度を変更
+				this->speed = max(NORMALSPEED, this->speed -= 0.5f);
 				//不要なサウンドをストップ
 				if (this->dashSoundFlag)
 				{
@@ -258,12 +237,16 @@ namespace  Player
 				this->cnt_SP = 2;
 				//揺れ幅を指定
 				this->tremor = 0.5f;
+				//スタミナを回復
+				this->stamina += 0.3;
 				//各フラグを反転
 				this->neutralSoundFlag = true;
 				this->dashSoundFlag = false;
 				this->tiredSoundFlag = false;
 				break;
 			case dash:
+				//速度を変更
+				this->speed = min(DASHSPEED, this->speed += 0.5f);
 				//不要なサウンドをストップ
 				if (this->neutralSoundFlag)
 				{
@@ -281,13 +264,17 @@ namespace  Player
 				//視点揺れの速度を指定
 				this->cnt_SP = 14;
 				//揺れ幅を指定
-				this->tremor = 1.0f;
+				this->tremor = 0.8f;
+				//dash時はスタミナ減少
+				this->stamina--;
 				//各フラグを反転
 				this->neutralSoundFlag = false;
 				this->dashSoundFlag = true;
 				this->tiredSoundFlag = false;
 				break;
 			case tired:
+				//速度を変更
+				this->speed = TIRED_SPEED;
 				//不要なサウンドをストップ
 				if (this->dashSoundFlag)
 				{ 
@@ -306,17 +293,14 @@ namespace  Player
 				this->cnt_SP = 8;
 				//揺れ幅を指定
 				this->tremor = 6.0f;
+				//スタミナを回復
+				this->stamina += 0.3;
 				//各フラグを反転
 				this->neutralSoundFlag = false;
 				this->dashSoundFlag = false;
 				this->tiredSoundFlag = true;
 				break;
 			}
-			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)*(スピード*揺れ幅)
-			float headY = this->headHeight_std + sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor);
-			float targetY = this->adjust_TG_std + sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor) + this->add_adjust;
-			this->headHeight = headY;
-			this->adjust_TG = targetY;
 
 			this->moveVecRec = this->moveVec.Length();
 			this->Player_CheckMove(this->moveVec);

@@ -9,13 +9,13 @@ class Joint
 private:
 	//関節の位置
 	ML::Vec3 pos;
-	//回転の限界値
-	const float limit_X_Minus;
+	//回転の限界値(現在要らないと思われるので、コメントアウト)(2018/07/30)
+	/*const float limit_X_Minus;
 	const float limit_X_Plus;
 	const float limit_Y_Minus;
 	const float limit_Y_Plus;
 	const float limit_Z_Minus;
-	const float limit_Z_Plus;
+	const float limit_Z_Plus;*/
 	//現在までの回転量クォータニオン
 	ML::QT rotated;
 	//繋がれた骨のアドレス値(仮の名前)
@@ -52,22 +52,23 @@ public:
 
 	//ゲッター
 	ML::Vec3 Get_Pos() const;
-	float Get_Limit_X_Plus() const;
+	/*float Get_Limit_X_Plus() const;
 	float Get_Limit_X_Minus()const;
 	float Get_Limit_Y_Plus()const;
 	float Get_Limit_Y_Minus()const;
 	float Get_Limit_Z_Plus()const;
-	float Get_Limit_Z_Minus()const;
+	float Get_Limit_Z_Minus()const;*/
 
 	//コンストラクタ
 	//ゼロクリア
-	Joint():
+	Joint()
+		/*:
 		limit_X_Minus(0.0f),
 		limit_X_Plus(0.0f),
 		limit_Y_Minus(0.0f),
 		limit_Y_Plus(0.0f),
 		limit_Z_Minus(0.0f),
-		limit_Z_Plus(0.0f)
+		limit_Z_Plus(0.0f)*/
 	{
 		this->rotated = ML::QT();
 		this->pos = ML::Vec3(0, 0, 0);		
@@ -76,13 +77,14 @@ public:
 		this->mesh_Name = "";
 	}
 	//引数 : (関節の位置、回転量の限界X-,X+,Y-,Y+,Z-,Z+,つながっている骨のアドレス値,メッシュ名)
-	Joint(const ML::Vec3& p, const float& xm, const float& xp, const float& ym, const float& yp, const float& zm, const float& zp, Shape* bone,const string& name) :
+	Joint(const ML::Vec3& p, Shape* bone,const string& name) 
+		/*:, const float& xm, const float& xp, const float& ym, const float& yp, const float& zm, const float& zp
 		limit_X_Minus(xm),
 		limit_X_Plus(xp),
 		limit_Y_Minus(ym),
 		limit_Y_Plus(yp),
 		limit_Z_Minus(zm),
-		limit_Z_Plus(zp)
+		limit_Z_Plus(zp)*/
 	{
 		//左手法右手法を治すために
 		this->rotated = ML::QT(ML::Vec3(0,1,0),ML::ToRadian(180));

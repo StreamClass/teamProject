@@ -58,7 +58,7 @@ namespace  MiniMap
 		this->tab_use_now = false;
 		//座標参照用倍率
 		this->magni = chipX / NORMALMAGNI;
-		//
+		//ミニマップ表示サイズを通常状態に設定
 		this->mapSize = NORMALMAPSIZE;
 		//デバックモードの初期化(無効)
 		this->debugMode = false;
@@ -191,8 +191,8 @@ namespace  MiniMap
 	//画像描画範囲の設定を未実装
 	void Object::MiniMap_Render()
 	{
-		ML::Box2D draw(60, 60, 500, 500);
-		ML::Box2D src(0, 0, 500, 500);
+		ML::Box2D draw(60, 60, this->mapSize, this->mapSize);
+		ML::Box2D src(0, 0, 50, 50);
 		//描画位置の変更
 
 		//リソースの参照位置を変更
