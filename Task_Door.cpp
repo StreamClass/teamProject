@@ -13,14 +13,18 @@ namespace Task_Door
 	bool  Resource::Initialize()
 	{
 		this->meshName = "Door_mesh";
+		this->shadowMesh = "Door_Shadow";
 		//仮のメッシュ
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/door.SOB");
+		DG::Mesh_CreateFromSOBFile(this->shadowMesh, "./data/mesh/SquareShadow.SOB");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{		
+		DG::Mesh_Erase(this->meshName);
+		DG::Mesh_Erase(this->shadowMesh);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -85,6 +89,8 @@ namespace Task_Door
 		DG::EffectState().param.matWorld = matS * matT;
 
 		DG::Mesh_Draw(this->res->meshName);
+
+		this->Render3DShadow();
 	}
 
 	//-----------------------------------------------------------------------
@@ -104,7 +110,16 @@ namespace Task_Door
 	{
 		return this->circuit->How_Many_Breaker_Be_Cunnected();
 	}
+	//
+	void Object::Render3DShadow()
+	{
+		ML::Mat4x4 matT, matS;
+		matS.Scaling(ML::Vec3(150,100,40));
+		matT.Translation(ML::Vec3(this->circuit->Get_Pos().x,1, this->circuit->Get_Pos().z));
+		DG::EffectState().param.matWorld = matS * matT;
 
+		DG::Mesh_Draw(this->res->shadowMesh);
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

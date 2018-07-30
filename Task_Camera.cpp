@@ -56,9 +56,9 @@ namespace  Camera
 		//フォグ(霧)の設定
 		DG::EffectState().param.fogEnable = true;
 		DG::EffectState().param.fogColor = ML::Color(1, 0, 0, 0);
-		DG::EffectState().param.fogFore = RENDERRENGE * chipX;
+		DG::EffectState().param.fogFore = RENDERRENGE * chipX - chipX * 1;
 		DG::EffectState().param.fogMode = true;
-		DG::EffectState().param.fogNear = RENDERRENGE * chipX - chipX * 2;
+		DG::EffectState().param.fogNear = RENDERRENGE * chipX - chipX * 3;
 
 		//タブレット使用中のeasingをセット
 		easing::Set("disp_Noise_Alpha", easing::CUBICOUT, 1.0f, 0.03f, 30);
@@ -185,16 +185,23 @@ namespace  Camera
 	{
 		auto ene = ge->GetTask_One_G<Enemy::Object>("エネミー");
 		//カメラとエネミーの距離を計算
-		ML::Vec3 len = (ge->camera[0]->pos - ene->Get_Pos());
+		ML::Vec3 len = ge->camera[0]->pos - ene->Get_Pos();
+		//y座標の分は換算しない
+		len.y = 0;
 		//音量の基準値を1000(最大値)に設定
 		int volume = 1000;
-		if (len.Length() > 1000)//距離の長さが1000以上なら
+		if (len.Length() > 1000.0f)//距離の長さが1000以上なら
 		{
 			//音量の最大値から長さの1/3を引く
-			volume = 1000 - int(len.Length() / 3);//長さが3000以上だと音量が0になる
+			volume =
+				1000 
+				- 
+				int(len.Length()
+					/ 
+					10);//長さが以上だと音量が0になる
 		}
 		//音量が0以下だと
-		if (volume <= 0)
+		if (volume <= 200)
 		{
 			//最小値(0)に置き換える
 			volume = 0;

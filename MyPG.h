@@ -12,7 +12,7 @@
 #define chipY 300
 #define chipZ 150
 //描画範囲
-#define RENDERRENGE 12
+#define RENDERRENGE 14
 //プレイヤ用
 //視点速度
 #define TURNSPEED 2

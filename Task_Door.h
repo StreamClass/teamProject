@@ -26,6 +26,7 @@ namespace Task_Door
 		//共有する変数はここに追加する		
 		//仮のメッシュ名
 		string meshName;
+		string shadowMesh;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -61,5 +62,7 @@ namespace Task_Door
 		bool Hit_Check(const ML::Box3D& hit);
 		//つながっているブレーカーの数確認
 		int How_Many_Breaker_Be_Cunnected();
+		//
+		void Render3DShadow();
 	};
 }
