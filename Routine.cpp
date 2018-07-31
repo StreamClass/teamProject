@@ -167,7 +167,7 @@ bool Routine::RelationShip_XP(int num_, int c)
 			{
 				continue;
 			}
-			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(xp * 50, 0, 0)).Hit(this->cornerPos[i]))
+			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3((float)xp * 50, 0.0f, 0.0f)).Hit(this->cornerPos[i]))
 			{
 				this->choiceCorner[num_][c] = i;				
 				return true;
@@ -189,7 +189,7 @@ bool Routine::RelationShip_XM(int num_, int c)
 			{
 				continue;
 			}
-			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(xm * -50, 0, 0)).Hit(this->cornerPos[i]))
+			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3((float)xm * -50, 0.0f, 0.0f)).Hit(this->cornerPos[i]))
 			{
 				this->choiceCorner[num_][c] = i;				
 				return true;
@@ -212,7 +212,7 @@ bool Routine::RelationShip_ZP(int num_, int c)
 			{
 				continue;
 			}
-			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(0, 0, zp * 50)).Hit(this->cornerPos[i]))
+			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(0.0f, 0.0f, (float)zp * 50)).Hit(this->cornerPos[i]))
 			{
 				this->choiceCorner[num_][c] = i;				
 				return true;
@@ -235,7 +235,7 @@ bool Routine::RelationShip_ZM(int num_, int c)
 				continue;
 			}
 
-			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(0, 0, zm * -50)).Hit(this->cornerPos[i]))
+			if (me.OffsetCopy(this->cornerPos[num_] + ML::Vec3(0.0f, 0.0f, (float)zm * -50)).Hit(this->cornerPos[i]))
 			{
 				this->choiceCorner[num_][c] = i;				
 				return true;

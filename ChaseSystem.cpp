@@ -16,13 +16,13 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 	ML::Vec3 a(1, 0, 0);
 	for (int i = -1; i < 2; i++)
 	{
-		matR.RotationY(angle + ML::ToRadian(45 * i));
+		matR.RotationY(angle + ML::ToRadian(45 * (float)i));
 		a = matR.TransformCoord(a);
 
 		//マップとのあたり判定を持っているタスクをもらう
 		auto h = ge->GetTask_One_G<Map::Object>("フィールド");
 		//アングル方向にセンサー矩形発射
-		for (int i = 0; i < chipX * 10; i += this->sensor.d / 2.0f)
+		for (float i = 0; i < chipX * 10; i += this->sensor.d / 2.0f)
 		{
 			ML::Box3D s = this->sensor.OffsetCopy(pos + (a.Normalize()*i));
 			//センサーの中心に範囲1の矩形を同時に発射

@@ -28,7 +28,7 @@ private:
 	//モーション用カウンタ
 	int motionCnt;
 	//ヴェクターの[]演算子で利用する識別子
-	int motion_Index;
+	unsigned int motion_Index;
 	//今何のモーションなのかを確認するキー
 	string now_Motion;
 	//予約かけてる次に動くモーションを確認するキー
@@ -42,17 +42,6 @@ private:
 
 
 	//メソッド
-
-	//動きのプリセット
-	//歩き
-	//void Make_Walking();
-	//走り
-	void Make_Running();
-	//相互作用
-	void Make_Interaction();
-	//歩く
-	void Make_Walking();
-
 	//直立に整頓
 	void To_Standing(bool ASAP);
 
@@ -97,7 +86,7 @@ public:
 		}
 
 		this->motions.clear();
-		this->motionCnt = 0.0f;
+		this->motionCnt = 0;
 		this->motion_Index = 0;
 		this->front_Vec = ML::Vec3(0, 0, 0);
 		this->now_Motion = "";

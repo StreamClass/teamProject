@@ -119,7 +119,7 @@ namespace  Player
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		auto in = DI::GPad_GetState(ge->controllerName);
+		auto in = DI::GPad_GetState(ge->controllerName);		
 		//状態管理
 		switch (this->motion)
 		{
@@ -145,14 +145,14 @@ namespace  Player
 			{
 				this->debugMode = !this->debugMode;
 			}
-			if (in.LStick.volume > 0) //アナログスティックを倒している強さ0.0~1.0f
+			if (in.LStick.volume >= 0.1f) //アナログスティックを倒している強さ0.0~1.0f
 			{
 				ML::Mat4x4 matR;
 				matR.RotationY(this->angle.y);
 				this->moveVec.x = -this->speed * in.LStick.axis.y;
-				this->moveVec.z = -this->speed * in.LStick.axis.x;
+				this->moveVec.z = -this->speed * in.LStick.axis.x;				
 				//ベクトルを座標変換させる
-				this->moveVec = matR.TransformCoord(this->moveVec);
+				this->moveVec = matR.TransformCoord(this->moveVec);				
 				//走るモーション
 				this->plBone->Set_Next_Motion(this->animations_Name[1]);
 				this->plBone->Repeat_Now_Motioin();
@@ -190,7 +190,10 @@ namespace  Player
 				this->recovery_Flag = false;
 			}
 			//視点の回転
-			this->angle.y += in.RStick.axis.x * ML::ToRadian(TURNSPEED);
+			if (in.RStick.volume >= 0.1f)
+			{
+				this->angle.y += in.RStick.axis.x * ML::ToRadian(TURNSPEED);
+			}
 			//注視点の上下移動
 			if (in.RStick.U.on && this->adjust_TG < this->adjust_Max)
 			{
@@ -238,7 +241,7 @@ namespace  Player
 				//揺れ幅を指定
 				this->tremor = 0.5f;
 				//スタミナを回復
-				this->stamina += 0.3;
+				this->stamina += 0.3f;
 				//各フラグを反転
 				this->neutralSoundFlag = true;
 				this->dashSoundFlag = false;
@@ -294,7 +297,7 @@ namespace  Player
 				//揺れ幅を指定
 				this->tremor = 6.0f;
 				//スタミナを回復
-				this->stamina += 0.3;
+				this->stamina += 0.3f;
 				//各フラグを反転
 				this->neutralSoundFlag = false;
 				this->dashSoundFlag = false;

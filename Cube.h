@@ -52,12 +52,12 @@ public:
 	}
 	//すかライブラリーでも生成できる
 	Cube(const ML::Box3D& b)
-		: Shape((ML::Vec3(b.x, b.y, b.z) + ML::Vec3(b.w / 2.0f, b.h / 2.0f, b.d / 2.0f)))
+		: Shape((ML::Vec3((float)b.x, (float)b.y, (float)b.z) + ML::Vec3(b.w / 2.0f, b.h / 2.0f, b.d / 2.0f)))
 	{
-		this->leftBottom = ML::Vec3(b.x, b.y, b.z);
-		this->lengthX = ML::Vec3(b.x, 0, 0);
-		this->lengthY = ML::Vec3(0, b.y, 0);
-		this->lengthZ = ML::Vec3(0, 0, b.z);
+		this->leftBottom = ML::Vec3((float)b.x, (float)b.y, (float)b.z);
+		this->lengthX = ML::Vec3((float)b.w, 0, 0);
+		this->lengthY = ML::Vec3(0, (float)b.h, 0);
+		this->lengthZ = ML::Vec3(0, 0, (float)b.d);
 	}
 
 	//デストラクタ

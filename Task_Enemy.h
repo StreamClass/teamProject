@@ -26,7 +26,7 @@ namespace Enemy
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
-		string meshName,searchMesh;
+		string searchMesh, chasing_BG;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

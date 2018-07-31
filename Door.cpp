@@ -26,17 +26,12 @@ Door::Door(ML::Vec3 pos, std::vector<Breaker*> b, LR a)
 void Door::Door_Open()
 {
 	//自分とつながっている全てのブレーカーを検索
-	for (auto b : this->cunnected_Breaker)
+	for (auto& b : this->cunnected_Breaker)
 	{		
 		//状態を確認する
 		if (!b->Get_Now_State())
 		{
 			return;
-		}
-		//フェーズ移行を確かめる
-		else
-		{
-			
 		}
 	}
 	//全部働いているならドアを開ける

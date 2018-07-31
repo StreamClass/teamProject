@@ -25,97 +25,31 @@ Motion::Motion_Data Motion::Create_Step_From_File(const string& fn)
 		string key_Data;
 		
 		file >> key_Data;
-		//腰
-		if (key_Data.at(0) == 'W' || key_Data.at(0) == 'w')
+		//もらったデータを全部小文字にする
+		Motion::Replace_to_Key(key_Data);
+		//キーデータと比較していれる場所を判別
+		if (Motion::motion_Data_Key.count(key_Data) >= 1)
 		{
-			file >> md[0].x >> md[0].y >> md[0].z;
+			auto& index = Motion::motion_Data_Key.find(key_Data);
+			file >> md[(*index).second].x >> md[(*index).second].y >> md[(*index).second].z;
 		}
-		//頭
-		else if (key_Data.at(0) == 'N' || key_Data.at(0) == 'n')
-		{
-			file >> md[1].x >> md[1].y >> md[1].z;
-		}
-		//左半身
-		else if (key_Data.at(0) == 'L' || key_Data.at(0) == 'l')
-		{
-			//左肩
-			if (key_Data.at(1) == 'S' || key_Data.at(1) == 's')
-			{
-				file >> md[2].x >> md[2].y >> md[2].z;
-			}
-			//左肘
-			if (key_Data.at(1) == 'E' || key_Data.at(1) == 'e')
-			{
-				file >> md[3].x >> md[3].y >> md[3].z;
-			}
-			//左手首
-			if (key_Data.at(1) == 'W' || key_Data.at(1) == 'w')
-			{
-				file >> md[4].x >> md[4].y >> md[4].z;
-			}
-			//左お尻
-			if (key_Data.at(1) == 'H' || key_Data.at(1) == 'h')
-			{
-				file >> md[8].x >> md[8].y >> md[8].z;
-			}
-			//左膝
-			if (key_Data.at(1) == 'K' || key_Data.at(1) == 'k')
-			{
-				file >> md[9].x >> md[9].y >> md[9].z;
-			}
-			// 左足首
-			if (key_Data.at(1) == 'A' || key_Data.at(1) == 'a')
-			{
-				file >> md[10].x >> md[10].y >> md[10].z;
-			}
-		}
-		//右半身
-		else if (key_Data.at(0) == 'R' || key_Data.at(0) == 'r')
-		{
-			//右肩
-			if (key_Data.at(1) == 'S' || key_Data.at(1) == 's')
-			{
-				file >> md[5].x >> md[5].y >> md[5].z;
-			}
-			//右肘
-			if (key_Data.at(1) == 'E' || key_Data.at(1) == 'e')
-			{
-				file >> md[6].x >> md[6].y >> md[6].z;
-			}
-			// 右手首
-			if (key_Data.at(1) == 'W' || key_Data.at(1) == 'w')
-			{
-				file >> md[7].x >> md[7].y >> md[7].z;
-			}
-			// 右お尻
-			if (key_Data.at(1) == 'H' || key_Data.at(1) == 'h')
-			{
-				file >> md[11].x >> md[11].y >> md[11].z;
-			}
-			// 右膝
-			if (key_Data.at(1) == 'K' || key_Data.at(1) == 'k')
-			{
-				file >> md[12].x >> md[12].y >> md[12].z;
-			}
-			// 右足首
-			if (key_Data.at(1) == 'A' || key_Data.at(1) == 'a')
-			{
-				file >> md[13].x >> md[13].y >> md[13].z;
-			}
-		}
-		//フレーム数
-		else if (key_Data.at(0) == 'D' || key_Data.at(0) == 'd')
-		{
-			file >> du;
-		}
-		//repeat flag
-		else if (key_Data.at(0) == 'T' || key_Data.at(0) == 't')
+		else if (key_Data.at(0) == 't')
 		{
 			flag = true;
 		}
-		else if(key_Data.at(0) == 'F' || key_Data.at(0) == 'f')
+		else if (key_Data.at(0) == 'f')
 		{
 			flag = false;
+		}
+		else if (key_Data.at(0) == 'd')
+		{
+			file >> du;
+		}
+		//どちらにも合わない場合フォーマットに合わないのでゼロデータを返す
+		else
+		{
+			file.close();
+			return Motion::Motion_Data();
 		}
 	}
 
@@ -154,4 +88,21 @@ void Motion::Make_Motion(std::vector<Motion_Data>* result, const string& motion_
 	}
 
 
+}
+
+void Motion::Replace_to_Key(string& s)
+{
+	for (unsigned int i = 0; i < s.length(); i++)
+	{
+		//小文字に置き換える
+		if (s.at(i) >= 'A' && s.at(i) <= 'Z')
+		{
+			s.at(i) += 32;
+		}
+		//：を発見したら、そこまでのデータをキーデータとする
+		if (s.at(i) == ':')
+		{
+			s.resize(i);
+		}
+	}
 }

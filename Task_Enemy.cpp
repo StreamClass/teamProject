@@ -14,12 +14,15 @@ namespace  Enemy
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		this->chasing_BG = "chasing_BG";
+		DG::Image_Create(this->chasing_BG, "./data/image/chasingbg.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		DG::Image_Erase(this->chasing_BG);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -32,13 +35,14 @@ namespace  Enemy
 		this->res = Resource::Create();
 
 		//★データ初期化
+		this->render2D_Priority[1] = 0.1f;
 		this->rou = ge->OM.Create_Routine();
 
 		this->pos = ML::Vec3(chipX * 5, 20, chipZ * 13);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
 		this->angle = ML::Vec3(0, ML::ToRadian(-90),0);
-		this->chasing_Speed = 13.0f;
+		this->chasing_Speed = 14.0f;
 		this->final_Phase_Speed = 13.0f;
 		this->timeCnt = 0;
 		this->ebone = new Bone(180, "Enemy");
@@ -157,21 +161,21 @@ namespace  Enemy
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-
+		//チェイスモードの時はプレイヤに知らせる
+		if (this->system.Is_Chase_Mode())
+		{
+			ML::Box2D draw(0, 0, ge->screenWidth, ge->screenHeight);
+			ML::Box2D src;
+			//イメージ全体サイズをもらう
+			POINT imgsize = DG::Image_Size(this->res->chasing_BG);
+			src = ML::Box2D(0, 0, imgsize.x, imgsize.y);
+			//描画
+			DG::Image_Draw(this->res->chasing_BG, draw, src,ML::Color(0.4f,1,1,1));
+		}
 	}
 	void  Object::Render3D_L0()
 	{
-		//エネミーのメッシュを表示
-		/*ML::Mat4x4 matS, matR, matRy, matRz, matT;
-		matS.Scaling(ML::Vec3(2, 1.5f, 2));
-		matRy.RotationY(this->angle.y);
-		matRz.RotationZ(this->angle.z);
-		matR = matRz * matRy;
-		matT.Translation(this->pos);
-		DG::EffectState().param.matWorld = matS * matR * matT;
-		DG::EffectState().param.objectColor = ML::Color( 1, 0.6f, 0.2f, 0.2f);
-		DG::Mesh_Draw(this->res->meshName);
-		DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);*/
+		//エネミーのメッシュを表示		
 		this->ebone->Render();
 	}
 

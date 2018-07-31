@@ -116,10 +116,28 @@ namespace Motion
 			return this->duration == 0 ? true : false;
 		}
 	}; 
-
+	const std::map<string,int> motion_Data_Key = 
+	{
+		{"waist",0},
+		{"neck",1},
+		{"lsholder",2},
+		{"lelbow",3},
+		{"lwrist",4},
+		{"rsholder",5},
+		{"relbow",6},
+		{"rwrist",7},
+		{"lhip",8},
+		{"lknee",9},
+		{"lankle",10},
+		{"rhip",11},
+		{"rknee",12},
+		{"rankle",13}
+	};
 	//外部ファイルからのモーションデータ生成
 	//引数 : (ファイル名 + .txt)
 	Motion_Data Create_Step_From_File(const string&);
 
 	void Make_Motion(std::vector<Motion_Data>* result, const string& motion_Name);
+
+	void Replace_to_Key(string& s);
 }

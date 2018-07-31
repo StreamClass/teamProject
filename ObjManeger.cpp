@@ -2,15 +2,16 @@
 #include "Task_Breaker.h"
 #include "Task_Door.h"
 #include "Task_LampBase.h"
-
+//ゼロクリア生成
 ObjManeger::ObjManeger()
 {
 	this->door_Connencted_Breaker.clear();
 	this->first_Door_Connencted_Breaker.clear();
 	this->door.clear();	
 	this->tab = nullptr;
+	this->rou = nullptr;
 }
-
+//最初のドアとつながっているブレーカーを生成
 void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos, int angle)
 {
 	Breaker* b = new Breaker(pos);
@@ -19,7 +20,7 @@ void ObjManeger::Init_First_Doors_Breaker(ML::Vec3 pos, int angle)
 	//ブレーカータスク生成
 	Task_Breaker::Object::Create(true, b, angle);
 }
-
+//出口とつながっているブレーカーを生成
 void ObjManeger::Init_Doors_Breaker(ML::Vec3 pos, int angle)
 {
 	Breaker* b = new Breaker(pos);
@@ -28,7 +29,7 @@ void ObjManeger::Init_Doors_Breaker(ML::Vec3 pos, int angle)
 	//ブレーカータスク生成
 	Task_Breaker::Object::Create(true, b, angle);
 }
-
+//最初のドアを生成
 void ObjManeger::Init_First_Door(ML::Vec3 pos, LR a)
 {
 	Door* d = new Door(pos, this->first_Door_Connencted_Breaker, a);
@@ -38,7 +39,7 @@ void ObjManeger::Init_First_Door(ML::Vec3 pos, LR a)
 	//ドアタスク生成
 	Task_Door::Object::Create(true, d);
 }
-
+//出口を生成
 void ObjManeger::Init_Door(ML::Vec3 pos, LR a)
 {
 	//もし後でドアが追加されたら変える可能性あり(2018/05/18)
@@ -52,6 +53,7 @@ void ObjManeger::Init_Door(ML::Vec3 pos, LR a)
 }
 //--------------------------------------------------------------------------------------------
 //実際に呼び出せる関数
+//ブレーカー生成
 void ObjManeger::Create_Breaker(ML::Vec3 pos, Type type)
 {
 	if (this->first_Door_Connencted_Breaker.size() == 0)
@@ -63,7 +65,7 @@ void ObjManeger::Create_Breaker(ML::Vec3 pos, Type type)
 		this->Init_Doors_Breaker(pos, (int)type);
 	}
 }
-
+//ドアを生成
 void ObjManeger::Create_Door(ML::Vec3 pos, LR a)
 {
 	if (this->door.size() <= 1)
@@ -75,7 +77,7 @@ void ObjManeger::Create_Door(ML::Vec3 pos, LR a)
 		this->Init_Door(pos, a);
 	}
 }
-
+//解放処理
 void ObjManeger::Finalize()
 {
 	//ヒープからの解放処理
@@ -101,7 +103,7 @@ void ObjManeger::Finalize()
 	this->first_Door_Connencted_Breaker.clear();
 	this->door.clear();
 }
-
+//監視カメラ生成
 void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 {
 	//引数でもらった角度を計算して
@@ -150,9 +152,6 @@ void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 		this->tab->PushBack_Camera(pos, target);
 		break;
 	}
-
-	//タスク生成
-	//未実装
 }
 
 void ObjManeger::Create_Lamp(ML::Vec3 pos, ML::Box3D hitBase)

@@ -288,7 +288,7 @@ void Bone::UpDate()
 				{
 					//repeat Point‚ð’T‚·
 					int repeat_Index = 0;
-					for (int n =0; n<now.size();n++)
+					for (unsigned int n =0; n<now.size();n++)
 					{
 						if (now[n].repeat_Point)
 						{
