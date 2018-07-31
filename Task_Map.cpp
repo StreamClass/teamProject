@@ -112,7 +112,7 @@ namespace  Map
 
 	void  Object::Render3D_L0()
 	{
-		//ライト０番のライティングを無効化
+		//ライティングを無効化
 		//マップにはライティングを適応しない
 		DG::EffectState().param.light[0].enable = false;
 		//壁の描画
@@ -184,9 +184,11 @@ namespace  Map
 			//最初の読み込みならチップ名を読み込む
 			if (this->fileName == "Map00.txt")
 			{
+				int meshNum;
+				fin >> meshNum;
 				string meshName = "";
 				//現在追加中のオブジェクトの数だけ回す
-				for (int m = 0; m < 9; ++m)
+				for (int m = 0; m < meshNum; ++m)
 				{
 					//メッシュ名を読み込み
 					fin >> meshName;
