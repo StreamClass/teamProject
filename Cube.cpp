@@ -11,19 +11,19 @@ void Cube::Get_Parameter(const string key, ML::Vec3& container)
 	{
 		container = this->lengthX;
 	}
-	if (key == "y" || key == "Y")
+	else if (key == "y" || key == "Y")
 	{
 		container = this->lengthY;
 	}
-	if (key == "z" || key == "Z")
+	else if (key == "z" || key == "Z")
 	{
 		container = this->lengthZ;
 	}
-	if (key == "all_length" || key == "All_Length")
+	else if (key == "all_length" || key == "All_Length")
 	{
 		container = (this->lengthX + this->lengthY + this->lengthZ);
 	}
-	if (key == "lb" || key == "LB")
+	else if (key == "lb" || key == "LB")
 	{
 		container = this->leftBottom;
 	}

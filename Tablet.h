@@ -22,6 +22,7 @@ private:
 public:
 
 	//カメラ生成の時の位置登録
+	//引数 : (登録するカメラの位置、登録するカメラの主視点)
 	void PushBack_Camera(const ML::Vec3&, const ML::Vec3&);
 	//使用フラグを反転させる関数
 	void Open_or_Close_Tablet();
@@ -29,7 +30,7 @@ public:
 	void Select_Camera();
 
 	//使用されているかを返す関数
-	bool Is_Used_Now();
+	bool Is_Used_Now() const;
 
 	//コンストラクタ・デストラクタ
 	//セロクリア

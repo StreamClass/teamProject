@@ -15,7 +15,7 @@ Breaker::Breaker(ML::Vec3 pos)
 	this->active_Falg = false;
 }
 //引数(プレイヤエイムの矩形)と当たっているかを返すメソッド
-bool Breaker::Player_Touch_Breaker(const ML::Box3D& hit)
+bool Breaker::Player_Touch_Breaker(const ML::Box3D& hit) const
 {
 	return hit.Hit(this->active_Base.OffsetCopy(this->pos));
 }
@@ -25,12 +25,12 @@ void Breaker::Activate_Breaker()
 	this->active_Falg = true;
 }
 //現在状態を返す
-bool Breaker::Get_Now_State()
+bool Breaker::Get_Now_State() const
 {
 	return this->active_Falg;
 }
 //ブレーカーの位置を返す
-ML::Vec3 Breaker::Get_Pos()
+ML::Vec3 Breaker::Get_Pos() const
 {
 	return this->pos;
 }

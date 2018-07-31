@@ -16,13 +16,13 @@ private:
 
 public:
 	//プレイヤとのあたり判定 引数 : (プレイヤのあたり判定範囲)
-	bool Player_Touch_Breaker(const ML::Box3D& hit);
+	bool Player_Touch_Breaker(const ML::Box3D& hit) const;
 	//ブレーカーを起動
 	void Activate_Breaker();
 	//今のブレーカーの状態をもらう
-	bool Get_Now_State();
+	bool Get_Now_State() const;
 	//位置取得
-	ML::Vec3 Get_Pos();
+	ML::Vec3 Get_Pos() const;
 
 	//コンストラクタ・デストラクタ
 	//ゼロクリア

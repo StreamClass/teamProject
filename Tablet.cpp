@@ -12,7 +12,7 @@ Tablet::Tablet()
 
 void Tablet::Select_Camera()
 {
-	auto in1 = DI::GPad_GetState("P1");
+	auto in1 = DI::GPad_GetState(ge->controllerName);
 	auto cm = ge->GetTask_One_G<Camera::Object>("カメラマン");
 	//入力で選択番号更新
 	if (in1.HL.down || in1.LStick.L.down)
@@ -27,6 +27,7 @@ void Tablet::Select_Camera()
 	}
 	//範囲を超えないようにする処理
 	this->Is_Select_Range_Over();
+	//カメラ変更
 	this->Change_Camera();
 }
 
@@ -35,7 +36,6 @@ void Tablet::Change_Camera()
 	//カメラの位置と主視点更新
 	ge->camera[0]->pos = this->camera_Pos[this->Select];
 	ge->camera[0]->target = this->target_Pos[this->Select];
-	//ge->camera[0]->forePlane = 10000.0f;
 	ge->camera[0]->UpDate();
 }
 
@@ -46,7 +46,7 @@ void Tablet::PushBack_Camera(const ML::Vec3& pos, const ML::Vec3& target)
 	this->target_Pos.push_back(target);
 }
 
-bool Tablet::Is_Used_Now()
+bool Tablet::Is_Used_Now() const
 {
 	return this->be_used_now;
 }
@@ -61,6 +61,7 @@ void Tablet::Open_or_Close_Tablet()
 
 void Tablet::Is_Select_Range_Over()
 {
+	//範囲を超えたら各終端点で上書きする
 	if (this->Select > (int)this->camera_Pos.size()-1)
 	{
 		this->Select = 0;

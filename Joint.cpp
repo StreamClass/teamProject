@@ -89,7 +89,7 @@ void Joint::Quartanion_Update(const ML::QT& uqt)
 	this->rotated *= uqt;
 }
 
-void Joint::Render(const float& tall)
+void Joint::Render(const float& tall) const
 {
 	//表示用ワールド行列作成
 	ML::Mat4x4 matW;

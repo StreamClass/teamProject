@@ -22,12 +22,12 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 		//マップとのあたり判定を持っているタスクをもらう
 		auto h = ge->GetTask_One_G<Map::Object>("フィールド");
 		//アングル方向にセンサー矩形発射
-		for (float i = 0; i < chipX * 10; i += this->sensor.d / 2.0f)
+		for (float f = 0; f < chipX * 10; f += this->sensor.d / 2.0f)
 		{
-			ML::Box3D s = this->sensor.OffsetCopy(pos + (a.Normalize()*i));
+			ML::Box3D s = this->sensor.OffsetCopy(pos + (a.Normalize()*f));
 			//センサーの中心に範囲1の矩形を同時に発射
 			ML::Box3D c(0, 0, 0, 1, 1, 1);
-			c.Offset(pos + (a.Normalize()*i));
+			c.Offset(pos + (a.Normalize()*f));
 			//マップとのあたり判定であたったら処理終了
 			if (h->Map_CheckHit(c))
 			{
@@ -48,7 +48,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 ML::Vec3 ChaseSystem::NextRoute()
 {
 	//追跡ルートが終わったら通常モードに
-	if (destination > this->player_Route.size() - 1)
+	if (this->Is_Any_More_Route())
 	{
 		//通常モード返還
 		this->Shift_to_Routine();
@@ -69,7 +69,12 @@ void ChaseSystem::Shift_to_Routine()
 	this->player_Route.clear();
 }
 
-bool ChaseSystem::Is_Chase_Mode()
+bool ChaseSystem::Is_Chase_Mode() const
 {
 	return this->systemFlag;
+}
+
+bool ChaseSystem::Is_Any_More_Route() const
+{
+	return destination > this->player_Route.size() - 1 ? true : false;
 }

@@ -35,7 +35,7 @@ void Door::Door_Open()
 		}
 	}
 	//全部働いているならドアを開ける
-	if (this->Get_Angle() == LR::Left)
+	if (this->Is_Angle_Left())
 	{
 		this->pos.x -= DOOR_OPEN_SPEED;
 	}
@@ -53,43 +53,34 @@ void Door::Door_Open()
 	}
 }
 
-//void Door::Door_Open(Breaker* b0, Breaker* b1, Breaker* b2)
-//{
-//	//引数でもらうブレーカーの状態を確認する
-//	if (b0->Get_Now_State() && b1->Get_Now_State() && b2->Get_Now_State())
-//	{
-//		//全部働いているならドアを開ける
-//		this->openFlag = true;
-//	}
-//}
 
-bool Door::Player_Hit_the_Door(const ML::Box3D& hit)
+bool Door::Player_Hit_the_Door(const ML::Box3D& hit) const
 {
 	return hit.Hit(this->hitBase.OffsetCopy(this->pos));
 }
 
-bool Door::Get_State()
+bool Door::Get_State() const
 {
 	return this->openFlag;
 }
 
-ML::Vec3 Door::Get_Pos()
+ML::Vec3 Door::Get_Pos() const
 {
 	return this->pos;
 }
 
-LR Door::Get_Angle()
+bool Door::Is_Angle_Left() const
 {
-	return this->open_Angle;
+	return this->open_Angle == LR::Left ? true : false;
 }
 
-bool Door::Is_Opened_Over()
+bool Door::Is_Opened_Over() const
 {
 	return this->timeCnt > 60;
 }
 
 //フェーズ移行感知
-bool Door::Is_Phase_Offset()
+bool Door::Is_Phase_Offset() const
 {
 	//活動しているブレーカーの数
 	int actived_Breaker_Number = 0;	
@@ -111,7 +102,7 @@ bool Door::Is_Phase_Offset()
 }
 
 
-int Door::How_Many_Breaker_Be_Cunnected()
+int Door::How_Many_Breaker_Be_Cunnected() const
 {
 	//活動しているブレーカーの数
 	int actived_Breaker_Number = 0;

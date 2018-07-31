@@ -36,40 +36,43 @@ private:
 	//モーションが一回り終わっても繰り返すフラグ(走るモーションとかに利用)
 	bool repeat_Flag;
 
-	//モーションデータのマッピング
-	//実体持ち？ヒープに宣言？(2018/07/05)
+	//モーションデータのマッピング	
 	std::map < string, std::vector<Motion::Motion_Data> > motions;
 
 
 	//メソッド
 	//直立に整頓
-	void To_Standing(bool ASAP);
+	//引数 : (処理を一回で終わらせるかどうかのフラグ)
+	void To_Standing(bool ASAP) const;
 
 	//予約モーションにするか空の状態にする
 	bool Next_Motion_or_None();
 
 public:
 	//ゲッター
-	ML::Vec3 Get_Center();
+	ML::Vec3 Get_Center() const;
 
 	//座標移動
+	//引数 : (移動するベクトル)
 	void Moving(const ML::Vec3& vec);
 
-	//体全体をY軸回転を行う
+	//体全体をY軸回転を行う(引数の方向を見る)
 	//ほかの軸も必要に応じて追加可能性あり(2018/07/04)
-	//引数 : (Y軸回転量)
+	//引数 : (振り向かせたい角度)
 	void Bone_RotateY_All(const float& radian);
 
 	//モーションをボーンに登録
+	//引数 : (モーションデータを集めたヴェクター、新しいモーションの名前)
 	void Registrate_Motion(const std::vector<Motion::Motion_Data>& d, const string& motions_Name);
 	//次のモーション予約
+	//引数 : (予約するモーションの名前)
 	void Set_Next_Motion(const string& next);
 	//連続行動フラグを立てる
 	void Repeat_Now_Motioin();
 	//アニメーションアップデート
 	void UpDate();
 	//アニメーションレンダリング
-	void Render();	
+	void Render() const;	
 
 
 	//コンストラクタ

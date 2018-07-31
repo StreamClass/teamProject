@@ -32,7 +32,7 @@ private:
 
 public:
 	//中心点のコピーをもらう
-	ML::Vec3 GetCenter();
+	ML::Vec3 GetCenter() const;
 	//継承先のパラメータのコピーをもらう	
 	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
 	//回転

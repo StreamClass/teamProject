@@ -1,7 +1,7 @@
 #include "Shape.h"
 
 
-ML::Vec3 Shape::GetCenter()
+ML::Vec3 Shape::GetCenter() const
 {
 	return this->center;
 }

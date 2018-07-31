@@ -184,7 +184,7 @@ Bone::Bone(const float& tall, const string& owner)
 
 
 //getter
-ML::Vec3 Bone::Get_Center()
+ML::Vec3 Bone::Get_Center() const
 {
 	return this->center_of_Body;
 }
@@ -281,7 +281,7 @@ void Bone::UpDate()
 		else
 		{
 			//一回り終わった
-			if (this->motion_Index >= now.size() - 1 )
+			if (this->motion_Index >= now.size() - 1)
 			{
 				//連続行動フラグが立っている場合
 				if (this->repeat_Flag == true && this->next_Motion == "")
@@ -385,7 +385,7 @@ void Bone::Repeat_Now_Motioin()
 }
 
 //全軸に対して整頓されないバグがある(2018/07/19)
-void Bone::To_Standing(bool ASAP)
+void Bone::To_Standing(bool ASAP) const
 {
 	for (int i = 0; i < JOINT_ON_HUMAN; i++)
 	{
@@ -401,7 +401,7 @@ void Bone::To_Standing(bool ASAP)
 			//Y-(その他)
 			standing_Vec = ML::Vec3(0, -1, 0);
 		}
-		float sx = 0.0f, sy = 0.0f;
+		float sx = 0.0f;
 
 		ML::Vec3 bone_Vec = this->joint[i]->Get_To_Bone().Normalize();
 		
@@ -413,7 +413,7 @@ void Bone::To_Standing(bool ASAP)
 		MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);
 		anker = anker.Normalize();
 		//もし回転軸がゼロベクトルなら次に移る
-		if (anker.Is_Zero_Vec() || ML::ToDegree(asin(sx)) < 0.5f)
+		if (anker.Is_Zero_Vec())
 		{
 			continue;
 		}
@@ -451,7 +451,7 @@ void Bone::To_Standing(bool ASAP)
 	}
 }
 
-void Bone::Render()
+void Bone::Render() const
 {
 	//関節全体にレンダリング命令する
 	for (int i = 0; i < JOINT_ON_HUMAN; i++)

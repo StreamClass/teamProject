@@ -26,6 +26,12 @@ private:
 	//描画するメッシュの名前
 	string mesh_Name;
 
+
+	//回転量アップデート
+	//引数 : (合成するクォータニオン)
+	void Quartanion_Update(const ML::QT&);
+	
+
 public:
 	//移動
 	//引数 : (移動ベクトル)
@@ -36,21 +42,22 @@ public:
 	//上位の関節から命令される場合
 	//引数 : (回転行列のアドレス値, 掛け算するクォータニオン)
 	void Rotated_by_Prev_Joint(ML::Mat4x4*, const ML::QT&);
+	
 	//次の関節をセット
+	//引数 : (つながる関節のアドレス)
 	void Set_Next_Joint(Joint*);
-	//回転量アップデート
-	void Quartanion_Update(const ML::QT&);
+	
 
 	//レンダリング
 	//引数 : (倍率用背の高さ)
-	void Render(const float& tall);
+	void Render(const float& tall) const;
 
 	
 	//現在関節とボーンまでのベクトルを返す
 	ML::Vec3 Get_To_Bone() const;
 
 
-	//ゲッター
+	//現在位置を返す
 	ML::Vec3 Get_Pos() const;
 	/*float Get_Limit_X_Plus() const;
 	float Get_Limit_X_Minus()const;

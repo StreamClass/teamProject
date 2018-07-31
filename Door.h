@@ -25,25 +25,28 @@ private:
 	LR open_Angle;
 	//時間
 	int timeCnt;
-	
+
+
+	//ドアが完全に開かれたかを返すメソッド
+	bool Is_Opened_Over() const;
+	//開かれる方向が左かを確認する
+	bool Is_Angle_Left() const;
 public:	
 	//ドアを開ける処理 
 	void Door_Open();
 	//プレイヤとのあたり判定 引数 : (プレイヤのあたり判定範囲)
-	bool Player_Hit_the_Door(const ML::Box3D& hit);
+	bool Player_Hit_the_Door(const ML::Box3D& hit) const;
 	//状態を返す関数、trueを返したらその後当たり判定と開ける処理はしない
-	bool Get_State();
+	bool Get_State() const;
 	//位置をもらう関数
-	ML::Vec3 Get_Pos();
-	//開かれる方向をもらう
-	LR Get_Angle();
-	//ドアが完全に開かれたかを返す関数
-	bool Is_Opened_Over();
+	ML::Vec3 Get_Pos() const;
+	
+	
 	//フェーズ移行感知
-	bool Is_Phase_Offset();
+	bool Is_Phase_Offset() const;
 
 	//つながっているブレーカーの数確認
-	int How_Many_Breaker_Be_Cunnected();
+	int How_Many_Breaker_Be_Cunnected() const;
 
 
 	//コンストラクタ・デストラクタ
