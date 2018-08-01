@@ -29,6 +29,8 @@ private:
 	int motionCnt;
 	//ヴェクターの[]演算子で利用する識別子
 	unsigned int motion_Index;
+	//repeat Pointを保存する
+	unsigned int repeat_Index;
 	//今何のモーションなのかを確認するキー
 	string now_Motion;
 	//予約かけてる次に動くモーションを確認するキー
@@ -47,7 +49,8 @@ private:
 
 	//予約モーションにするか空の状態にする
 	bool Next_Motion_or_None();
-
+	//連続行動する状態かを確認する
+	bool Is_Ok_to_Repeat();
 public:
 	//ゲッター
 	ML::Vec3 Get_Center() const;
@@ -91,6 +94,7 @@ public:
 		this->motions.clear();
 		this->motionCnt = 0;
 		this->motion_Index = 0;
+		this->repeat_Index = 0;
 		this->front_Vec = ML::Vec3(0, 0, 0);
 		this->now_Motion = "";
 		this->next_Motion = "";

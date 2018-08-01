@@ -17,7 +17,6 @@ Bone::Bone(const float& tall, const string& owner)
 	float length_of_hand = (tall / 2.0f)*(4.0f / 14.0f);
 
 
-	// TODO 後で直す
 	//頭の初期化
 	ML::Vec3 center_of_head = ML::Vec3(this->center_of_Body + (this->center_of_Body*(12.0f / 14.0f)));
 	Shape* head = new Cube(center_of_head, (center_of_head + ML::Vec3(-length_of_hand / 2.0f, -length_of_hand / 2.0f, -length_of_hand * (3.0f / 8.0f))), length_of_hand, length_of_hand, length_of_hand*(3.0f / 4.0f));
@@ -79,7 +78,6 @@ Bone::Bone(const float& tall, const string& owner)
 	ML::Vec3 right_center_of_ankle = right_center_of_knee + ML::Vec3(0, -length_of_hand*2.0f, 0);
 	Joint* right_ankle = new Joint(right_center_of_ankle, right_foot, owner + "/Right_Foot");
 	//, ML::ToRadian(-90), ML::ToRadian(45), ML::ToRadian(-5), ML::ToRadian(5), ML::ToRadian(-10), ML::ToRadian(0)
-
 
 	//両手
 	//左手
@@ -176,6 +174,7 @@ Bone::Bone(const float& tall, const string& owner)
 	this->motions.clear();
 	this->motionCnt = 0;
 	this->motion_Index = 0;
+	this->repeat_Index = 0;
 	this->now_Motion = "";
 	this->next_Motion = "";
 	this->repeat_Flag = false;
@@ -234,7 +233,13 @@ void Bone::UpDate()
 	if (this->now_Motion != "")
 	{
 		//持っているモーションを検索
-		auto& now = this->motions.find(this->now_Motion)->second;
+		auto& now = this->motions.find(this->now_Motion)->second;		
+
+		//連続行動ポイントならそのインデックスを保存
+		if (now[this->motion_Index].repeat_Point)
+		{
+			this->repeat_Index = this->motion_Index;
+		}
 
 		//現在カウントが持続時間内なら
 		if (this->motionCnt <= now[this->motion_Index].duration)
@@ -283,27 +288,12 @@ void Bone::UpDate()
 			//一回り終わった
 			if (this->motion_Index >= now.size() - 1)
 			{
-				//連続行動フラグが立っている場合
-				if (this->repeat_Flag == true && this->next_Motion == "")
+				//連続行動をする場合
+				if (this->Is_Ok_to_Repeat())
 				{
-					//repeat Pointを探す
-					int repeat_Index = 0;
-					for (unsigned int n =0; n<now.size();n++)
-					{
-						if (now[n].repeat_Point)
-						{
-							repeat_Index = n;
-							//repeat Pointを代入
-							this->motion_Index = repeat_Index;
-							//カウントをゼロにする
-							this->motionCnt = 0;
-						}
-					}					
-					//repeat Pointを探せなかったら次のモーションを探す
-					if (repeat_Index == 0)
-					{
-						this->Next_Motion_or_None();
-					}
+					//現在インデックスを探しておいたインデックスに上書きする
+					this->motion_Index = this->repeat_Index;
+					this->motionCnt = 0;
 				}
 				else
 				{
@@ -323,6 +313,8 @@ void Bone::UpDate()
 	//空の時
 	else
 	{
+		//連続行動インデックスを初期値にする
+		this->repeat_Index = 0;
 		//次のモーションを探す
 		if (!this->Next_Motion_or_None())
 		{
@@ -382,6 +374,11 @@ void Bone::Set_Next_Motion(const string& next)
 void Bone::Repeat_Now_Motioin()
 {
 	this->repeat_Flag = true;
+}
+
+bool Bone::Is_Ok_to_Repeat()
+{
+	return (this->repeat_Flag == true && this->next_Motion == "" && repeat_Index != 0) ? true : false;
 }
 
 //全軸に対して整頓されないバグがある(2018/07/19)

@@ -28,7 +28,7 @@ Motion::Motion_Data Motion::Create_Step_From_File(const string& fn)
 		//もらったデータを全部小文字にする
 		Motion::Replace_to_Key(key_Data);
 		//キーデータと比較していれる場所を判別
-		if (Motion::motion_Data_Key.count(key_Data) >= 1)
+		if (Motion::motion_Data_Key.count(key_Data) != 0)
 		{
 			auto& index = Motion::motion_Data_Key.find(key_Data);
 			file >> md[(*index).second].x >> md[(*index).second].y >> md[(*index).second].z;
