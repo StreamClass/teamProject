@@ -17,6 +17,9 @@ namespace Task_Door
 		//仮のメッシュ
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/door.SOB");
 		DG::Mesh_CreateFromSOBFile(this->shadowMesh, "./data/mesh/SquareShadow.SOB");
+
+		this->soundName = "DoorOpenSE";
+		DM::Sound_CreateSE(this->soundName, "./data/sound/DoorOpenSE.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -25,6 +28,7 @@ namespace Task_Door
 	{		
 		DG::Mesh_Erase(this->meshName);
 		DG::Mesh_Erase(this->shadowMesh);
+		DM::Sound_Erase(this->soundName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -38,6 +42,7 @@ namespace Task_Door
 
 		//★データ初期化
 		this->circuit = d;
+		this->circuit->Set_SoundName(this->res->soundName);
 		//★タスクの生成
 
 		return  true;

@@ -15,6 +15,8 @@ namespace Task_Breaker
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/BreakerBase.SOB");
 		this->buttonMeshName = "ButtonMesh";
 		DG::Mesh_CreateFromSOBFile(this->buttonMeshName, "./data/mesh/BreakerButton.SOB");
+		this->soundName = "ButtonPushSE";
+		//DM::Sound_CreateSE(this->soundName, "./data/sound/");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -23,6 +25,7 @@ namespace Task_Breaker
 	{		
 		DG::Mesh_Erase(this->meshName);
 		DG::Mesh_Erase(this->buttonMeshName);
+		//DM::Sound_Erase(this->soundName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -97,6 +100,7 @@ namespace Task_Breaker
 	void Object::ActivateBreaker()
 	{
 		this->circuit->Activate_Breaker();
+		//DM::Sound_Play(this->res->soundName,false);
 	}
 	//-----------------------------------------------------------------------
 	//Œü‚«‚Ìİ’è

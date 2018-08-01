@@ -25,6 +25,8 @@ private:
 	LR open_Angle;
 	//時間
 	int timeCnt;
+	//SE再生用
+	string soundName;
 
 
 	//ドアが完全に開かれたかを返すメソッド
@@ -40,7 +42,10 @@ public:
 	bool Get_State() const;
 	//位置をもらう関数
 	ML::Vec3 Get_Pos() const;
-	
+	//SE再生用変数に代入
+	void Set_SoundName(const string&);
+	//SE再生
+	void Sound_Play();
 	
 	//フェーズ移行感知
 	bool Is_Phase_Offset() const;

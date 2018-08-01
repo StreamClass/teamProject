@@ -27,6 +27,7 @@ namespace Task_Door
 		//‰¼‚ÌƒƒbƒVƒ…–¼
 		string meshName;
 		string shadowMesh;
+		string soundName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

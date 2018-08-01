@@ -33,6 +33,7 @@ void Door::Door_Open()
 		{
 			return;
 		}
+		this->Sound_Play();
 	}
 	//全部働いているならドアを開ける
 	if (this->Is_Angle_Left())
@@ -117,4 +118,14 @@ int Door::How_Many_Breaker_Be_Cunnected() const
 	}
 
 	return actived_Breaker_Number;
+}
+
+void Door::Set_SoundName(const string& seName)
+{
+	this->soundName = seName;
+}
+
+void Door::Sound_Play()
+{
+	DM::Sound_Play(this->soundName, false);
 }

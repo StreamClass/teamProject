@@ -26,6 +26,7 @@ namespace Task_Breaker
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é	
 		string meshName;
 		string buttonMeshName;
+		string soundName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
