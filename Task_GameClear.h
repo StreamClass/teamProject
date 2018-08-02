@@ -1,14 +1,14 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//タイトル画面
+//ゲームクリア画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
 namespace Clear
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("クリア画面");	//グループ名
+	const  string  defGroupName("ゲームクリア");	//グループ名
 	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource

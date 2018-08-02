@@ -1,7 +1,7 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//タイトル画面
+//フェードイン・アウト
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
 
@@ -56,19 +56,18 @@ namespace Loading
 		ML::Color color;
 		//RGBの値(一括)
 		float rgb;
-
-		string task01_;
-		string task02_;
+		//
+		string nowTask;
+		string nextTask;
 	public:
-
 		//メソッド
 		//
-		void Stop_Task();
+		void Set_NowTask(const string);
 		//
-		void Start_Task();
-		//
-		void Set_TaskName(const string& task01, const string& task02);
+		void Set_NextTask(const string);
 		//他のタスクからRGB値を指定
-		void Set_Color(float& rgb);
+		void Set_Color(float rgb);
+		//
+		void FadeInOut();
 	};
 }

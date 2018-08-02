@@ -1,8 +1,12 @@
 //-------------------------------------------------------------------
-//タイトル画面
+//フェードイン・アウト
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_NowLoading.h"
+#include  "Task_Title.h"
+#include  "Task_Game.h"
+#include  "Task_GameClear.h"
+#include  "Task_GameOver.h"
 
 namespace  Loading
 {
@@ -38,8 +42,8 @@ namespace  Loading
 		this->timeCnt = 0;
 		this->alpha = 0.0f;
 		this->color = ML::Color(0, 0, 0, 0);
-		this->task01_ = "";
-		this->task02_ = "";
+		this->nowTask = "";
+		this->nextTask = "";
 		//★タスクの生成
 
 		return  true;
@@ -62,26 +66,55 @@ namespace  Loading
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//if (this->timeCnt == 0)
-		//{
-		//	this->Stop_Task();
-		//}
-		//タスク生成から2秒間かけて
-		if (this->timeCnt < 60 * 2)
+		//
+		if (this->timeCnt < 60 * 4)
 		{
-			//不透明度を1に
-			this->alpha += this->timeCnt / 120.f;
+			this->FadeInOut();
 		}
-		//2~4秒の2秒間かけて
-		else if (this->timeCnt < 60 * 4)
+		//
+		if (this->timeCnt == 60)
 		{
-			//不透明度を0に
-			this->alpha -= (this->timeCnt - 120) / 120.0f;
+			if(this->nowTask != "")
+				ge->KillAll_G(this->nowTask);
 		}
-		//if (this->timeCnt == 60 * 4)
-		//{
-		//	this->Start_Task();
-		//}
+		//
+		if (this->timeCnt == 60 * 2)
+		{
+			//
+			if (this->nextTask != "")
+			{
+				//
+				if (this->nextTask == "タイトル")
+				{
+					Title::Object::Create(true);
+				}
+				//
+				else if (this->nextTask == "ゲーム")
+				{
+					Game::Object::Create(true);
+				}
+				//
+				else if (this->nextTask == "ゲームオーバー")
+				{
+					Over::Object::Create(true);
+				}
+				//
+				else if (this->nextTask == "ゲームクリア")
+				{
+					Clear::Object::Create(true);
+				}
+				//
+				else if (this->nextTask == "デモ")
+				{
+
+				}
+				//
+				else if (this->nextTask == "日電ロゴ")
+				{
+
+				}
+			}
+		}
 		//不透明度が0未満になったら
 		if (this->alpha < 0)
 		{
@@ -112,30 +145,50 @@ namespace  Loading
 	{
 	}
 	//
-	void Object::Stop_Task()
+	void Object::Set_NowTask(const string now)
 	{
-		if (this->task01_ == "" || this->task02_ == "")
+		this->nowTask = now;
+		if (this->nowTask == "ゲーム")
 		{
-			return;
+			if (ge->state == ge->clear)
+			{
+				this->nextTask = "ゲームクリア";
+			}
+			else if(ge->state == ge->over)
+			{
+				this->nextTask = "ゲームオーバー";
+			}
+			else
+			{
+				this->nextTask = "タイトル";
+			}
 		}
-		ge->StopAll_G(this->task01_);
-		ge->StopAll_G(this->task02_);
 	}
 	//
-	void Object::Start_Task()
+	void Object::Set_NextTask(const string next)
 	{
-		ge->StopAll_G(this->task02_, false);
-	}
-	//
-	void Object::Set_TaskName(const string& task01 = "", const string& task02 = "")
-	{
-		this->task01_ = task01;
-		this->task02_ = task02;
+		this->nextTask = next;
 	}
 	//他のタスクからRGB値を指定
-	void Object::Set_Color(float& rgb)
+	void Object::Set_Color(float rgb)
 	{
 		this->rgb = rgb;
+	}
+	//
+	void Object::FadeInOut()
+	{
+		//タスク生成から2秒間かけて
+		if (this->timeCnt < 60 * 2)
+		{
+			//不透明度を1に
+			this->alpha += this->timeCnt / 120.f;
+		}
+		//2~4秒の2秒間かけて
+		else if (this->timeCnt < 60 * 4)
+		{
+			//不透明度を0に
+			this->alpha -= (this->timeCnt - 120) / 120.0f;
+		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

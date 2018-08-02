@@ -57,7 +57,9 @@ namespace Title
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
-		//フレームカウンタ
+		//スタートボタンを押してからのフレームカウンタ
+		int sTimeCnt;
+		//起動時からのフレームカウンタ
 		int timeCnt;
 		//Startボタンを押したか判断
 		bool pushSon;

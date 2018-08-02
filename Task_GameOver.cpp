@@ -51,6 +51,13 @@ namespace  Over
 		//
 		this->iniFlag = true;
 
+		this->enBone = new Bone(180, "Enemy");
+		ML::Vec3 pos(200, -90, 0);
+		this->enBone->Moving(pos);
+		float radi = ML::ToRadian(-90);
+		this->enBone->Bone_RotateY_All(radi);
+		this->enBone->Set_Next_Motion("Running");
+
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
 			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
@@ -83,7 +90,7 @@ namespace  Over
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nextTask = Title::Object::Create(true);
+			//auto nextTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -97,9 +104,10 @@ namespace  Over
 		if (in.ST.down && this->endFlag == false)
 		{
 			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("タイトル");
 			//ローディング画面の色を黒に指定
-			float color = 0.0f;
-			lo->Set_Color(color);
+			lo->Set_Color(0);
 			this->endFlag = true;
 		}
 		//2秒後から
@@ -121,24 +129,25 @@ namespace  Over
 		{
 			//ローディングを呼び出し
 			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("タイトル");
 			//ローディング画面の色を黒に指定
-			float color = 0.0f;
-			lo->Set_Color(color);
+			lo->Set_Color(0);
 			//endFlagをtrueに
 			this->endFlag = true;
 		}
-		if (this->timeCnt > 60 && this->iniFlag)
-		{
-			//
-			this->enBone->Moving(-this->enBone->Get_Center());
-			//
-			ML::Vec3 pos(200, 0, 0);
-			this->enBone->Moving(pos);
-			float radi = ML::ToRadian(-90);
-			this->enBone->Bone_RotateY_All(radi);
-			this->enBone->Set_Next_Motion("Running");
-			this->iniFlag = false;
-		}
+		//if (this->timeCnt > 60 && this->iniFlag)
+		//{
+		//	//
+		//	this->enBone->Moving(-this->enBone->Get_Center());
+		//	//
+		//	ML::Vec3 pos(200, 0, 0);
+		//	this->enBone->Moving(pos);
+		//	float radi = ML::ToRadian(-90);
+		//	this->enBone->Bone_RotateY_All(radi);
+		//	this->enBone->Set_Next_Motion("Running");
+		//	this->iniFlag = false;
+		//}
 
 		//endFlagがtrueなら
 		if (this->endFlag == true)
@@ -150,7 +159,7 @@ namespace  Over
 		if (this->endCnt > 60 * 2)
 		{
 			//タスクを解放
-			this->Kill();
+			//this->Kill();
 		}
 		//ロゴの不透明度の上限を指定
 		if (this->al > 1.0f)

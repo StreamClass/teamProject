@@ -60,6 +60,8 @@ namespace  Enemy
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		delete this->ebone;
+		this->ebone = nullptr;
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -189,10 +191,10 @@ namespace  Enemy
 		}
 	}
 	//
-	Bone* Object::Get_EnemyBonePtr()
-	{
-		return this->ebone;
-	}
+	//Bone* Object::Get_EnemyBonePtr()
+	//{
+	//	return this->ebone;
+	//}
 	//
 	ML::Vec3 Object::Get_Pos()
 	{

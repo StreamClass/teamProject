@@ -41,7 +41,7 @@ namespace  Game
 		this->res = Resource::Create();
 
 		//★データ初期化
-		ge->state = ge->standby;
+		ge->state = ge->game;
 		this->pushButton = false;
 		this->timeCnt = 0;
 		this->stanbyCnt = 0;
@@ -59,13 +59,6 @@ namespace  Game
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.2f,0.2f,0.2f);//色と強さ
 
-		//DG::EffectState().param.light[1].enable = true;
-		//DG::EffectState().param.light[1].kind = DG_::Light::Point;//光源の種類
-		//DG::EffectState().param.light[1].range = 400.0f;
-		//DG::EffectState().param.light[1].attenuation = (1 / 350.0f)*(1 / 350.0f);
-		//DG::EffectState().param.light[1].pos = ML::Vec3(900,200,900);
-		//DG::EffectState().param.light[1].color = ML::Color(1, 0.6f, 0.0f, 0.0f);//色と強さ
-
 		//
 		DM::Sound_Play(this->res->bgmName, true);
 		DM::Sound_Volume(this->res->bgmName, 800);
@@ -74,7 +67,6 @@ namespace  Game
 		auto pl = Player::Object::Create(true);
 		auto cam = Camera::Object::Create(true);
 		auto en = Enemy::Object::Create(true);
-		this->eBone = en->Get_EnemyBonePtr();
 		auto map = Map::Object::Create(true);
 		map->Load_Map();
 		map->Load_Objects();
@@ -106,19 +98,19 @@ namespace  Game
 		{
 			//★引き継ぎタスクの生成
 			//auto nextTask = Clear::Object::Create(true);
-			if (ge->state == ge->clear)
-			{
-				auto nextTask = Clear::Object::Create(true);
-			}
-			else if (ge->state == ge->over)
-			{
-				auto nextTask = Over::Object::Create(true);
-				nextTask->Set_Bone_Ptr(this->eBone);
-			}
-			else
-			{
-				auto nextTask = Title::Object::Create(true);
-			}
+			//if (ge->state == ge->clear)
+			//{
+			//	auto nextTask = Clear::Object::Create(true);
+			//}
+			//else if (ge->state == ge->over)
+			//{
+			//	auto nextTask = Over::Object::Create(true);
+			//	nextTask->Set_Bone_Ptr(this->eBone);
+			//}
+			//else
+			//{
+			//	auto nextTask = Title::Object::Create(true);
+			//}
 		}
 
 		return  true;
@@ -152,35 +144,23 @@ namespace  Game
 		{
 			this->Start();
 		}
-		if (in.ST.down && this->pushButton == false)
+		if (in.ST.down && in.SE.down)
 		{
 			ge->state = ge->over;
-			this->pushButton = true;
-			auto lo = Loading::Object::Create(true);
-			float color = 0.0f;
-			lo->Set_Color(color);
 		}
 		if (ge->state == ge->clear && this->pushButton == false)
 		{
 			auto lo = Loading::Object::Create(true);
-			float color = 1.0f;
-			lo->Set_Color(color);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_Color(1);
 			this->pushButton = true;
 		}
 		if (ge->state == ge->over && this->pushButton == false)
 		{
 			auto lo = Loading::Object::Create(true);
-			float color = 0.0f;
-			lo->Set_Color(color);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_Color(0);
 			this->pushButton = true;
-		}
-		if (this->pushButton)
-		{
-			this->timeCnt++;
-		}
-		if (this->timeCnt == 60 * 1)
-		{
-			this->Kill();
 		}
 	}
 	//-------------------------------------------------------------------

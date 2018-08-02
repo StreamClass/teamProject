@@ -1,10 +1,9 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//ÉQÅ[ÉÄä«óù
+//ÉQÅ[ÉÄñ{ï“
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include "Bone.h"
 
 namespace Game
 {
@@ -52,7 +51,6 @@ namespace Game
 		int timeCnt;
 		int stanbyCnt;
 		int startTime;
-		Bone* eBone;
 	public:
 		//
 		void Start();

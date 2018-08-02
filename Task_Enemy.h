@@ -84,7 +84,7 @@ namespace Enemy
 		//
 		void Player_HitCheck();
 		//
-		Bone* Get_EnemyBonePtr();
+		//Bone* Get_EnemyBonePtr();
 		//
 		ML::Vec3 Get_Pos();
 	};

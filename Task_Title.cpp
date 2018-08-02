@@ -48,6 +48,8 @@ namespace  Title
 		srand((unsigned int)time(NULL));
 		this->render2D_Priority[1] = 0.5f;
 		//ボタン用カウント
+		this->sTimeCnt = 0;
+		//
 		this->timeCnt = 0;
 		//Startボタンを押したか判断
 		this->pushSon = false;
@@ -57,7 +59,7 @@ namespace  Title
 		this->eneBone->Moving(pos);
 		float radi = ML::ToRadian(200);
 		this->eneBone->Bone_RotateY_All(radi);
-		int ran = rand() % 3;
+		int ran = /*rand() % 3*/2;
 		switch (ran)
 		{
 		case 0:
@@ -111,7 +113,7 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			auto nextTask = Game::Object::Create(true);
+			//auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -124,6 +126,15 @@ namespace  Title
 		
 		this->eneBone->Repeat_Now_Motioin();
 		this->eneBone->UpDate();
+		if (this->timeCnt == 60 * 10)
+		{
+			/*
+			auto lo = ::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("デモ");
+			lo->Set_Color(1);
+			*/
+		}
 
 		//スタートボタンを押したら
 		if ((in.ST.down || in.B1.down || in.B2.down || in.B3.down || in.B4.down) && this->pushSon == false)
@@ -138,28 +149,24 @@ namespace  Title
 		//}
 
 		//3秒後に
-		if (this->timeCnt == 60 * 3)
+		if (this->sTimeCnt == 60 * 3)
 		{
 			//ローディング呼び出し
 			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("ゲーム");
 			//色を黒に指定
-			float color = 0.0f;
-			lo->Set_Color(color);
+			lo->Set_Color(0);
 
 			//DM::Sound_Stop("TitleBGM");
-		}
-		//5秒後に
-		if (this->timeCnt == 60 * 5)
-		{
-			//消滅
-			this->Kill();
 		}
 		//ボタンを押していたら
 		if (this->pushSon)
 		{
 			//カウント開始
-			this->timeCnt++;
+			this->sTimeCnt++;
 		}
+		this->timeCnt++;
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
