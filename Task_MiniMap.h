@@ -66,6 +66,8 @@ namespace MiniMap
 		//ミニマップのカメラ用変数
 		//座標
 		ML::Vec2 capos;
+		//使用されていないカメラの座標
+		std::vector<ML::Vec2> stanbyCamera;
 		//向き
 		float caAngle;
 		//ミニマップを表示するか
@@ -87,6 +89,8 @@ namespace MiniMap
 		void Set_MiniMap_View();
 		//ミニマップ描画用
 		void MiniMap_Render();
+		//
+		void Set_StanbyCameraPos(const ML::Vec3&);
 
 		//デバッグ時用変数
 		//エネミーの座標

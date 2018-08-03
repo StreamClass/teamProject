@@ -56,7 +56,13 @@ namespace  Over
 		this->enBone->Moving(pos);
 		float radi = ML::ToRadian(-90);
 		this->enBone->Bone_RotateY_All(radi);
-		this->enBone->Set_Next_Motion("Running");
+		this->motionName = "Running";
+		{
+			std::vector<Motion::Motion_Data> running;
+			Motion::Make_Motion(&running, this->motionName);
+			this->enBone->Registrate_Motion(running, this->motionName);
+		}
+		this->enBone->Set_Next_Motion(this->motionName);
 
 		//ƒJƒƒ‰‚ÌÝ’è
 		ge->camera[0] = MyPG::Camera::Create(

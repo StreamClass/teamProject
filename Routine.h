@@ -44,6 +44,8 @@ public:
 	Routine();
 	//ゲッター
 	int Get_Now();
+	//デモ用ターゲットセッター
+	void Set_Target(const int&);
 	//近いコーナーを目指して移動する
 	ML::Vec3 Move(const ML::Vec3& );
 	//自分がコーナーに到達したかの判定

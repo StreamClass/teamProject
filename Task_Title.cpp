@@ -59,17 +59,20 @@ namespace  Title
 		this->eneBone->Moving(pos);
 		float radi = ML::ToRadian(200);
 		this->eneBone->Bone_RotateY_All(radi);
-		int ran = /*rand() % 3*/2;
-		switch (ran)
+		this->motionName.push_back("Running");
+		this->motionName.push_back("Walking");
 		{
-		case 0:
-			break;
-		case 1:
-			this->eneBone->Set_Next_Motion("Walking");
-			break;
-		case 2:
-			this->eneBone->Set_Next_Motion("Running");
-			break;
+			std::vector<Motion::Motion_Data> running;
+			std::vector<Motion::Motion_Data> walking;
+			Motion::Make_Motion(&running, this->motionName[0]);
+			Motion::Make_Motion(&walking, this->motionName[1]);
+			this->eneBone->Registrate_Motion(running, this->motionName[0]);
+			this->eneBone->Registrate_Motion(walking, this->motionName[1]);
+		}
+		int ran = rand() % 3;
+		if (ran != 2)
+		{
+			this->eneBone->Set_Next_Motion(this->motionName[ran]);
 		}
 
 		//ƒJƒƒ‰‚Ìİ’è

@@ -5,6 +5,7 @@
 #include  "Task_Map.h"
 #include  "Task_Player.h"
 #include  "Task_Door.h"
+#include  "Task_MiniMap.h"
 
 namespace  Map
 {
@@ -258,6 +259,7 @@ namespace  Map
 						//オブジェクトマネージャで監視カメラを生成
 						//						座標					  ,	タイプ
 						ge->OM.Create_Camera(pos + ML::Vec3(0, 100, 0), (Type)in);
+						ge->GetTask_One_G<MiniMap::Object>("ミニマップ")->Set_StanbyCameraPos(pos);
 						break;
 
 					//曲がり角なら
@@ -415,7 +417,7 @@ namespace  Map
 				pl->Check_Clear();
 			}
 		}
-		auto d = ge->GetTask_Group_GN<Task_Door::Object>("ドア","NoName");
+		auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
 		for (auto it = d->begin(); it != d->end(); it++)
 		{
 			if ((*it)->Hit_Check(pHit))

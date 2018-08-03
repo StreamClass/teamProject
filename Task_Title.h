@@ -6,6 +6,7 @@
 #include "GameEngine_Ver3_7.h"
 #include "Task_Game.h"
 #include "Bone.h"
+#include "Motion.h"
 
 namespace Title
 {
@@ -69,7 +70,7 @@ namespace Title
 		string startSE;
 		//
 		Bone* eneBone;
-
+		std::vector<string> motionName;
 
 	public:
 		//ƒƒ\ƒbƒh

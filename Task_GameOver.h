@@ -4,7 +4,8 @@
 //ゲームオーバー画面
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include  "Bone.h"
+#include "Bone.h"
+#include "Motion.h"
 
 namespace Over
 {
@@ -59,6 +60,7 @@ namespace Over
 		int timeCnt;
 		//
 		Bone* enBone;
+		string motionName;
 		//
 		ML::Vec3 pos;
 		//エフェクトが出てロゴが出きっているか判断用

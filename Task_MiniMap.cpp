@@ -94,7 +94,7 @@ namespace  MiniMap
 		//デバッグモードか否かをプレイヤーから受け取る
 		this->debugMode = pl->Get_DebugOnOff();
 		//
-		this->magni = 150.0f / NORMALMAGNI;
+		this->magni = float(chipX) / NORMALMAGNI;
 		this->mapSize = NORMALMAPSIZE;
 		//
 		if (this->tab_use_now)
@@ -124,52 +124,83 @@ namespace  MiniMap
 		{
 			return;
 		}
-		//
-		ML::Vec2 cen(16, 24);
-		//
-		ML::Box2D pdraw(-8 + 60, -8 + 60, 16, 16);
-		ML::Box2D psrc(0, 0, 63, 63);
-		//
-		ML::Box2D cdraw = pdraw;
-		ML::Box2D csrc(0, 0, 63, 63);
-		//
-		ML::Box2D edraw = pdraw;;
-		ML::Box2D esrc(0, 0, 63, 63);
-		//
-		ML::Box2D aDraw(-16 + 60, -8 + 60, 32, 16);
+		ML::Box2D mapSrc(0, 0, 500, 500);
+		ML::Box2D src(0, 0, 63, 63);
 		ML::Box2D aSrc(0, 0, 63, 45);
-		//
-		float alpha = 1;
-		if (this->tab_use_now)
-		{
-			cen = ML::Vec2(20, 30);
-			pdraw = ML::Box2D(-10 + 60, -10 + 60, 20, 20);
-			cdraw = pdraw;
-			edraw = pdraw;
-			aDraw = ML::Box2D(-20 + 60, -10 + 60, 40, 20);
-			alpha = 0.4f;
-		}
-		ML::Box2D draw(60, 60, this->mapSize, this->mapSize);
-		ML::Box2D src(0, 0, 500, 500);
-		DG::Image_Draw(this->res->imageName, draw, src, ML::Color(alpha, 1, 1, 1));
-		//
-		aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
-		DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
-		DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
-		//
-		pdraw.Offset(this->plpos);
-		DG::Image_Draw(this->res->plImgName, pdraw, psrc, ML::Color(alpha, 1, 1, 1));
-		if (this->tab_use_now)
+		if (!this->tab_use_now)
 		{
 			//
-			cdraw.Offset(this->capos);
-			DG::Image_Draw(this->res->caImgName, cdraw, csrc, ML::Color(alpha, 1, 1, 1));
+			ML::Vec2 cen(16, 24);
+			//
+			ML::Box2D pdraw(-8 + 60, -8 + 60, 16, 16);
+			//
+			ML::Box2D cdraw = pdraw;
+			//
+			ML::Box2D edraw = pdraw;;
+			//
+			ML::Box2D aDraw(-16 + 60, -8 + 60, 32, 16);
+			//
+			float alpha = 1;
+			//
+			ML::Box2D draw(60, 60, this->mapSize, this->mapSize);
+			DG::Image_Draw(this->res->imageName, draw, mapSrc, ML::Color(alpha, 1, 1, 1));
+			//
+			aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
+			DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
+			DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
+			//
+			pdraw.Offset(this->plpos);
+			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
+			if (this->tab_use_now)
+			{
+				//
+				cdraw.Offset(this->capos);
+				DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
+			}
+			//
+			edraw.Offset(this->epos);
+			if (this->debugMode)
+			{
+				DG::Image_Draw(this->res->plImgName, edraw, src, ML::Color(alpha, 1, 1, 0));
+			}
 		}
-		//
-		edraw.Offset(this->epos);
-		if (this->debugMode)
+		else
 		{
-			DG::Image_Draw(this->res->plImgName, edraw, esrc, ML::Color(alpha, 1, 1, 0));
+			ML::Vec2 cen(20, 30);
+			ML::Box2D pdraw(-10 + 60, -10 + 60, 20, 20);
+			ML::Box2D cdraw = pdraw;
+			ML::Box2D edraw = pdraw;
+			ML::Box2D aDraw = ML::Box2D(-20 + 60, -10 + 60, 40, 20);
+			float alpha = 0.4f;
+			//
+			ML::Box2D mapDraw(60, 60, this->mapSize, this->mapSize);
+			DG::Image_Draw(this->res->imageName, mapDraw, mapSrc, ML::Color(alpha, 1, 1, 1));
+			//
+			for (ML::Vec2 scpos : this->stanbyCamera)
+			{
+				ML::Box2D draw(-10 + 60, -10 + 60, 20, 20);
+				draw.Offset(scpos);
+				DG::Image_Draw(this->res->caImgName, draw, src, ML::Color(alpha, 1, 0.5f, 0.5f));
+			}
+			//
+			aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
+			DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
+			DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
+			//
+			pdraw.Offset(this->plpos);
+			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
+			if (this->tab_use_now)
+			{
+				//
+				cdraw.Offset(this->capos);
+				DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
+			}
+			//
+			edraw.Offset(this->epos);
+			if (this->debugMode)
+			{
+				DG::Image_Draw(this->res->plImgName, edraw, src, ML::Color(alpha, 1, 1, 0));
+			}
 		}
 	}
 	//-------------------------------------------------------------------
@@ -197,6 +228,15 @@ namespace  MiniMap
 
 		//リソースの参照位置を変更
 		DG::Image_Draw(this->res->imageName, draw, src);
+	}
+	//
+	void Object::Set_StanbyCameraPos(const ML::Vec3& pos)
+	{
+		if (pos.x < 0 || pos.x > chipX * 100 || pos.z < 0 || pos.z > chipZ * 100)
+		{
+			return;
+		}
+		this->stanbyCamera.push_back(ML::Vec2(pos.x / (float(chipX) / TABLETMAGNI), TABLETMAPSIZE - pos.z / (float(chipX) / TABLETMAGNI)));
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

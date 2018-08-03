@@ -132,6 +132,11 @@ void Routine::Set_CornerPos(const ML::Vec3& pos_,const int& num_)
 {
 	this->cornerPos[num_] = pos_;
 }
+//外部から挙動を設定したいとき行き先を入れる
+void Routine::Set_Target(const int& target_)
+{
+	this->target = target_;
+}
 //目的地の検索用
 //マップ読み込みの後に呼び出す
 void Routine::Initialize_RelationShip(int num)

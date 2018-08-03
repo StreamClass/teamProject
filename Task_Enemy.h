@@ -51,6 +51,12 @@ namespace Enemy
 	public:
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加変数
+		//デモフラグ
+		bool demo;
+		//デモ用移動先コーナー配列
+		int demoCorner[9];
+		//デモ用今のコーナーを保持
+		int demoNowCorner;
 		//自身の座標
 		ML::Vec3 pos;
 		//徘徊時の移動速度
