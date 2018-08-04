@@ -1,6 +1,7 @@
 #include "Tablet.h"
 #include "Task_Camera.h"
 #include "MyPG.h"
+#include "Task_Enemy.h"
 
 Tablet::Tablet()
 {
@@ -14,16 +15,27 @@ void Tablet::Select_Camera()
 {
 	auto in1 = DI::GPad_GetState(ge->controllerName);
 	auto cm = ge->GetTask_One_G<Camera::Object>("カメラマン");
-	//入力で選択番号更新
-	if (in1.HL.down || in1.LStick.L.down)
+	//デモの更新と普通の更新を分ける
+	if (ge->state == MyPG::MyGameEngine::State::demo)
 	{
-		this->Select--;
-		cm->Noise_Reset();
+		if (this->Update_On_Demo())
+		{
+			cm->Noise_Reset();
+		}
 	}
-	else if (in1.HR.down || in1.LStick.R.down)
+	else
 	{
-		this->Select++;		
-		cm->Noise_Reset();
+		//入力で選択番号更新
+		if (in1.HL.down || in1.LStick.L.down)
+		{
+			this->Select--;
+			cm->Noise_Reset();
+		}
+		else if (in1.HR.down || in1.LStick.R.down)
+		{
+			this->Select++;
+			cm->Noise_Reset();
+		}
 	}
 	//範囲を超えないようにする処理
 	this->Is_Select_Range_Over();
@@ -70,4 +82,25 @@ void Tablet::Is_Select_Range_Over()
 	{
 		this->Select = (int)this->camera_Pos.size() - 1;
 	}
+}
+
+bool Tablet::Update_On_Demo()
+{
+	//エネミータスクの座用をとる
+	ML::Vec3 epos = ge->GetTask_One_G<Enemy::Object>("エネミー")->Get_Pos();
+	//判別する距離
+	const float to_Length = 1200.0f;
+
+	//全ての監視カメラとの距離をとって一定距離以内のカメラを選択
+	for (int i =0; i<this->camera_Pos.size(); i++)
+	{
+		ML::Vec3 evec = this->camera_Pos[i] - epos;
+
+		if (evec.Length() < to_Length && this->Select != i)
+		{
+			this->Select = i;
+			return true;
+		}
+	}
+	return false;
 }

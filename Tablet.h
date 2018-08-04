@@ -12,13 +12,16 @@ private:
 	//現在選択したカメラ
 	int Select;
 	//タブレットを使用中なのかを確認するフラグ
-	bool be_used_now;
+	bool be_used_now;	
 
 
 	//選択範囲を超えないようにする処理
 	void Is_Select_Range_Over();
 	//カメラ変更
 	void Change_Camera();
+	//デモの時のカメラの動き
+	bool Update_On_Demo();
+
 public:
 
 	//カメラ生成の時の位置登録

@@ -130,13 +130,11 @@ namespace  Title
 		this->eneBone->Repeat_Now_Motioin();
 		this->eneBone->UpDate();
 		if (this->timeCnt == 60 * 10)
-		{
-			/*
-			auto lo = ::Object::Create(true);
+		{			
+			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
 			lo->Set_NextTask("デモ");
-			lo->Set_Color(1);
-			*/
+			lo->Set_Color(1);			
 		}
 
 		//スタートボタンを押したら

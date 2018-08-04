@@ -92,6 +92,7 @@ namespace  Loading
 				else if (this->nextTask == "ゲーム")
 				{
 					Game::Object::Create(true);
+					ge->state = ge->game;
 				}
 				//
 				else if (this->nextTask == "ゲームオーバー")
@@ -106,7 +107,8 @@ namespace  Loading
 				//
 				else if (this->nextTask == "デモ")
 				{
-
+					Game::Object::Create(true);
+					ge->state = ge->demo;
 				}
 				//
 				else if (this->nextTask == "日電ロゴ")

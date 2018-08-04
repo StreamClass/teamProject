@@ -338,7 +338,7 @@ bool Bone::Next_Motion_or_None()
 		this->now_Motion = this->next_Motion;
 		//予約は空にする
 		this->next_Motion = "";
-		//カウントは-1に
+		//カウントは0に
 		this->motionCnt = 0;
 		this->motion_Index = 0;
 		//次のモーションが入る前にスタンディングに戻せる		
@@ -407,15 +407,21 @@ void Bone::To_Standing(bool ASAP) const
 
 		//回転軸宣言
 		ML::Vec3 anker;
-		MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);
-		anker = anker.Normalize();
+		MyMath::Get_Normal_to_Vector_Cross(&anker, bone_Vec, standing_Vec);	
 		//もし回転軸がゼロベクトルなら次に移る
 		if (anker.Is_Zero_Vec())
 		{
 			continue;
 		}
+
+		//anker = anker.Normalize();
+		
 		//関節一個ずつ戻せた後に次の関節を整頓
-		if (abs(sx) <= abs(sinf(ML::ToRadian(2))))
+		if (abs(sx) <= abs(sinf(ML::ToRadian(1))))
+		{
+			continue;
+		}
+		else if (abs(sx) <= abs(sinf(ML::ToRadian(3))))
 		{
 			//直立になる回転を代入					
 			//クォータニオン宣言
@@ -424,7 +430,7 @@ void Bone::To_Standing(bool ASAP) const
 			ML::Mat4x4 matR;
 			D3DXMatrixAffineTransformation(&matR, 1.0f, &this->joint[i]->Get_Pos(), &remainX, NULL);
 			//回転
-			this->joint[i]->Rotate_Bone(&matR, remainX);			
+			this->joint[i]->Rotate_Bone(&matR, remainX);
 			continue;
 		}
 		else

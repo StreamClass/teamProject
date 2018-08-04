@@ -90,7 +90,7 @@ namespace  Enemy
 	void  Object::UpDate()
 	{
 		//デモ用処理
-		if (this->demo)
+		if (ge->state == MyPG::MyGameEngine::State::demo)
 		{
 			auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 			//目的地

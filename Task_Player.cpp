@@ -322,7 +322,8 @@ namespace  Player
 		{
 			this->tab->Select_Camera();
 		}
-		if (in.B4.down)
+		//デモ画面以外の時Yボタンでタブレットオンオフ
+		if (in.B4.down && ge->state != ge->demo)
 		{
 			this->tab->Open_or_Close_Tablet();
 		}

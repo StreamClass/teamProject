@@ -40,8 +40,7 @@ namespace  Game
 		//リソースクラス生成orリソース共有
 		this->res = Resource::Create();
 
-		//★データ初期化
-		ge->state = ge->game;
+		//★データ初期化		
 		this->pushButton = false;
 		this->timeCnt = 0;
 		this->stanbyCnt = 0;
