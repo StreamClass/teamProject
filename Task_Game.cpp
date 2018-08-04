@@ -20,6 +20,7 @@ namespace  Game
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//BGM
 		this->bgmName = "GameBGM";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/GameBGM.wav");
 		return true;
@@ -58,8 +59,9 @@ namespace  Game
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
 		DG::EffectState().param.light[0].color = ML::Color(1, 0.2f,0.2f,0.2f);//色と強さ
 
-		//
+		//BGM再生
 		DM::Sound_Play(this->res->bgmName, true);
+		//大きかったため音量を少し下げる(800 / 1000)
 		DM::Sound_Volume(this->res->bgmName, 800);
 
 		//★タスクの生成
@@ -68,6 +70,11 @@ namespace  Game
 		auto en = Enemy::Object::Create(true);
 		auto map = Map::Object::Create(true);
 		auto mm = MiniMap::Object::Create(true);
+		/*
+		ミニマップで監視カメラの座標を保存するために
+		ミニマップを生成したあとにマップをファイルから読み込む
+		(オブジェクトはミニマップの前でも可)
+		*/
 		map->Load_Map();
 		map->Load_Objects();
 
@@ -90,12 +97,13 @@ namespace  Game
 		ge->KillAll_G("ランプ基盤");
 
 		ge->OM.Finalize();
-
+		//BGMを停止
 		DM::Sound_Stop(this->res->bgmName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
+			//フェードインアウトに移行
 			//auto nextTask = Clear::Object::Create(true);
 			//if (ge->state == ge->clear)
 			//{
@@ -119,11 +127,12 @@ namespace  Game
 	void  Object::UpDate()
 	{		
 		auto in = DI::GPad_GetState(ge->controllerName);
-
+		//最初のフレームなら
 		if (this->stanbyCnt == 0)
 		{
+			//エネミーを停止
 			ge->StopAll_G("エネミー", true);
-			this->stanbyCnt = 1;
+			this->stanbyCnt++;
 		}
 		//スタンバイ時の処理
 		else if (this->stanbyCnt == 1)//カメラの初期位置を設定するように1フレームのみ動かす
@@ -131,35 +140,62 @@ namespace  Game
 			ge->StopAll_G("プレイヤ", true);
 			this->stanbyCnt++;
 		}
+		//スタートするタイミングになるまで
 		else if(this->stanbyCnt < this->startTime)
 		{
 			this->stanbyCnt++;
+			//デバッグ用
+			//B1(Xor□)を押したら
 			if (in.B1.down)
 			{
-				this->stanbyCnt = this->startTime;
+				//スタートするタイミングまで飛ばす
+				this->stanbyCnt = this->startTime - 1;
 			}
 		}
+		//スタートするタイミングなら
 		else if(this->stanbyCnt == this->startTime)
 		{
+			//ゲームを開始
 			this->Start();
 		}
+		//スタートとセレクトを押すと
 		if (in.ST.down && in.SE.down)
 		{
+			//ゲームオーバーに
 			ge->state = ge->over;
 		}
-		if (ge->state == ge->clear && this->pushButton == false)
+		//クリア状態で初めてのフレームなら
+		if (ge->state == ge->clear && !this->pushButton)
 		{
+			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
 			lo->Set_Color(1);
+			//状態遷移待機状態へ
 			this->pushButton = true;
 		}
-		if (ge->state == ge->over && this->pushButton == false)
+		//ゲームオーバー状態で初めてのフレームなら
+		if (ge->state == ge->over && !this->pushButton)
 		{
+			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
 			lo->Set_Color(0);
+			//状態遷移待機状態へ
 			this->pushButton = true;
+		}
+		//デモ状態なら
+		if (ge->state == ge->demo)
+		{
+			//デモが32秒経ったら
+			if (this->timeCnt == 60 * 32)
+			{
+				//フェードインアウト
+				auto lo = Loading::Object::Create(true);
+				lo->Set_NowTask(defGroupName);
+				lo->Set_Color(1);
+			}
+			this->timeCnt++;
 		}
 	}
 	//-------------------------------------------------------------------

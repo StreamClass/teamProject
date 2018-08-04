@@ -7,6 +7,7 @@
 #include  "Task_Game.h"
 #include  "Task_GameClear.h"
 #include  "Task_GameOver.h"
+#include  "Task_JecLogo.h"
 
 namespace  Loading
 {
@@ -41,7 +42,6 @@ namespace  Loading
 		this->render2D_Priority[1] = 0.1f;
 		this->timeCnt = 0;
 		this->alpha = 0.0f;
-		this->color = ML::Color(0, 0, 0, 0);
 		this->nowTask = "";
 		this->nextTask = "";
 		//★タスクの生成
@@ -66,54 +66,62 @@ namespace  Loading
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//
-		if (this->timeCnt < 60 * 4)
+		//時間カウンタが2秒以下なら
+		if (this->timeCnt < 60 * 2)
 		{
+			//フェードインアウトの画像の不透明度の指定
 			this->FadeInOut();
 		}
-		//
-		if (this->timeCnt == 60)
+		//0.5秒の時
+		if (this->timeCnt == 60 * 0.5f)
 		{
+			//現在のタスクを指定しているとき
 			if(this->nowTask != "")
-				ge->KillAll_G(this->nowTask);
+				ge->KillAll_G(this->nowTask);//指定したタスクを解放
 		}
-		//
-		if (this->timeCnt == 60 * 2)
+		//1秒の時
+		if (this->timeCnt == 60 * 1)
 		{
-			//
+			//次のタスクを指定していれば
 			if (this->nextTask != "")
 			{
-				//
+				//タイトルを指定していれば
 				if (this->nextTask == "タイトル")
 				{
+					//タイトルタスクを生成
 					Title::Object::Create(true);
 				}
-				//
+				//ゲームを指定していれば
 				else if (this->nextTask == "ゲーム")
 				{
+					//ゲームタスクを生成
 					Game::Object::Create(true);
 					ge->state = ge->game;
 				}
-				//
+				//ゲームオーバーを指定していれば
 				else if (this->nextTask == "ゲームオーバー")
 				{
+					//ゲームオーバー画面を生成
 					Over::Object::Create(true);
 				}
-				//
+				//ゲームクリアを指定していれば
 				else if (this->nextTask == "ゲームクリア")
 				{
+					//ゲームクリア画面を生成
 					Clear::Object::Create(true);
 				}
-				//
+				//デモ画面を指定していれば
 				else if (this->nextTask == "デモ")
 				{
+					//ゲームタスクをデモ状態で生成
 					Game::Object::Create(true);
 					ge->state = ge->demo;
 				}
-				//
+				//ロゴ画面を指定していれば
 				else if (this->nextTask == "日電ロゴ")
 				{
-
+					//ロゴタスクを生成
+					JecLogo::Object::Create(true);
 				}
 			}
 		}
@@ -123,13 +131,6 @@ namespace  Loading
 			//タスクを解放
 			this->Kill();
 		}
-		//不透明度の上限を指定
-		if (this->alpha >= 1.0f)
-		{
-			this->alpha = 1.0f;
-		}
-		//ローディング画面の不透明度・色を指定
-		this->color = ML::Color(this->alpha, this->rgb, this->rgb, this->rgb);
 		//フレーム数をカウント
 		this->timeCnt++;
 	}
@@ -140,56 +141,77 @@ namespace  Loading
 		//ローディング画面描画
 		ML::Box2D draw(0, 0, 1920, 1080);
 		ML::Box2D src(0, 0, 160, 90);
-		DG::Image_Draw(this->res->imageName, draw, src, this->color);
+		DG::Image_Draw(this->res->imageName, draw, src, ML::Color(this->alpha,this->rgb,this->rgb,this->rgb));
 	}
 
 	void  Object::Render3D_L0()
 	{
 	}
-	//
+	//今のタスクを指定
 	void Object::Set_NowTask(const string now)
 	{
+		//名前を保存
 		this->nowTask = now;
+		//保存したのが"ゲーム"なら
 		if (this->nowTask == "ゲーム")
 		{
+			//ゲームの状態によって次のタスクを指定
+			//クリアなら
 			if (ge->state == ge->clear)
 			{
 				this->nextTask = "ゲームクリア";
 			}
+			//ゲームオーバーなら
 			else if(ge->state == ge->over)
 			{
 				this->nextTask = "ゲームオーバー";
 			}
+			//デモなら
+			else if (ge->state == ge->demo)
+			{
+				this->nextTask = "日電ロゴ";
+			}
+			//それ以外で呼び出していたら(gameかnon)
 			else
 			{
 				this->nextTask = "タイトル";
 			}
 		}
 	}
-	//
+	//次のタスクを指定
 	void Object::Set_NextTask(const string next)
 	{
 		this->nextTask = next;
 	}
-	//他のタスクからRGB値を指定
+	//他のタスクから白か黒を指定(数値によっては灰色も可)
 	void Object::Set_Color(float rgb)
 	{
 		this->rgb = rgb;
 	}
-	//
+	//フェードインアウト時の画像の不透明度の指定
 	void Object::FadeInOut()
 	{
 		//タスク生成から2秒間かけて
-		if (this->timeCnt < 60 * 2)
+		if (this->timeCnt < 60 * 1)
 		{
 			//不透明度を1に
-			this->alpha += this->timeCnt / 120.f;
+			this->alpha = this->timeCnt / (60.0f * 0.5f);
+			//不透明度の上限を指定
+			if (this->alpha >= 1.0f)
+			{
+				this->alpha = 1.0f;
+			}
 		}
 		//2~4秒の2秒間かけて
-		else if (this->timeCnt < 60 * 4)
+		else if (this->timeCnt < 60 * 2)
 		{
 			//不透明度を0に
-			this->alpha -= (this->timeCnt - 120) / 120.0f;
+			this->alpha = 1.0f - (this->timeCnt - 60) / (60 * 0.5f);
+			//不透明度の上限を指定
+			if (this->alpha >= 1.0f)
+			{
+				this->alpha = 1.0f;
+			}
 		}
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

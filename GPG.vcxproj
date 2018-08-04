@@ -121,6 +121,7 @@
     <ClCompile Include="Task_Game.cpp" />
     <ClCompile Include="Task_GameClear.cpp" />
     <ClCompile Include="Task_GameOver.cpp" />
+    <ClCompile Include="Task_JecLogo.cpp" />
     <ClCompile Include="Task_LampBase.cpp" />
     <ClCompile Include="Task_LampGlass.cpp" />
     <ClCompile Include="Task_Map.cpp" />
@@ -173,6 +174,7 @@
     <ClInclude Include="Task_Game.h" />
     <ClInclude Include="Task_GameClear.h" />
     <ClInclude Include="Task_GameOver.h" />
+    <ClInclude Include="Task_JecLogo.h" />
     <ClInclude Include="Task_LampBase.h" />
     <ClInclude Include="Task_LampGlass.h" />
     <ClInclude Include="Task_Map.h" />

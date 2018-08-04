@@ -1,17 +1,14 @@
 #pragma warning(disable:4996)
 #pragma once
 //-------------------------------------------------------------------
-//タイトル画面
+//日本電子ロゴ
 //-------------------------------------------------------------------
 #include "GameEngine_Ver3_7.h"
-#include "Task_Game.h"
-#include "Bone.h"
-#include "Motion.h"
 
-namespace Title
+namespace JecLogo
 {
 	//タスクに割り当てるグループ名と固有名
-	const  string  defGroupName("タイトル");	//グループ名
+	const  string  defGroupName("日電ロゴ");	//グループ名
 	const  string  defName("NoName");	//タスク名
 	//-------------------------------------------------------------------
 	class  Resource
@@ -26,15 +23,8 @@ namespace Title
 		static   WP  instance;
 		static  Resource::SP  Create();
 		//共有する変数はここに追加する
-		//背景イメージ名
-		string bgMeshName;
-		//ロゴイメージ名
-		string loImgName;
-		//StartButtonイメージ名
-		string sbImgName;
-		//
-		string bgmName;
-		string startSEName;
+		string logoImgName;
+		string bgImgName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -57,25 +47,8 @@ namespace Title
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
-		//追加したい変数・メソッドはここに追加する
-		//スタートボタンを押してからのフレームカウンタ
-		int sTimeCnt;
-		//起動時からのフレームカウンタ
-		int timeCnt;
-		//Startボタンを押したか判断
-		bool pushSon;
-		//BGM名
-		string titleBGM;
-		//スタート時SE名
-		string startSE;
-		//エネミーのボーン用ポインタ
-		Bone* eneBone;
-		//アニメーション名保存用
-		std::vector<string> motionName;
-
 	public:
-		//メソッド
-		//StartButtonロゴのアニメーション処理
-		bool LogoAnim();
+		//追加したい変数・メソッドはここに追加する
+		int timeCnt; //時間カウント
 	};
 }

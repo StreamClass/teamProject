@@ -93,12 +93,13 @@ namespace  MiniMap
 		this->tab_use_now = pl->Is_Used_Tablet();
 		//デバッグモードか否かをプレイヤーから受け取る
 		this->debugMode = pl->Get_DebugOnOff();
-		//
+		//通常状態の表示倍率とミニマップ表示サイズを指定
 		this->magni = float(chipX) / NORMALMAGNI;
 		this->mapSize = NORMALMAPSIZE;
-		//
+		//タブレットを使用しているなら
 		if (this->tab_use_now)
 		{
+			//タブレット使用状態での表示倍率とミニマップ表示サイズを指定
 			this->magni = float(chipX) / TABLETMAGNI;
 			this->mapSize = TABLETMAPSIZE;
 		}
@@ -124,81 +125,94 @@ namespace  MiniMap
 		{
 			return;
 		}
+		//リソースの参照のサイズを指定
 		ML::Box2D mapSrc(0, 0, 500, 500);
 		ML::Box2D src(0, 0, 63, 63);
 		ML::Box2D aSrc(0, 0, 63, 45);
+		//タブレットを使用していない
+		//(通常状態)
 		if (!this->tab_use_now)
 		{
-			//
+			//回転中心
 			ML::Vec2 cen(16, 24);
-			//
+			//プレイヤの表示座標等を指定
 			ML::Box2D pdraw(-8 + 60, -8 + 60, 16, 16);
-			//
+			//カメラ用
 			ML::Box2D cdraw = pdraw;
-			//
+			//エネミー用(基本は表示しない)
 			ML::Box2D edraw = pdraw;;
-			//
+			//向き用
 			ML::Box2D aDraw(-16 + 60, -8 + 60, 32, 16);
-			//
+			//不透明度を1に
 			float alpha = 1;
-			//
+			//ミニマップを描画
 			ML::Box2D draw(60, 60, this->mapSize, this->mapSize);
 			DG::Image_Draw(this->res->imageName, draw, mapSrc, ML::Color(alpha, 1, 1, 1));
-			//
+			//向きを描画
 			aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
+			//中心軸とカメラの向きによって回転　
 			DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
 			DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
-			//
+			//描画位置をプレイヤの座標を参照して描画
 			pdraw.Offset(this->plpos);
 			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
-			if (this->tab_use_now)
-			{
-				//
-				cdraw.Offset(this->capos);
-				DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
-			}
-			//
+			////
+			//if (this->tab_use_now)
+			//{
+			//	//
+			//	cdraw.Offset(this->capos);
+			//	DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
+			//}
+			//描画位置をエネミーの座標を参照
 			edraw.Offset(this->epos);
+			//デバッグモードなら
 			if (this->debugMode)
 			{
+				//エネミーを描画
 				DG::Image_Draw(this->res->plImgName, edraw, src, ML::Color(alpha, 1, 1, 0));
 			}
 		}
+		//タブレット使用時
 		else
 		{
+			//回転中心
 			ML::Vec2 cen(20, 30);
+			//プレイヤの表示座標等を指定
 			ML::Box2D pdraw(-10 + 60, -10 + 60, 20, 20);
+			//カメラ用
 			ML::Box2D cdraw = pdraw;
+			//エネミー用(デモなら使用する(かも))
 			ML::Box2D edraw = pdraw;
+			//向き用
 			ML::Box2D aDraw = ML::Box2D(-20 + 60, -10 + 60, 40, 20);
+			//不透明度をほぼ半透明に
 			float alpha = 0.4f;
-			//
+			//ミニマップを描画
 			ML::Box2D mapDraw(60, 60, this->mapSize, this->mapSize);
 			DG::Image_Draw(this->res->imageName, mapDraw, mapSrc, ML::Color(alpha, 1, 1, 1));
-			//
+			//監視カメラの座標を参照して描画
 			for (ML::Vec2 scpos : this->stanbyCamera)
 			{
 				ML::Box2D draw(-10 + 60, -10 + 60, 20, 20);
 				draw.Offset(scpos);
 				DG::Image_Draw(this->res->caImgName, draw, src, ML::Color(alpha, 1, 0.5f, 0.5f));
 			}
-			//
+			//カメラの向きと座標を参照して描画
 			aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
 			DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
 			DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
-			//
+			//プレイヤの座標を参照して描画
 			pdraw.Offset(this->plpos);
 			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
-			if (this->tab_use_now)
-			{
-				//
-				cdraw.Offset(this->capos);
-				DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
-			}
-			//
+			//使用中の現在のカメラを座標を参照して描画
+			cdraw.Offset(this->capos);
+			DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
+			//エネミーの座標を参照
 			edraw.Offset(this->epos);
-			if (this->debugMode)
+			//デバッグモードもしくはデモなら
+			if (this->debugMode || ge->state == ge->demo)
 			{
+				//エネミーを描画
 				DG::Image_Draw(this->res->plImgName, edraw, src, ML::Color(alpha, 1, 1, 0));
 			}
 		}

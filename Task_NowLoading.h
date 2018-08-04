@@ -52,8 +52,6 @@ namespace Loading
 		int timeCnt;
 		//不透明度
 		float alpha;
-		//色の総括
-		ML::Color color;
 		//RGBの値(一括)
 		float rgb;
 		//
@@ -61,13 +59,13 @@ namespace Loading
 		string nextTask;
 	public:
 		//メソッド
-		//
+		//現状のタスクを指定
 		void Set_NowTask(const string);
-		//
+		//次のタスクを指定
 		void Set_NextTask(const string);
-		//他のタスクからRGB値を指定
+		//他のタスクから白か黒を指定
 		void Set_Color(float rgb);
-		//
+		//フェードインアウトの画像の不透明度の指定
 		void FadeInOut();
 	};
 }

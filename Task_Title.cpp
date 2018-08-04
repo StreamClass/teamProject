@@ -12,14 +12,19 @@ namespace  Title
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//背景
 		this->bgMeshName = "TitleBGImg";
-		this->loImgName = "LogoImg";
-		this->sbImgName = "StartButtonImg";
 		DG::Mesh_CreateFromSOBFile(this->bgMeshName, "./data/mesh/TitleBG.SOB");
+		//タイトルロゴ
+		this->loImgName = "LogoImg";
 		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
+		//Startロゴ
+		this->sbImgName = "StartButtonImg";
 		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
+		//BGM
 		this->bgmName = "TitmeBGM";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/TitleBGM.wav");
+		//スタート時SE
 		this->startSEName = "StartButtonPushBGM";
 		DM::Sound_CreateSE(this->startSEName, "./data/sound/StartSE.wav");
 		return true;
@@ -53,25 +58,36 @@ namespace  Title
 		this->timeCnt = 0;
 		//Startボタンを押したか判断
 		this->pushSon = false;
-		//
+		//エネミー生成
 		this->eneBone = new Bone(180, "Enemy");
+		//座標指定　反映
 		ML::Vec3 pos(80, -160, 0);
 		this->eneBone->Moving(pos);
+		//向き指定　反映
 		float radi = ML::ToRadian(200);
 		this->eneBone->Bone_RotateY_All(radi);
+		//使用するアニメーションの種類名をvectorに保存
 		this->motionName.push_back("Running");
 		this->motionName.push_back("Walking");
+		//保存した名前でアニメーションを読み込み
 		{
+			//アニメーションを保存する容器を準備
 			std::vector<Motion::Motion_Data> running;
 			std::vector<Motion::Motion_Data> walking;
+			//名前からアニメーションファイルを開いて容器に入れる
 			Motion::Make_Motion(&running, this->motionName[0]);
 			Motion::Make_Motion(&walking, this->motionName[1]);
+			//種類名でアニメーションを呼び出せるようにする
 			this->eneBone->Registrate_Motion(running, this->motionName[0]);
 			this->eneBone->Registrate_Motion(walking, this->motionName[1]);
 		}
+		//ランダムで0～2を指定
 		int ran = rand() % 3;
+		//2以外なら
+		//2ならアニメーションをしない
 		if (ran != 2)
 		{
+			//対応するアニメーションの呼び出し
 			this->eneBone->Set_Next_Motion(this->motionName[ran]);
 		}
 
@@ -86,7 +102,7 @@ namespace  Title
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		DG::EffectState().param.lightAmbient = ML::Color(1, 0.2f, 0.2f, 0.2f);
-		//
+		//点光源を設定
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Point;//光源の種類
 		DG::EffectState().param.light[0].range = 200.0f;
@@ -99,6 +115,7 @@ namespace  Title
 		//DG::EffectState().param.light[1].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
 		//DG::EffectState().param.light[1].color = ML::Color(1, 0.8f, 0.2f, 0.2f);//色と強さ
 
+		//BGMを再生
 		DM::Sound_Play(this->res->bgmName, true);
 		//★タスクの生成
 		
@@ -109,8 +126,11 @@ namespace  Title
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		//エネミーのボーンを解放
 		delete this->eneBone;
+		//もし呼び出されないようにnullptrを参照させる
 		this->eneBone = nullptr;
+		//BGMを停止
 		DM::Sound_Stop(this->res->bgmName);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
@@ -126,28 +146,30 @@ namespace  Title
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
-		
+		//現在のアニメーションをリピートする
 		this->eneBone->Repeat_Now_Motioin();
+		//アニメーション更新
 		this->eneBone->UpDate();
-		if (this->timeCnt == 60 * 10)
-		{			
+		//時間カウンタが10秒かつスタートしてないとき
+		if (this->timeCnt == 60 * 10 && !this->pushSon)
+		{
+			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
+			//次のタスクをデモに指定
 			lo->Set_NextTask("デモ");
-			lo->Set_Color(1);			
+			//白
+			lo->Set_Color(1);
 		}
 
 		//スタートボタンを押したら
 		if ((in.ST.down || in.B1.down || in.B2.down || in.B3.down || in.B4.down) && this->pushSon == false)
 		{
+			//スタート時SEを再生
 			DM::Sound_Play(this->res->startSEName,false);
+			//スタート状態へ
 			this->pushSon = true;
 		}
-		//デバッグ時用
-		//else if (in.B1.down && this->pushSon == true)
-		//{
-		//	this->Kill();
-		//}
 
 		//3秒後に
 		if (this->sTimeCnt == 60 * 3)
@@ -189,13 +211,13 @@ namespace  Title
 	//
 	void  Object::Render3D_L0()
 	{
-		
+		//背景描画
 		ML::Mat4x4 matT, matS;
 		matT.Translation(ML::Vec3(0, 0, 200));
 		matS.Scaling(100 << 3);
 		DG::EffectState().param.matWorld = matS * matT;
 		DG::Mesh_Draw(this->res->bgMeshName);
-		//
+		//エネミー描画
 		this->eneBone->Render();
 	}
 

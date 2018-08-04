@@ -87,6 +87,8 @@ namespace  Clear
 		if (this->timeCnt == 60 * 17.0f)
 		{
 			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("日電ロゴ");
 			//ローディングの色を白に指定
 			lo->Set_Color(1);
 		}

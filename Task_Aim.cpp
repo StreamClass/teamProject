@@ -35,7 +35,7 @@ namespace  Aiming
 		DG::Image_Create(this->staminaImgName[0], "./data/image/StaminaMax.png");
 		this->staminaImgName[1] = "StaminaGage";
 		DG::Image_Create(this->staminaImgName[1], "./data/image/StaminaGage.png");
-
+		//Aボタンの画像
 		this->pushButtonImg = "AButton";
 		DG::Image_Create(this->pushButtonImg, "./data/image/PushButton.png");
 		return true;
@@ -44,16 +44,19 @@ namespace  Aiming
 	//リソースの解放
 	bool  Resource::Finalize()
 	{
+		//エイムの画像を解放
 		for (int i = 0; i < 3; ++i)
 		{
 			DG::Image_Erase(this->imageName[i]);
 		}
+		//操作説明画像とスタミナゲージの画像を解放
 		for (int i = 0; i < 2; ++i)
 		{
 			DG::Image_Erase(this->normalModeImg[i]);
 			DG::Image_Erase(this->tabletModeImg[i]);
 			DG::Image_Erase(this->staminaImgName[i]);
 		}
+		//Aボタンの画像の解放
 		DG::Image_Erase(this->pushButtonImg);
 		return true;
 	}
@@ -102,22 +105,30 @@ namespace  Aiming
 	void  Object::UpDate()
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		if (pl->Is_Used_Tablet() == false)
+		if (!pl->Is_Used_Tablet())//タブレットを使用していなければ
 		{
+			//移動速度の指定
 			this->aimMoveSpeed = 5.0f;
+			//移動幅を指定
 			this->aimMovetremor = pl->Get_MoveSpeed() + 5.0f;
 			if (pl->Is_Tired())
-			{
+			{//プレイヤが疲労状態なら
+				//疲労時の速度に指定
 				this->aimMoveSpeed = (MAX_STAMINA / 3 - pl->Get_Stamina()) / 10.0f;
+				//疲労時の幅に指定
 				this->aimMovetremor =  (pl->Get_MoveSpeed() + 5.0f) * 5.0f;
 			}
+			//sinの時間軸を速度によって加算
 			this->moveCnt += this->aimMoveSpeed;
+			//上記で指定した数値を用いて各エイムの座標を変更
 			this->aimPosT.y = -sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f - (15 + this->aimMovetremor));
 			this->aimPosB.y =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f + (15 + this->aimMovetremor));
 			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f - (15 + this->aimMovetremor));
 			this->aimPosR.x =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f + (15 + this->aimMovetremor));
-			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && pl->Is_Tired() == false)
+			//プレイヤが疲労状態ではなく移動量がほぼ無い時
+			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && !pl->Is_Tired())
 			{
+				//sinの時間軸を初期化
 				this->moveCnt = 0;
 			}
 		}
@@ -127,18 +138,29 @@ namespace  Aiming
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		if (pl->Is_Used_Tablet() == true)
+		//デモでなければ
+		if (ge->state != ge->demo)
 		{
-			this->TabletModeRrender();
-			return;
-		}
-		this->NormalModeRrender();
-		this->AimingRender();
-		this->StaminaRender();
-		if (pl->Touch_AimToBreaker())
-		{
-			this->BreakerTouchRender();
+			auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
+			//プレイヤがタブレットを使用しているか
+			if (pl->Is_Used_Tablet() == true)
+			{//していたら
+				//タブレットの操作説明を描画
+				this->TabletModeRrender();
+				return;
+			}
+			//通常の操作説明を描画
+			this->NormalModeRrender();
+			//エイムを描画
+			this->AimingRender();
+			//スタミナゲージを描画
+			this->StaminaRender();
+			//ブレーカーを押せるか
+			if (pl->Touch_AimToBreaker())
+			{//押せるなら
+				//Aボタンの画像を描画
+				this->BreakerTouchRender();
+			}
 		}
 	}
 	//-------------------------------------------------------------------
@@ -153,7 +175,7 @@ namespace  Aiming
 		//DG::Mesh_Draw("t");
 	}
 	//-------------------------------------------------------------------
-	//通常時の操作説明
+	//通常時の操作説明描画処理
 	void Object::NormalModeRrender()
 	{
 		ML::Box2D draw(0, 1020, 1920, 60);
@@ -161,7 +183,7 @@ namespace  Aiming
 		DG::Image_Draw(this->res->normalModeImg[(this->timeCnt / 20) % 2], draw, src);
 	}
 	//-------------------------------------------------------------------
-	//タブレット時の操作説明
+	//タブレット時の操作説明描画処理
 	void Object::TabletModeRrender()
 	{
 		ML::Box2D draw(0, 1020, 1920, 60);
@@ -169,7 +191,7 @@ namespace  Aiming
 		DG::Image_Draw(this->res->tabletModeImg[(this->timeCnt / 20) % 2], draw, src);
 	}
 	//-------------------------------------------------------------------
-	//エイムのアニメーション
+	//エイムのアニメーション描画処理
 	void Object::AimingRender()
 	{
 		//注視点
@@ -197,7 +219,7 @@ namespace  Aiming
 		DG::Image_Draw(this->res->imageName[2], draw, src);
 	}
 	//-------------------------------------------------------------------
-	//ブレーカーが押せる時にボタンを描画
+	//ブレーカーが押せる時にボタンを描画処理
 	void Object::BreakerTouchRender()
 	{
 		if ((this->timeCnt / 10) % 3 >= 1)
@@ -208,7 +230,7 @@ namespace  Aiming
 		}
 	}
 	//-------------------------------------------------------------------
-	//スタミナの描画
+	//スタミナの描画処理
 	void Object::StaminaRender()
 	{
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");

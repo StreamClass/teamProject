@@ -116,6 +116,9 @@
     <Filter Include="MyPG\Game\Map">
       <UniqueIdentifier>{aaba4863-8eeb-437e-8da4-e257b5889b6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="MyPG\JecLogo">
+      <UniqueIdentifier>{70a5fc0d-a15d-47e2-964d-690ee1506f25}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="myLib.cpp">
@@ -265,6 +268,9 @@
     <ClCompile Include="Motion.cpp">
       <Filter>MyPG\Namespace\Motion</Filter>
     </ClCompile>
+    <ClCompile Include="Task_JecLogo.cpp">
+      <Filter>MyPG\JecLogo</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="myLib.h">
@@ -413,6 +419,9 @@
     </ClInclude>
     <ClInclude Include="MapObject.h">
       <Filter>MyPG\Class\MapObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Task_JecLogo.h">
+      <Filter>MyPG\JecLogo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

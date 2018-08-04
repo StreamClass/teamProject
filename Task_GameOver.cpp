@@ -111,7 +111,7 @@ namespace  Over
 		{
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
-			lo->Set_NextTask("タイトル");
+			lo->Set_NextTask("日電ロゴ");
 			//ローディング画面の色を黒に指定
 			lo->Set_Color(0);
 			this->endFlag = true;
@@ -136,7 +136,7 @@ namespace  Over
 			//ローディングを呼び出し
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
-			lo->Set_NextTask("タイトル");
+			lo->Set_NextTask("日電ロゴ");
 			//ローディング画面の色を黒に指定
 			lo->Set_Color(0);
 			//endFlagをtrueに
