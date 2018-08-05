@@ -54,5 +54,7 @@ namespace Game
 	public:
 		//
 		void Start();
+		//
+		bool PushAnyButton();
 	};
 }

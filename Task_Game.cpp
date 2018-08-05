@@ -188,12 +188,13 @@ namespace  Game
 		if (ge->state == ge->demo)
 		{
 			//デモが32秒経ったら
-			if (this->timeCnt == 60 * 32)
+			if (!this->pushButton && this->timeCnt == 60 * 32 || this->PushAnyButton())
 			{
 				//フェードインアウト
 				auto lo = Loading::Object::Create(true);
 				lo->Set_NowTask(defGroupName);
 				lo->Set_Color(1);
+				this->pushButton = true;
 			}
 			this->timeCnt++;
 		}
@@ -219,6 +220,12 @@ namespace  Game
 	{
 		ge->StopAll_G("プレイヤ", false);
 		ge->StopAll_G("エネミー", false);
+	}
+	//
+	bool Object::PushAnyButton()
+	{
+		auto in = DI::GPad_GetState(ge->controllerName);
+		return (in.B1.down || in.B2.down || in.B3.down || in.B4.down || in.SE.down || in.ST.down);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

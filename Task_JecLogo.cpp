@@ -40,6 +40,7 @@ namespace JecLogo
 		//★データ初期化
 		this->render2D_Priority[1] = 0.5f;
 		this->timeCnt = 0;
+		this->pushButton = false;
 		//★タスクの生成
 
 		return  true;
@@ -63,14 +64,25 @@ namespace JecLogo
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//3秒経ったら
-		if (this->timeCnt == 60 * 3)
+		auto in = DI::GPad_GetState(ge->controllerName);
+		if (this->PushAnyButton() && !this->pushButton)
 		{
 			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
 			lo->Set_NextTask("タイトル");
 			lo->Set_Color(1);
+			this->pushButton = true;
+		}
+		//3秒経ったら
+		if (this->timeCnt == 60 * 3 && !this->pushButton)
+		{
+			//フェードインアウト
+			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("タイトル");
+			lo->Set_Color(1);
+			this->pushButton = true;
 		}
 		this->timeCnt++;
 	}
@@ -87,9 +99,15 @@ namespace JecLogo
 		src = ML::Box2D(0, 0, 4251, 731);
 		DG::Image_Draw(this->res->logoImgName, draw, src,ML::Color((float)(this->timeCnt / 60.0f),1,1,1));
 	}
-
+	//
 	void  Object::Render3D_L0()
 	{
+	}
+	//
+	bool Object::PushAnyButton()
+	{
+		auto in = DI::GPad_GetState(ge->controllerName);
+		return (in.B1.down || in.B2.down || in.B3.down || in.B4.down || in.SE.down || in.ST.down);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
