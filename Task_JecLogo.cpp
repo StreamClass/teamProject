@@ -65,6 +65,7 @@ namespace JecLogo
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
+		//何かしらボタンを押したら
 		if (this->PushAnyButton() && !this->pushButton)
 		{
 			//フェードインアウト
@@ -103,7 +104,7 @@ namespace JecLogo
 	void  Object::Render3D_L0()
 	{
 	}
-	//
+	//ある一定のボタンを押すとtrueを返す
 	bool Object::PushAnyButton()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);

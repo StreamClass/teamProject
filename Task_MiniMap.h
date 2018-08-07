@@ -76,7 +76,7 @@ namespace MiniMap
 		bool tab_use_now;
 		//座標参照用倍率
 		float magni;
-		//
+		//マップのサイズ
 		int mapSize;
 		//デバックモードの有無
 		bool debugMode;
@@ -89,7 +89,7 @@ namespace MiniMap
 		void Set_MiniMap_View();
 		//ミニマップ描画用
 		void MiniMap_Render();
-		//
+		//監視カメラをミニマップ表示用に座標を取得
 		void Set_StanbyCameraPos(const ML::Vec3&);
 
 		//デバッグ時用変数

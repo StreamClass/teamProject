@@ -47,14 +47,19 @@ namespace Game
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//追加したい変数・メソッドはここに追加する
+		//ボタンを押したか判断
 		bool pushButton;
+		//時間カウンタ
 		int timeCnt;
+		//ゲームを開始するタイミング
 		int stanbyCnt;
+		//ゲームの待機時間カウンタ
 		int startTime;
 	public:
-		//
+		//メソッド
+		//ゲームスタート(プレイヤとエネミーの停止解除)
 		void Start();
-		//
+		//ある一定のボタンを押したらtrueを返す
 		bool PushAnyButton();
 	};
 }

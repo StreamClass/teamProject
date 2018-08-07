@@ -20,7 +20,7 @@ namespace  Game
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
-		//BGM
+		//BGM指定
 		this->bgmName = "GameBGM";
 		DM::Sound_CreateStream(this->bgmName, "./data/sound/GameBGM.wav");
 		return true;
@@ -103,21 +103,6 @@ namespace  Game
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//フェードインアウトに移行
-			//auto nextTask = Clear::Object::Create(true);
-			//if (ge->state == ge->clear)
-			//{
-			//	auto nextTask = Clear::Object::Create(true);
-			//}
-			//else if (ge->state == ge->over)
-			//{
-			//	auto nextTask = Over::Object::Create(true);
-			//	nextTask->Set_Bone_Ptr(this->eBone);
-			//}
-			//else
-			//{
-			//	auto nextTask = Title::Object::Create(true);
-			//}
 		}
 
 		return  true;
@@ -221,7 +206,7 @@ namespace  Game
 		ge->StopAll_G("プレイヤ", false);
 		ge->StopAll_G("エネミー", false);
 	}
-	//
+	//ある一定のボタンを押すとtrueを返す
 	bool Object::PushAnyButton()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
