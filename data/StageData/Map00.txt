@@ -1,4 +1,4 @@
-9
+12
 MapBox
 Table
 chair
@@ -7,6 +7,9 @@ toilet
 fireModel
 torch
 BloodFloor
+Books00
+BookShelf00
+BookShelf01
 SquareShadow
 20 20
 
