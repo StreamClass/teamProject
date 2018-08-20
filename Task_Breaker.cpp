@@ -139,7 +139,6 @@ namespace Task_Breaker
 					this->pos.z = this->circuit->Get_Pos().z - 15.0f;
 				}
 			}
-			return this->pos;
 		}
 		return this->pos;
 	}

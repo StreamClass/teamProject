@@ -1,5 +1,6 @@
 ﻿#include "MyPG.h"
 #include "Task_JecLogo.h"
+#include "Task_Game.h"
 
 namespace MyPG
 {
@@ -117,7 +118,8 @@ namespace MyPG
 		this->vp3D_BF = defVP;
 
 		//初期実行タスク生成＆ゲームエンジンに登録
-		auto  firstTask = JecLogo::Object::Create(true);
+		//auto  firstTask = JecLogo::Object::Create(true);
+		auto ftask = Game::Object::Create(true);
 
 //------------------------------------------------------------------------------------
 //レイヤー毎の描画のON/OFF

@@ -173,7 +173,7 @@ namespace  Game
 		if (ge->state == ge->demo)
 		{
 			//デモが32秒経ったら
-			if (!this->pushButton && this->timeCnt == 60 * 32 || this->PushAnyButton())
+			if (!this->pushButton && (this->timeCnt == 60 * 32 || this->PushAnyButton()))
 			{
 				//フェードインアウト
 				auto lo = Loading::Object::Create(true);

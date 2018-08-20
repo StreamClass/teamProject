@@ -1,4 +1,4 @@
-12
+11
 MapBox
 Table
 chair
@@ -8,7 +8,6 @@ fireModel
 torch
 BloodFloor
 Books00
-BookShelf00
 BookShelf01
 SquareShadow
 20 20
@@ -40,7 +39,7 @@ SquareShadow
 
 1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
 
-1	0	0	0	0	4	0	0	0	0	0	1	0	0	0	0	0	0	0	0
+1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
 
 1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0
 

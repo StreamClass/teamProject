@@ -76,7 +76,7 @@ namespace  Player
 		this->tremor = 1.0f;
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
-		this->debugMode = false;
+		this->debugMode = true;
 		this->motion = neutral;
 
 		this->plBone = new Bone(170,"Player");

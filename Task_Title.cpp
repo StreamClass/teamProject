@@ -82,14 +82,18 @@ namespace  Title
 			this->eneBone->Registrate_Motion(walking, this->motionName[1]);
 		}
 		//ランダムで0～2を指定
-		int ran = rand() % 3;
+		int ran = rand() % 2;
 		//2以外なら
 		//2ならアニメーションをしない
-		if (ran != 2)
-		{
+		/*
+		常に画面が動いているようにとのことで2種類に変更
+		2018/08/20
+		*/
+		//if (ran != 2)
+		//{
 			//対応するアニメーションの呼び出し
 			this->eneBone->Set_Next_Motion(this->motionName[ran]);
-		}
+		//}
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
