@@ -67,7 +67,7 @@ namespace  Clear
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//šˆø‚«Œp‚¬ƒ^ƒXƒN‚Ì¶¬
-			auto nectTask = Title::Object::Create(true);
+			//auto nectTask = Title::Object::Create(true);
 		}
 
 		return  true;

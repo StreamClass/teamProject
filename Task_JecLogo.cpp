@@ -76,7 +76,7 @@ namespace JecLogo
 			this->pushButton = true;
 		}
 		//3秒経ったら
-		if (this->timeCnt == 60 * 3 && !this->pushButton)
+		if (this->timeCnt == 60 * 10000 && !this->pushButton)
 		{
 			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
@@ -96,8 +96,8 @@ namespace JecLogo
 		ML::Box2D src(0, 0, 160, 90);
 		DG::Image_Draw(this->res->bgImgName, draw, src);
 		//ロゴ描画
-		draw = ML::Box2D(ge->screen2DWidth / 2 - 800, ge->screen2DHeight  / 2 - 300, 1600, 600);
-		src = ML::Box2D(0, 0, 4251, 731);
+		draw = ML::Box2D(ge->screen2DWidth / 2 - 800 , ge->screen2DHeight / 2 - 274 / 2, 1600, 274);
+		src = ML::Box2D(0, 0, 4259, 731);
 		DG::Image_Draw(this->res->logoImgName, draw, src,ML::Color((float)(this->timeCnt / 60.0f),1,1,1));
 	}
 	//
