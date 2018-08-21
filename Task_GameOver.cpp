@@ -21,6 +21,8 @@ namespace  Over
 		DG::Image_Create(this->lImgName, "./data/image/OverLogo.png");
 		//this->bgMeshName = "EndingBG";
 		//DG::Mesh_CreateFromSOBFile(this->bgMeshName, "");
+		this->footSoundName = "FootsSound";
+		DM::Sound_CreateSE(this->footSoundName, "./data/sound/foot00.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -30,7 +32,8 @@ namespace  Over
 		//画像をすべて解放
 		DG::Image_Erase(this->eImgName);
 		DG::Image_Erase(this->lImgName);
-		DG::Mesh_Erase(this->bgMeshName);
+		//DG::Mesh_Erase(this->bgMeshName);
+		DM::Sound_Erase(this->footSoundName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -49,7 +52,7 @@ namespace  Over
 		this->endCnt = 0;
 		this->endFlag = false;
 		//
-		this->iniFlag = true;
+		this->iniFlag = false;
 
 		this->enBone = new Bone(180, "Enemy");
 		ML::Vec3 pos(200, -90, 0);
@@ -123,6 +126,11 @@ namespace  Over
 			this->enBone->UpDate();
 			this->pos.x -= 1;
 			this->enBone->Moving(this->pos);
+			if (!this->iniFlag)
+			{
+				DM::Sound_Play(this->res->footSoundName, true);
+				this->iniFlag = true;
+			}
 		}
 		//5秒後から
 		if (this->timeCnt > 60 * 4)
@@ -187,6 +195,7 @@ namespace  Over
 		{
 			//エフェクトを画面全体に描画
 			DG::Image_Draw(this->res->eImgName, draw, src);
+			DM::Sound_Stop(this->res->footSoundName);
 		}
 		//ロゴ描画
 		draw = ML::Box2D(0, 350, 1920, 300);

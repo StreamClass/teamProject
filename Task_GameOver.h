@@ -31,6 +31,9 @@ namespace Over
 		string eImgName;
 		//ゲームオーバーロゴのイメージ名
 		string lImgName;
+
+		//
+		string footSoundName;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
