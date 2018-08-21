@@ -58,6 +58,8 @@ namespace Task_Breaker
 		int angle;
 		//ボタン座標
 		ML::Vec3 pos;
+		//すでに押されているか
+		bool pushedButton;
 
 	public:
 		//メソッド

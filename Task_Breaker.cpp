@@ -16,7 +16,7 @@ namespace Task_Breaker
 		this->buttonMeshName = "ButtonMesh";
 		DG::Mesh_CreateFromSOBFile(this->buttonMeshName, "./data/mesh/BreakerButton.SOB");
 		this->soundName = "ButtonPushSE";
-		//DM::Sound_CreateSE(this->soundName, "./data/sound/");
+		DM::Sound_CreateSE(this->soundName, "./data/sound/pushButton.wav");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -25,7 +25,7 @@ namespace Task_Breaker
 	{		
 		DG::Mesh_Erase(this->meshName);
 		DG::Mesh_Erase(this->buttonMeshName);
-		//DM::Sound_Erase(this->soundName);
+		DM::Sound_Erase(this->soundName);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -41,6 +41,7 @@ namespace Task_Breaker
 		this->circuit = b;
 
 		this->angle = angle;
+		this->pushedButton = false;
 		this->pos = this->circuit->Get_Pos();
 		//šƒ^ƒXƒN‚Ì¶¬
 
@@ -129,6 +130,11 @@ namespace Task_Breaker
 				if (this->pos.z > this->circuit->Get_Pos().z + 15.0f)
 				{
 					this->pos.z = this->circuit->Get_Pos().z + 15.0f;
+					if (!this->pushedButton)
+					{
+						DM::Sound_Play(this->res->soundName, false);
+						this->pushedButton = true;
+					}
 				}
 			}
 			else
@@ -137,6 +143,12 @@ namespace Task_Breaker
 				if (this->pos.z < this->circuit->Get_Pos().z - 15.0f)
 				{
 					this->pos.z = this->circuit->Get_Pos().z - 15.0f;
+					if (!this->pushedButton)
+					{
+						DM::Sound_Play(this->res->soundName, false);
+						this->pushedButton = true;
+					}
+
 				}
 			}
 		}

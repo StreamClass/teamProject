@@ -193,12 +193,7 @@ namespace  Camera
 		if (len.Length() > 1000.0f)//‹——£‚Ì’·‚³‚ª1000ˆÈã‚È‚ç
 		{
 			//‰¹—Ê‚ÌÅ‘å’l‚©‚ç’·‚³‚Ì1/3‚ðˆø‚­
-			volume =
-				1000 
-				- 
-				int(len.Length()
-					/ 
-					10);//’·‚³‚ªˆÈã‚¾‚Æ‰¹—Ê‚ª0‚É‚È‚é
+			volume = 1000 -	int(len.Length() / 10);//’·‚³‚ªˆÈã‚¾‚Æ‰¹—Ê‚ª0‚É‚È‚é
 		}
 		//‰¹—Ê‚ª0ˆÈ‰º‚¾‚Æ
 		if (volume <= 200)
