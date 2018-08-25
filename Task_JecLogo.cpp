@@ -76,7 +76,7 @@ namespace JecLogo
 			this->pushButton = true;
 		}
 		//3秒経ったら
-		if (this->timeCnt == 60 * 10000 && !this->pushButton)
+		if (this->timeCnt == 60 * 3 && !this->pushButton)
 		{
 			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
