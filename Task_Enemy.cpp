@@ -49,6 +49,8 @@ namespace  Enemy
 		this->ebone->Moving(this->pos);
 		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(-90));
 		this->Init_Enemys_Animations();
+		this->priority_Position = ML::Vec3(0, 0, 0);
+
 		//デモコーナー仮初期化
 		/*for (int i = 0; i < 9; ++i)
 		{
@@ -159,6 +161,13 @@ namespace  Enemy
 				{
 					this->pos += targetPos * this->speed;
 					this->ebone->Moving(targetPos * this->speed);
+					//一定以上近いなら向かう場所を不定にする
+					ML::Vec3 dist = this->pos - this->priority_Position;
+					if (dist.Length() <= 1500.0f)
+					{
+						this->priority_Position = ML::Vec3(0, 0, 0);
+						this->Set_Destination(ML::Vec3(0, 0, 0));
+					}
 				}
 				else
 				{
@@ -269,7 +278,14 @@ namespace  Enemy
 		Motion::Make_Motion(&walking, this->animations_Name[1]);
 		this->ebone->Registrate_Motion(walking, this->animations_Name[1]);
 	}
-
+	//--------------------------------------------------------------------------------
+	//向かわせる場所を設定する処理
+	void Object::Set_Destination(const ML::Vec3& des)
+	{
+		//ルーチンシステムとエネミ－本人の目的地を設定
+		this->rou->Set_Priority_Position(des);
+		this->priority_Position = des;
+	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★

@@ -51,9 +51,9 @@ namespace  Player
 		this->controllerName = "P1";
 		//プレイヤの初期化
 		this->pos = ML::Vec3(0, 0, 0);
-		this->headHeight = 175;
-		this->headHeight_std = 175;
-		this->adjust_TG = 175;
+		this->headHeight = 175.0f;
+		this->headHeight_std = 175.0f;
+		this->adjust_TG = 175.0f;
 		this->adjust_TG_std = 175;
 		this->cnt_TG = 0;
 		this->add_adjust = 0.0f;
@@ -208,7 +208,7 @@ namespace  Player
 			this->cnt_TG++;
 			//頭の基準値+sin(カウンタ*揺れ速度はスピードで変化)*(スピード*揺れ幅)
 			float headY = this->headHeight_std +
-				sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor);
+				sin(ML::ToRadian(float(this->cnt_TG*this->cnt_SP)))*(this->speed*this->tremor);
 			float targetY = this->adjust_TG_std +
 				sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor) + this->add_adjust;
 			//頭の高さを更新
@@ -373,13 +373,13 @@ namespace  Player
 	}
 	//-------------------------------------------------------------------
 	//プレイヤの視点の高さをint型で返す
-	int Object::Get_PointView()
+	float Object::Get_PointView()
 	{
 		return this->headHeight;
 	}
 	//-------------------------------------------------------------------
 	//注視点の高さ(adJust_TG)を返す7
-	int Object::Get_Adjust()
+	float Object::Get_Adjust()
 	{
 		return this->adjust_TG;
 	}
@@ -511,7 +511,7 @@ namespace  Player
 				move = move.Normalize();
 				for (int i = 0; i < 10; ++i)
 				{
-					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0.0f, this->headHeight, 0.0f)) + (move * i * 15.0f))))
 					{
 						(*it)->ActivateBreaker();
 						//ボタン操作モーション実行

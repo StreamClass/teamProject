@@ -20,6 +20,8 @@ private:
 	ML::Box3D hitBase;
 	//最終フェーズなのかを確認するフラグ
 	bool final_Phase;
+	//プレイヤが押して向かうべきコーナー
+	ML::Vec3 priority_Pos;
 
 	//現在のコーナー
 	int now;
@@ -39,6 +41,9 @@ private:
 	bool RelationShip_ZP(int num_, int);
 	//
 	bool RelationShip_ZM(int num_, int);
+
+	//引数の場所と一番近いコーナーを探す
+	void Find_Nearest_Conner(const ML::Vec3&);
 public:
 	//コンストラクタ
 	Routine();
@@ -59,9 +64,11 @@ public:
 	//目的地の検索用
 	void Initialize_RelationShip(int num);
 
+	//向かうべき場所を設定
+	void Set_Priority_Position(const ML::Vec3&);
+
 	//フェーズ確認
 	bool Is_Final_Phase();
-
 
 	//最終フェーズに移行
 	void Set_Final_Phase();

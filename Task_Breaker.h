@@ -60,7 +60,8 @@ namespace Task_Breaker
 		ML::Vec3 pos;
 		//すでに押されているか
 		bool pushedButton;
-
+		//プレイヤがボタンを押したことをエネミーに教える処理
+		void Now_Be_Pushed();
 	public:
 		//メソッド
 		//プレイヤとのあたり判定

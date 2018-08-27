@@ -67,6 +67,9 @@ namespace Enemy
 		ML::Vec3 angle;
 		//追跡用移動量
 		ML::Vec3 toVec;
+		//目的地にするブレーカーの位置
+		ML::Vec3 priority_Position;
+
 		//速度
 		float chasing_Speed;
 		float final_Phase_Speed;
@@ -93,5 +96,9 @@ namespace Enemy
 		//Bone* Get_EnemyBonePtr();
 		//
 		ML::Vec3 Get_Pos();
+
+
+		//向かわせる場所を設定する処理
+		void Set_Destination(const ML::Vec3&);
 	};
 }

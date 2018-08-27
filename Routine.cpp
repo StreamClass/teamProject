@@ -73,6 +73,12 @@ void Routine::Choice(const int& now_)
 		{
 			this->target = this->choiceCorner[this->now][rand() % choices];
 		}
+		//向かうべき場所が不定場所でなければ
+		if (!this->priority_Pos.Is_Zero_Vec())
+		{
+			//そこに向かう最短ルートで行く
+			this->Find_Nearest_Conner(this->priority_Pos);
+		}
 	}
 	//最終フェーズの処理
 	//選べる選択肢の中でプレイヤと一番近いところを選ぶ
@@ -80,28 +86,7 @@ void Routine::Choice(const int& now_)
 	{
 		//プレイヤの情報をもらう
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		ML::Vec3 p_pos = pl->Get_Pos();
-		int m = 0;
-		ML::Vec3 min = p_pos - this->cornerPos[this->choiceCorner[now_][m]];
-
-		for (int i = 1; i < choices; i++)
-		{
-			int check = this->choiceCorner[now_][i];
-			//-1は不定アクセスだから処理せず次に
-			if (check == -1)
-			{
-				continue;
-			}
-
-			ML::Vec3 compare = p_pos - this->cornerPos[check];
-			if (min.Length() > compare.Length())
-			{
-				min = compare;
-				m = i;
-			}
-		}
-
-		this->target = this->choiceCorner[now_][m];
+		this->Find_Nearest_Conner(pl->Get_Pos());		
 	}
 }
 //コーナーの持つ矩形の側がエネミーとの接触に応じて自分の番号を返す
@@ -314,4 +299,36 @@ void Routine::Set_Final_Phase()
 bool Routine::Is_Final_Phase()
 {
 	return this->final_Phase;
+}
+
+//引数の場所と一番近いコーナーを探す
+void Routine::Find_Nearest_Conner(const ML::Vec3& find)
+{
+	int m = 0;
+	ML::Vec3 min = find - this->cornerPos[this->choiceCorner[this->now][m]];
+
+	for (int i = 1; i < choices; i++)
+	{
+		int check = this->choiceCorner[this->now][i];
+		//-1は不定アクセスだから処理せず次に
+		if (check == -1)
+		{
+			continue;
+		}
+
+		ML::Vec3 compare = find - this->cornerPos[check];
+		if (min.Length() > compare.Length())
+		{
+			min = compare;
+			m = i;
+		}
+	}
+	//次の場所を設定
+	this->target = this->choiceCorner[this->now][m];	
+}
+
+//向かうべき場所を設定
+void Routine::Set_Priority_Position(const ML::Vec3& pp)
+{
+	this->priority_Pos = pp;
 }

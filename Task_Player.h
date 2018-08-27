@@ -74,11 +74,11 @@ namespace Player
 		//プレイやの向き
 		ML::Vec3 angle;
 		//プレイヤの視点(頭の高さ)
-		int headHeight;
+		float headHeight;
 		//プレイやの視点基準
-		int headHeight_std;
+		float headHeight_std;
 		//注視点の高さ
-		int adjust_TG;
+		float adjust_TG;
 		//注視点の高さ基準
 		int adjust_TG_std;
 		//注視点の増減量
@@ -138,9 +138,9 @@ namespace Player
 	public:
 		//追加メソッド
 		//プレイヤの視点をint型で返す
-		int Get_PointView();
+		float Get_PointView();
 		//注視点の高さ(adJust_TG)を返す
-		int Get_Adjust();		
+		float Get_Adjust();		
 		//プレイヤの座標をML::Vec3型で返す
 		ML::Vec3 Get_Pos();
 		//プレイヤの向きをML::Vec3型で返す

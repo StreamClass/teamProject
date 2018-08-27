@@ -3,6 +3,7 @@
 //-------------------------------------------------------------------
 #include  "MyPG.h"
 #include  "Task_Breaker.h"
+#include  "Task_Enemy.h"
 
 namespace Task_Breaker
 {
@@ -102,6 +103,9 @@ namespace Task_Breaker
 	{
 		this->circuit->Activate_Breaker();
 		//DM::Sound_Play(this->res->soundName,false);
+
+		//起動したらエネミーの目的地を設定するようにする
+		this->Now_Be_Pushed();
 	}
 	//-----------------------------------------------------------------------
 	//向きの設定
@@ -158,6 +162,13 @@ namespace Task_Breaker
 	bool Object::Get_Now_State()
 	{
 		return this->circuit->Get_Now_State();
+	}
+	//---------------------------------------------------------------------
+	//プレイヤがボタンを押したことをエネミーに教える処理
+	void Object::Now_Be_Pushed()
+	{
+		auto en = ge->GetTask_One_G<Enemy::Object>("エネミー");
+		en->Set_Destination(this->pos);
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
