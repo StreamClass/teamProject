@@ -23,6 +23,10 @@ namespace  Over
 		//DG::Mesh_CreateFromSOBFile(this->bgMeshName, "");
 		this->footSoundName = "FootsSound";
 		DM::Sound_CreateSE(this->footSoundName, "./data/sound/foot00.wav");
+		
+		this->gameOver_Bgm = "GameOver_Bgm";
+		DM::Sound_CreateStream(this->gameOver_Bgm, "./data/sound/GameOver_BGM.wav");
+
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -34,6 +38,7 @@ namespace  Over
 		DG::Image_Erase(this->lImgName);
 		//DG::Mesh_Erase(this->bgMeshName);
 		DM::Sound_Erase(this->footSoundName);
+		DM::Sound_Erase(this->gameOver_Bgm);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -53,6 +58,9 @@ namespace  Over
 		this->endFlag = false;
 		//
 		this->iniFlag = false;
+
+		//bgm再生
+		DM::Sound_Play(this->res->gameOver_Bgm, true);
 
 		this->enBone = new Bone(180, "Enemy");
 		ML::Vec3 pos(200, -90, 0);
@@ -95,6 +103,8 @@ namespace  Over
 		//★データ＆タスク解放
 		delete this->enBone;
 		this->enBone = nullptr;
+		
+		DM::Sound_Erase(this->res->gameOver_Bgm);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{

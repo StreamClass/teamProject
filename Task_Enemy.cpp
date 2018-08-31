@@ -163,7 +163,7 @@ namespace  Enemy
 					this->ebone->Moving(targetPos * this->speed);
 					//ˆê’èˆÈã‹ß‚¢‚È‚çŒü‚©‚¤êŠ‚ð•s’è‚É‚·‚é
 					ML::Vec3 dist = this->pos - this->priority_Position;
-					if (dist.Length() <= 1500.0f)
+					if (dist.Length() <= chipX*10.0f)
 					{
 						this->priority_Position = ML::Vec3(0, 0, 0);
 						this->Set_Destination(ML::Vec3(0, 0, 0));

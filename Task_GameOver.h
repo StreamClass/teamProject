@@ -34,6 +34,7 @@ namespace Over
 
 		//
 		string footSoundName;
+		string gameOver_Bgm;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask

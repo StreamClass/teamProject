@@ -25,6 +25,10 @@ namespace  Clear
 		//クリアテキスト
 		this->imageName[3] = "TextImg";
 		DG::Image_Create(this->imageName[3], "./data/image/ClearText.png");
+		//背景音楽
+		this->clearBgm = "ClearBgm";
+		DM::Sound_CreateStream(this->clearBgm, "./data/sound/GameClear_BGM.wav");
+
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -35,6 +39,7 @@ namespace  Clear
 		{
 			DG::Image_Erase(this->imageName[i]);
 		}
+		DM::Sound_Erase(this->clearBgm);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -53,6 +58,9 @@ namespace  Clear
 		this->cloud00pos = ML::Vec2(1920, 0);
 		this->cloud01pos = ML::Vec2(960, 300);
 		this->alpha = 0.0f;
+
+		//bgm再生
+		DM::Sound_Play(this->res->clearBgm,true);
 		//★タスクの生成
 
 		return  true;
@@ -62,7 +70,7 @@ namespace  Clear
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-
+		DM::Sound_Stop(this->res->clearBgm);
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{

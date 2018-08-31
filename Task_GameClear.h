@@ -25,6 +25,7 @@ namespace Clear
 		//‹¤—L‚·‚é•Ï”‚Í‚±‚±‚É’Ç‰Á‚·‚é
 		//‰æ‘œ‚Ì–¼‘O‚S‚Â•ª
 		string imageName[4];
+		string clearBgm;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
