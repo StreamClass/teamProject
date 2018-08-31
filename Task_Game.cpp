@@ -158,6 +158,7 @@ namespace  Game
 			lo->Set_Color(1);
 			//状態遷移待機状態へ
 			this->pushButton = true;
+			DM::Sound_FadeOut(this->res->bgmName);
 		}
 		//ゲームオーバー状態で初めてのフレームなら
 		if (ge->state == ge->over && !this->pushButton)
@@ -168,6 +169,7 @@ namespace  Game
 			lo->Set_Color(0);
 			//状態遷移待機状態へ
 			this->pushButton = true;
+			DM::Sound_FadeOut(this->res->bgmName);
 		}
 		//デモ状態なら
 		if (ge->state == ge->demo)
@@ -180,6 +182,7 @@ namespace  Game
 				lo->Set_NowTask(defGroupName);
 				lo->Set_Color(1);
 				this->pushButton = true;
+				DM::Sound_FadeOut(this->res->bgmName);
 			}
 			this->timeCnt++;
 		}

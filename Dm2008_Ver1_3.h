@@ -36,4 +36,6 @@ namespace DM
 	void  Sound_Clear();
 	//指定した音声を削除する
 	void  Sound_Erase(const string name_);
+	//指定した音声をフェードアウトさせる
+	void  Sound_FadeOut(const string name_);
 }

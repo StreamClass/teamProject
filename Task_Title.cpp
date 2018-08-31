@@ -164,6 +164,7 @@ namespace  Title
 			lo->Set_NextTask("デモ");
 			//白
 			lo->Set_Color(1);
+			DM::Sound_FadeOut(this->res->bgmName);
 		}
 
 		//スタートボタンを押したら
@@ -184,7 +185,7 @@ namespace  Title
 			lo->Set_NextTask("ゲーム");
 			//色を黒に指定
 			lo->Set_Color(0);
-
+			DM::Sound_FadeOut(this->res->bgmName);
 			//DM::Sound_Stop("TitleBGM");
 		}
 		//ボタンを押していたら

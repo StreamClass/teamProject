@@ -99,13 +99,14 @@ namespace  Clear
 			lo->Set_NextTask("日電ロゴ");
 			//ローディングの色を白に指定
 			lo->Set_Color(1);
+			DM::Sound_FadeOut(this->res->clearBgm);
 		}
 		/*19秒後(ローディングを呼んでから2秒後)
 		にタスクを解放*/
-		if (this->timeCnt > 60 * 19.0f)
-		{
-			this->Kill();
-		}
+		//if (this->timeCnt > 60 * 19.0f)
+		//{
+		//	this->Kill();
+		//}
 		/*画面が見えてから2秒後(タスク生成から4秒後)
 		から3秒かけてゲームクリアのロゴを表示*/
 		if (this->timeCnt > 60 * 4 && this->timeCnt < 60 * 7 )

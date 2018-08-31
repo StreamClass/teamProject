@@ -128,6 +128,7 @@ namespace  Over
 			//ローディング画面の色を黒に指定
 			lo->Set_Color(0);
 			this->endFlag = true;
+			DM::Sound_FadeOut(this->res->gameOver_Bgm);
 		}
 		//2秒後から
 		if (this->timeCnt > 60 * 2)
@@ -159,6 +160,7 @@ namespace  Over
 			lo->Set_Color(0);
 			//endFlagをtrueに
 			this->endFlag = true;
+			DM::Sound_FadeOut(this->res->gameOver_Bgm);
 		}
 		//if (this->timeCnt > 60 && this->iniFlag)
 		//{

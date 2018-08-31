@@ -1030,4 +1030,21 @@ namespace DM
 	{
 		sounds.erase(name_);
 	}
+	//
+	void  Sound_FadeOut(const string name_)
+	{
+		auto it = sounds.find(name_);
+		if (it == sounds.end())
+		{
+			if (sounds_NotObject == false) {
+				MessageBox(nullptr, name_.c_str(), _T("存在しないサウンドバッファに制御を要求しました"), MB_OK);
+			}
+			sounds_NotObject = true;
+			return;
+		}
+		else
+		{
+			it->second->FadeOut(int(1000 / 30));
+		}
+	}
 }
