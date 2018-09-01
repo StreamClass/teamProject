@@ -1044,7 +1044,7 @@ namespace DM
 		}
 		else
 		{
-			it->second->FadeOut(int(1000 / 30));
+			it->second->FadeOut(30);
 		}
 	}
 }
