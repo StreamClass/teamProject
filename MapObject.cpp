@@ -56,8 +56,13 @@ bool MapObj::HitCheck(const ML::Box3D& hit)
 //•`‰æˆ—
 void MapObj::Render3D()
 {
+	if (this->meshName_ == "fireModel")
+	{
+		DG::EffectState().param.lightAmbient = ML::Color(1, 1, 1, 1);
+	}
 	ML::Mat4x4 matW;
 	D3DXMatrixAffineTransformation(&matW, float(this->scale_), NULL, &this->angle_, &this->pos_);
 	DG::EffectState().param.matWorld = matW;
 	DG::Mesh_Draw(this->meshName_);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
 }
