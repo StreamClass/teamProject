@@ -33,8 +33,7 @@ private:
 public:
 	//中心点のコピーをもらう
 	ML::Vec3 GetCenter() const;
-	//継承先のパラメータのコピーをもらう	
-	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
+	
 	//回転
 	void Rotate_Center(ML::Mat4x4* matR);
 	//動く
@@ -49,6 +48,8 @@ public:
 	virtual void Get_All_Points(std::vector<ML::Vec3>*) = 0;
 	//三角形で分割する
 	virtual void Get_All_Triangle(std::vector<Triangle>*) = 0;
+	//継承先のパラメータのコピーをもらう	
+	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
 
 	//コンストラクタ
 	//ゼロクリア

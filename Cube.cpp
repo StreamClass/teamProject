@@ -51,15 +51,15 @@ void Cube::Move(const ML::Vec3& vec)
 //vector‚ðƒNƒŠƒA‚·‚é‚©‚Í–¢’è(2018/06/28)
 void Cube::Get_All_Points(std::vector<ML::Vec3>* vertex)
 {
-	//vertex->resize(VERTEX_ON_CUBE);
+	//0~3‚©‚ç+4‚·‚é‚Æ’š“x‘ÎŠpü‚É‚È‚é‚æ‚¤‚É
 	vertex->push_back(this->leftBottom);//0
 	vertex->push_back(this->leftBottom + this->lengthZ);//1
 	vertex->push_back(this->leftBottom + this->lengthX + this->lengthZ);//2
 	vertex->push_back(this->leftBottom + this->lengthX);//3
-	vertex->push_back(this->leftBottom + this->lengthY);//4
-	vertex->push_back(this->leftBottom + this->lengthY + this->lengthZ);//5
-	vertex->push_back(this->leftBottom + this->lengthX + this->lengthY + this->lengthZ);//6
-	vertex->push_back(this->leftBottom + this->lengthY + this->lengthX);//7
+	vertex->push_back(this->leftBottom + this->lengthX + this->lengthY + this->lengthZ);//4
+	vertex->push_back(this->leftBottom + this->lengthY + this->lengthX);//5
+	vertex->push_back(this->leftBottom + this->lengthY);//6
+	vertex->push_back(this->leftBottom + this->lengthY + this->lengthZ);//7
 }
 
 void Cube::Get_All_Triangle(std::vector<Triangle>* tri)
@@ -77,75 +77,75 @@ void Cube::Get_All_Triangle(std::vector<Triangle>* tri)
 	{
 		vertex_Index[0],
 		vertex_Index[3],
-		vertex_Index[4],
+		vertex_Index[6],
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[0].normal, (t[0].c - t[0].a), (t[0].b - t[0].a));
 	t[1] =
 	{
 		vertex_Index[3],
-		vertex_Index[4],
-		vertex_Index[7],
+		vertex_Index[6],
+		vertex_Index[5],
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[1].normal, (t[1].b - t[1].a), (t[1].c - t[1].a));
 	t[2] =
 	{
 		vertex_Index[1],
 		vertex_Index[0],
-		vertex_Index[5],
+		vertex_Index[7],
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[2].normal, (t[2].c - t[2].a), (t[2].b - t[2].a));
 	t[3] =
 	{
 		vertex_Index[0],
-		vertex_Index[5],
-		vertex_Index[4],
+		vertex_Index[7],
+		vertex_Index[6],
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[3].normal, (t[3].b - t[3].a), (t[3].c - t[3].a));
 	t[4] =
 	{
 		vertex_Index[1],
-		vertex_Index[5],
+		vertex_Index[7],
 		vertex_Index[2],
 
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[4].normal, (t[4].c - t[4].a), (t[4].b - t[4].a));
 	t[5] =
 	{
-		vertex_Index[5],
+		vertex_Index[7],
 		vertex_Index[2],
-		vertex_Index[6],
+		vertex_Index[4],
 
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[5].normal, (t[5].b - t[5].a), (t[5].c - t[5].a));
 	t[6] =
 	{
 		vertex_Index[3],
-		vertex_Index[7],
+		vertex_Index[5],
 		vertex_Index[2],
 
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[6].normal, (t[6].b - t[6].a), (t[4].c - t[6].a));
 	t[7] =
 	{
-		vertex_Index[7],
+		vertex_Index[5],
 		vertex_Index[2],
-		vertex_Index[6],
+		vertex_Index[4],
 
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[7].normal, (t[7].c - t[7].a), (t[7].b - t[7].a));
 	t[8] =
 	{
-		vertex_Index[4],
-		vertex_Index[7],
+		vertex_Index[6],
 		vertex_Index[5],
+		vertex_Index[7],
 
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[8].normal, (t[8].c - t[8].a), (t[8].b - t[8].a));
 	t[9] =
 	{
-		vertex_Index[7],
 		vertex_Index[5],
-		vertex_Index[6],
+		vertex_Index[7],
+		vertex_Index[4],
 	};
 	MyMath::Get_Normal_to_Vector_Cross(&t[9].normal, (t[9].b - t[9].a), (t[9].c - t[9].a));
 	t[10] =
