@@ -109,7 +109,6 @@ namespace  Over
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//šˆø‚«Œp‚¬ƒ^ƒXƒN‚Ì¶¬
-			//auto nextTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -162,18 +161,6 @@ namespace  Over
 			this->endFlag = true;
 			DM::Sound_FadeOut(this->res->gameOver_Bgm);
 		}
-		//if (this->timeCnt > 60 && this->iniFlag)
-		//{
-		//	//
-		//	this->enBone->Moving(-this->enBone->Get_Center());
-		//	//
-		//	ML::Vec3 pos(200, 0, 0);
-		//	this->enBone->Moving(pos);
-		//	float radi = ML::ToRadian(-90);
-		//	this->enBone->Bone_RotateY_All(radi);
-		//	this->enBone->Set_Next_Motion("Running");
-		//	this->iniFlag = false;
-		//}
 
 		//endFlag‚ªtrue‚È‚ç
 		if (this->endFlag == true)

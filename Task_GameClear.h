@@ -56,6 +56,8 @@ namespace Clear
 		ML::Vec2 cloud01pos;
 		//テキストの不透明度
 		float alpha;
+		//
+		bool endflag;
 	public:
 	};
 }

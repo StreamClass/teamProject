@@ -58,7 +58,7 @@ namespace  Clear
 		this->cloud00pos = ML::Vec2(1920, 0);
 		this->cloud01pos = ML::Vec2(960, 300);
 		this->alpha = 0.0f;
-
+		this->endflag = false;
 		//bgm再生
 		DM::Sound_Play(this->res->clearBgm,true);
 		//★タスクの生成
@@ -75,7 +75,6 @@ namespace  Clear
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nectTask = Title::Object::Create(true);
 		}
 
 		return  true;
@@ -86,27 +85,17 @@ namespace  Clear
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
 		//startボタンを押すと解放
-		//デバッグ用
-		if (in.ST.down)
-		{
-			this->Kill();
-		}
 		//タスク生成から17秒後にローディング画面を呼び出し
-		if (this->timeCnt == 60 * 17.0f)
+		if ((this->timeCnt == 60 * 17.0f || in.ST.down) && !this->endflag)
 		{
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
 			lo->Set_NextTask("日電ロゴ");
 			//ローディングの色を白に指定
 			lo->Set_Color(1);
+			this->endflag = true;
 			DM::Sound_FadeOut(this->res->clearBgm);
 		}
-		/*19秒後(ローディングを呼んでから2秒後)
-		にタスクを解放*/
-		//if (this->timeCnt > 60 * 19.0f)
-		//{
-		//	this->Kill();
-		//}
 		/*画面が見えてから2秒後(タスク生成から4秒後)
 		から3秒かけてゲームクリアのロゴを表示*/
 		if (this->timeCnt > 60 * 4 && this->timeCnt < 60 * 7 )
