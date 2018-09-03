@@ -6,6 +6,7 @@
 #include  "Task_Player.h"
 #include  "Task_Door.h"
 #include  "Task_MiniMap.h"
+#include <algorithm>
 
 namespace  Map
 {
@@ -168,6 +169,15 @@ namespace  Map
 	{
 		int x = 0, z = 0;
 		int num = 0;
+
+		struct BreakerData
+		{
+			ML::Vec3 pos;
+			int angle;
+		};
+		//ランダム配置の前にブレーカーデーターを格納する場所
+		vector<BreakerData> breakers;
+
 		//読み込んだファイル名がend以外の間回す
 		while (this->fileName != "end")
 		{
@@ -237,7 +247,8 @@ namespace  Map
 					case Type::breakerN:
 					case Type::breakerS:
 						//オブジェクトマネージャでブレイカーを生成
-						ge->OM.Create_Breaker(pos, (Type)in);
+						//ge->OM.Create_Breaker(pos, (Type)in);
+						breakers.push_back({ pos,in });
 						break;
 
 					//プレイヤなら
@@ -293,6 +304,23 @@ namespace  Map
 		}
 		//コーナー同士の関係性を構築
 		ge->OM.Set_Relationship();
+
+		//最初の一つ目だけそのまま生成		
+		ge->OM.Create_Breaker(breakers[0].pos,(Type)breakers[0].angle);
+		//作り終わったものは排除してシャッフルする
+		for (size_t i = 1; i < breakers.size(); i++)
+		{
+			breakers[i - 1] = breakers[i];
+		}
+		std::random_shuffle(breakers.begin(), breakers.end());
+		
+		//3つだけ残す
+		breakers.resize(3);
+
+		for (const auto& b : breakers)
+		{
+			ge->OM.Create_Breaker(b.pos, (Type)b.angle);
+		}
 
 		//ドアの生成は完全に別のところで
 		for (int z =0; z < this->maxSizeZ; ++z)

@@ -17,7 +17,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 	for (int i = -1; i < 2; i++)
 	{
 		matR.RotationY(angle + ML::ToRadian(45 * (float)i));
-		a = matR.TransformCoord(a);
+		a = matR.TransformNormal(a);
 
 		//マップとのあたり判定を持っているタスクをもらう
 		auto h = ge->GetTask_One_G<Map::Object>("フィールド");

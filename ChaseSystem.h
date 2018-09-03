@@ -1,5 +1,6 @@
 #pragma once
 #include "GameEngine_Ver3_7.h"
+#include "Cube.h"
 
 //エネミーの視野と追跡ルートを決めるクラス
 

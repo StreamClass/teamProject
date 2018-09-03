@@ -7,9 +7,9 @@
 #include "Tablet.h"
 #include "Bone.h"
 
-#define NORMALSPEED 10
+#define NORMALSPEED 8
 #define TIRED_SPEED 3
-#define DASHSPEED 20
+#define DASHSPEED 16
 #define MAX_STAMINA 240
 
 namespace Player
