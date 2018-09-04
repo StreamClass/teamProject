@@ -12,34 +12,38 @@ void ChaseSystem::PushBack_Route(const ML::Vec3& pos)
 
 void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const ML::Vec3& pos, const float& angle)
 {		
-	for (int i = -1; i < 2; i++)
+	for (int i = -5; i < 10; i++)
 	{
 		//アングルに合わせた方向ベクトル算出
 		ML::Mat4x4 matR;
 		ML::Vec3 a(1, 0, 0);
-		matR.RotationY(-angle + ML::ToRadian(60 * (float)i));
+		matR.RotationY(-angle + ML::ToRadian(10 * (float)i));
 		a = matR.TransformNormal(a);
+
+		//判定の基準になる内積値を先に求めておく
+		//内積値を保存する場所
+		float cos = 0.0f;
+		//相対ベクトル
+		ML::Vec3 tovec = (plpos - pos);
+		//判定中の視線ベクトルと相対ベクトルを内積する
+		MyMath::Vector_Dot(&cos, a, tovec);
 
 		//マップとのあたり判定を持っているタスクをもらう
 		auto h = ge->GetTask_One_G<Map::Object>("フィールド");
 		//アングル方向にセンサー矩形発射
-		for (float f = 0; f < chipX * 10; f += chipX/3.0f)
+		for (float f = 0; f <= chipX * 10; f += chipX/3.0f)
 		{
 			//センサーの中心に範囲1の矩形を同時に発射			
-			ML::Box3D c(-25, -25, -25, 50, 50, 50);
+			ML::Box3D c(-3,-3,-3,6,6,6);
 			c.Offset(pos + (a.Normalize()*f));
 			//マップとのあたり判定であたったら処理終了
 			if (h->Map_CheckHit(c))
 			{
 				break;
 			}
-			float cos = 0.0f;
-			ML::Vec3 tovec = (pos - plpos);
-			MyMath::Vector_Cross(&cos, a, tovec);
 
-
-			//センサーに当たったら			
-			if(cos > cosf(ML::ToRadian(60)) && (tovec.Length() < f))
+			//センサーに当たったら
+			if(cos > cosf(ML::ToRadian(10)) && (tovec.Length() < f))
 			{
 				//チェイスモードに変更し、プレイや位置をルートに登録
 				this->systemFlag = true;

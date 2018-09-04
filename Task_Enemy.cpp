@@ -186,7 +186,7 @@ namespace  Enemy
 					//目的地設定
 					this->toVec = this->system.NextRoute();
 				}
-				else if (this->timeCnt % 10 == 0)
+				else if (this->timeCnt % 5 == 0)
 				{
 					//センサーチェック
 					this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
@@ -198,11 +198,11 @@ namespace  Enemy
 					this->toVec = this->system.NextRoute();
 				}
 				//ルーチンワークに戻るときの動作
-				//if (this->toVec.Is_Zero_Vec())
-				//{
-				//	//センサーチェック
-				//	this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
-				//}
+				if (this->toVec.Is_Zero_Vec())
+				{
+					//センサーチェック
+					this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
+				}
 				targetPos = this->toVec - this->pos;
 				//移動
 				this->pos += targetPos.Normalize() * this->chasing_Speed;
