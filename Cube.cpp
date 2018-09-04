@@ -29,6 +29,11 @@ void Cube::Get_Parameter(const string key, ML::Vec3& container)
 	}
 }
 
+Shape_Type Cube::Get_Type()
+{
+	return Shape_Type::Shape_Cube;
+}
+
 //ˆÚ“®E‰ñ“]
 void Cube::Rotate(ML::Mat4x4* matR)
 {

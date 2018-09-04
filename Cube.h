@@ -31,6 +31,7 @@ public:
 	//引数 : (結果を保存するTriangle型のvectorのアドレス値)
 	void Get_All_Triangle(std::vector<Triangle>* resultr) override;	
 	
+	Shape_Type Get_Type() override;
 
 	//コンストラクタ
 	//ゼロクリア

@@ -1,6 +1,13 @@
 #pragma once
 #include "myLib.h"
 
+//継承先の列挙型
+enum Shape_Type
+{
+	Shape_Cube,
+	Shape_Sphere,
+};
+
 //三角形の基本情報
 //頂点と法線ベクトル
 struct Triangle
@@ -50,6 +57,8 @@ public:
 	virtual void Get_All_Triangle(std::vector<Triangle>*) = 0;
 	//継承先のパラメータのコピーをもらう	
 	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
+	//空間図形のタイプをもらう
+	virtual Shape_Type Get_Type() = 0;
 
 	//コンストラクタ
 	//ゼロクリア

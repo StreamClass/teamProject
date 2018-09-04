@@ -1,6 +1,5 @@
 #pragma once
 #include "GameEngine_Ver3_7.h"
-#include "Cube.h"
 
 //エネミーの視野と追跡ルートを決めるクラス
 
@@ -8,9 +7,7 @@ class ChaseSystem
 {
 private:
 	//プレイ屋の移動位置を保存する
-	std::vector<ML::Vec3> player_Route;
-	//センサーのあたり判定矩形
-	ML::Box3D sensor;
+	std::vector<ML::Vec3> player_Route;	
 	//システム判別(false : 普通 true : 追跡)
 	bool systemFlag;
 	//現在目的地を探す番号
@@ -35,7 +32,6 @@ public:
 
 	//コンストラクタ・デストラクタ
 	ChaseSystem() :
-		sensor(-500, -100, -50, 1000, 200, 100),
 		systemFlag(false),
 		destination(0)
 	{
