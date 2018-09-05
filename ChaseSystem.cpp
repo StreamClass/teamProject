@@ -6,18 +6,31 @@
 
 void ChaseSystem::PushBack_Route(const ML::Vec3& pos)
 {
+	//近すぎる目的地は登録しない
+	if (this->player_Route.size() > 1)
+	{
+		//判定する距離
+		float dist = 50.0f;
+		ML::Vec3 last_Route = this->player_Route[this->player_Route.size() - 1];
+		ML::Vec3 d = pos - last_Route;
+
+		if (d.Length() <= dist)
+		{
+			return;
+		}
+	}
 	//引数をvectorに組み込む	
 	this->player_Route.push_back(pos);
 }
 
 void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const ML::Vec3& pos, const float& angle)
 {		
-	for (int i = -5; i < 10; i++)
+	for (int i = -10; i < 20; i++)
 	{
 		//アングルに合わせた方向ベクトル算出
 		ML::Mat4x4 matR;
 		ML::Vec3 a(1, 0, 0);
-		matR.RotationY(-angle + ML::ToRadian(10 * (float)i));
+		matR.RotationY(angle + ML::ToRadian(5 * (float)i));
 		a = matR.TransformNormal(a);
 
 		//判定の基準になる内積値を先に求めておく
@@ -43,7 +56,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 			}
 
 			//センサーに当たったら
-			if(cos > cosf(ML::ToRadian(10)) && (tovec.Length() < f))
+			if((cos > cosf(ML::ToRadian(5)) && (tovec.Length() < f)) || hit.Hit(c))
 			{
 				//チェイスモードに変更し、プレイや位置をルートに登録
 				this->systemFlag = true;
@@ -68,7 +81,8 @@ ML::Vec3 ChaseSystem::NextRoute()
 	//不定場所が出ないまで繰り返す
 	while (r.Is_Zero_Vec())
 	{
-		r = this->player_Route[this->destination];		
+		r = this->player_Route[this->destination];
+		r.y = 0;
 		this->destination++;
 	}
 	r.y = 20;

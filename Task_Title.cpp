@@ -149,6 +149,15 @@ namespace  Title
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		if (this->timeCnt % 100 / 50 == 0)
+		{
+			DG::EffectState().param.light[0].range -= 2;
+		}
+		else
+		{
+			DG::EffectState().param.light[0].range += 2;
+		}
+		
 		auto in = DI::GPad_GetState(ge->controllerName);
 		//現在のアニメーションをリピートする
 		this->eneBone->Repeat_Now_Motioin();

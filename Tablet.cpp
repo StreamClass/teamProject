@@ -92,7 +92,7 @@ bool Tablet::Update_On_Demo()
 	const float to_Length = 1200.0f;
 
 	//全ての監視カメラとの距離をとって一定距離以内のカメラを選択
-	for (int i =0; i<this->camera_Pos.size(); i++)
+	for (size_t i = 0; i < this->camera_Pos.size(); i++)
 	{
 		ML::Vec3 evec = this->camera_Pos[i] - epos;
 

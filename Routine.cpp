@@ -104,7 +104,9 @@ int Routine::Recieved(const ML::Box3D& eHit_, const ML::Vec3& ePos_)
 	//		return i;
 	//	}
 	//}
-	ML::Box3D you = ML::Box3D(this->cornerPos[this->target].x, this->cornerPos[this->target].y, this->cornerPos[this->target].z,
+	ML::Box3D you = ML::Box3D(int(this->cornerPos[this->target].x),
+		int(this->cornerPos[this->target].y),
+		int(this->cornerPos[this->target].z),
 		1, 1, 1);
 	if (you.Hit(me))
 	{

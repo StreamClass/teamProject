@@ -64,5 +64,5 @@ void MapObj::Render3D()
 	D3DXMatrixAffineTransformation(&matW, float(this->scale_), NULL, &this->angle_, &this->pos_);
 	DG::EffectState().param.matWorld = matW;
 	DG::Mesh_Draw(this->meshName_);
-		DG::EffectState().param.lightAmbient = ML::Color(1, 0.3f, 0.3f, 0.3f);
+		DG::EffectState().param.lightAmbient = ML::Color(1, 0.2f, 0.2f, 0.2f);
 }

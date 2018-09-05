@@ -76,7 +76,7 @@ namespace  Player
 		this->tremor = 1.0f;
 		this->stamina = MAX_STAMINA;
 		this->recovery_Flag = false;
-		this->debugMode = true;
+		this->debugMode = false;
 		this->motion = neutral;
 
 		this->plBone = new Bone(170,"Player");
@@ -210,7 +210,7 @@ namespace  Player
 			float headY = this->headHeight_std +
 				sin(ML::ToRadian(float(this->cnt_TG*this->cnt_SP)))*(this->speed*this->tremor);
 			float targetY = this->adjust_TG_std +
-				sin(ML::ToRadian(this->cnt_TG*this->cnt_SP))*(this->speed*this->tremor) + this->add_adjust;
+				sin(ML::ToRadian(float(this->cnt_TG*this->cnt_SP)))*(this->speed*this->tremor) + this->add_adjust;
 			//頭の高さを更新
 			this->headHeight = headY;
 			//注視点の高さを更新
@@ -511,7 +511,7 @@ namespace  Player
 				move = move.Normalize();
 				for (int i = 0; i < 10; ++i)
 				{
-					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0.0f, this->headHeight, 0.0f)) + (move * i * 15.0f))))
+					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0.0f, this->headHeight, 0.0f)) + (move * (float)i * 15.0f))))
 					{
 						(*it)->ActivateBreaker();
 						//ボタン操作モーション実行
@@ -537,7 +537,7 @@ namespace  Player
 				move = move.Normalize();
 				for (int i = 0; i < 10; ++i)
 				{
-					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * i * 15))))
+					if ((*it)->Hit_Check(aim->Get_HitBase().OffsetCopy((this->pos + ML::Vec3(0, this->headHeight, 0)) + (move * (float)i * 15.0f))))
 					{
 						return true;
 					}

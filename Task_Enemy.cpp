@@ -186,7 +186,7 @@ namespace  Enemy
 					//目的地設定
 					this->toVec = this->system.NextRoute();
 				}
-				else if (this->timeCnt % 5 == 0)
+				else if (this->timeCnt % 15 == 0)
 				{
 					//センサーチェック
 					this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
@@ -202,20 +202,24 @@ namespace  Enemy
 				{
 					//センサーチェック
 					this->system.SensorCheck(pl->Get_HitBase().OffsetCopy(pl->Get_Pos()), pl->Get_Pos(), this->pos, this->angle.y);
+					this->timeCnt = 0;
+					
 				}
-				targetPos = this->toVec - this->pos;
-				//移動
-				this->pos += targetPos.Normalize() * this->chasing_Speed;
-				this->ebone->Moving(targetPos.Normalize() * this->chasing_Speed);
-				this->ebone->Set_Next_Motion(this->animations_Name[0]);
-				//向きをプレイヤ側にする
-				ML::Vec3 a = pl->Get_Pos() - this->pos;
-				this->angle.y = -atan2(a.z, a.x);
+				else
+				{
+					targetPos = this->toVec - this->pos;
+					//移動
+					this->pos += targetPos.Normalize() * this->chasing_Speed;
+					this->ebone->Moving(targetPos.Normalize() * this->chasing_Speed);
+					this->ebone->Set_Next_Motion(this->animations_Name[0]);
+					//向きをプレイヤ側にする
+					ML::Vec3 a = pl->Get_Pos() - this->pos;
+					this->angle.y = -atan2(a.z, a.x);
 
-				//カウント上昇
-				this->timeCnt++;
+					//カウント上昇
+					this->timeCnt++;
+				}
 			}
-
 
 			//ボーンアップデート
 			this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(90));
