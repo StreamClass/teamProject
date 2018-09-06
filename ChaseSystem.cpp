@@ -24,7 +24,11 @@ void ChaseSystem::PushBack_Route(const ML::Vec3& pos)
 }
 
 void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const ML::Vec3& pos, const float& angle)
-{		
+{
+	//センサー判断用の匿名関数
+	auto Sensor_Judge = [](const float& c, ML::Vec3 v, const float& sight)
+	{ return (c > cosf(ML::ToRadian(5)) && v.Length() < sight); };
+
 	for (int i = -10; i < 20; i++)
 	{
 		//アングルに合わせた方向ベクトル算出
@@ -46,7 +50,7 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 		//アングル方向にセンサー矩形発射
 		for (float f = 0; f <= chipX * 10; f += chipX/3.0f)
 		{
-			//センサーの中心に範囲1の矩形を同時に発射			
+			//センサーの中心に範囲6の矩形を同時に発射			
 			ML::Box3D c(-3,-3,-3,6,6,6);
 			c.Offset(pos + (a.Normalize()*f));
 			//マップとのあたり判定であたったら処理終了
@@ -56,7 +60,8 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 			}
 
 			//センサーに当たったら
-			if((cos > cosf(ML::ToRadian(5)) && (tovec.Length() < f)) || hit.Hit(c))
+			// cos<cosf(ML::ToRadian(5)) && tovec.Length() < f
+			if(Sensor_Judge(cos, tovec, f) || hit.Hit(c))
 			{
 				//チェイスモードに変更し、プレイや位置をルートに登録
 				this->systemFlag = true;
