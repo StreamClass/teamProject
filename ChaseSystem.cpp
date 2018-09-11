@@ -28,13 +28,13 @@ void ChaseSystem::SensorCheck(const ML::Box3D& hit, const ML::Vec3& plpos, const
 	//センサー判断用の匿名関数
 	auto Sensor_Judge = [](const float& c, ML::Vec3 v, const float& sight)
 	{ return (c > cosf(ML::ToRadian(5)) && v.Length() < sight); };
-
-	for (int i = -10; i < 20; i++)
+	
+	for (int i = -5; i < 10; i++)
 	{
 		//アングルに合わせた方向ベクトル算出
 		ML::Mat4x4 matR;
 		ML::Vec3 a(1, 0, 0);
-		matR.RotationY(angle + ML::ToRadian(5 * (float)i));
+		matR.RotationY(angle + ML::ToRadian(10 * (float)i));
 		a = matR.TransformNormal(a);
 
 		//判定の基準になる内積値を先に求めておく

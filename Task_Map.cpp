@@ -439,20 +439,25 @@ namespace  Map
 		//接触判定開始
 		for (int z = sz; z <= ez; ++z) {
 			for (int x = sx; x <= ex; ++x) {
-				if (this->arr[z][x].Get_Type() == Type::box) {
+				if (this->arr[z][x].Get_Type() == Type::box) 
+				{
 					return true;
+				}
+				else if (this->arr[z][x].Get_Type() == Type::door)
+				{
+					auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
+					for (auto it = d->begin(); it != d->end(); it++)
+					{
+						if ((*it)->Hit_Check(pHit))
+						{
+							return true;
+						}
+					}
 				}
 				pl->Check_Clear();
 			}
 		}
-		auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
-		for (auto it = d->begin(); it != d->end(); it++)
-		{
-			if ((*it)->Hit_Check(pHit))
-			{
-				return true;
-			}
-		}
+		
 		for (auto obj : this->mapObjects)
 		{
 			if (obj->HitCheck(pHit))
