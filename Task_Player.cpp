@@ -62,7 +62,7 @@ namespace  Player
 		this->trm_Min = 0.0f;
 		this->trm_Max_dash = 25.0f;
 		this->trm_Max_trd = 25.0f;
-		this->adjust_Speed = 10.0f;
+		this->adjust_Speed = 6.5f;
 		this->adjust_Min = -400;
 		this->adjust_Max = +400;
 		this->heightMax = 180;
@@ -241,7 +241,7 @@ namespace  Player
 				//揺れ幅を指定
 				this->tremor = 0.5f;
 				//スタミナを回復
-				this->stamina += 0.3f;
+				this->stamina += 0.5f;
 				//各フラグを反転
 				this->neutralSoundFlag = true;
 				this->dashSoundFlag = false;
@@ -312,7 +312,7 @@ namespace  Player
 			{
 				this->Touch();
 			}
-			if (in.B2.down)
+			if (in.SE.down)
 			{
 				auto mm = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
 				mm->Set_MiniMap_View();

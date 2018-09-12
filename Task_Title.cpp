@@ -17,7 +17,7 @@ namespace  Title
 		DG::Mesh_CreateFromSOBFile(this->bgMeshName, "./data/mesh/TitleBG.SOB");
 		//タイトルロゴ
 		this->loImgName = "LogoImg";
-		DG::Image_Create(this->loImgName, "./data/image/TitleLogo.png");
+		DG::Image_Create(this->loImgName, "./data/image/TitleLogo02.png");
 		//Startロゴ
 		this->sbImgName = "StartButtonImg";
 		DG::Image_Create(this->sbImgName, "./data/image/StartButton.png");
@@ -111,8 +111,8 @@ namespace  Title
 		DG::EffectState().param.light[0].kind = DG_::Light::Point;//光源の種類
 		DG::EffectState().param.light[0].range = 200.0f;
 		DG::EffectState().param.light[0].attenuation = (1 / 350.0f)*(1 / 350.0f);
-		DG::EffectState().param.light[0].pos = ML::Vec3(-100, 50, 180);
-		DG::EffectState().param.light[0].color = ML::Color(1, 1.0f, 0.0f, 0.0f);//色と強さ
+		DG::EffectState().param.light[0].pos = ML::Vec3(-130, 90, 180);
+		DG::EffectState().param.light[0].color = ML::Color(1, 1.0f, 1.0f, 1.0f);//色と強さ
 
 		//DG::EffectState().param.light[1].enable = true;
 		//DG::EffectState().param.light[1].kind = DG_::Light::Directional;//光源の種類
@@ -151,11 +151,11 @@ namespace  Title
 	{
 		if (this->timeCnt % 100 / 50 == 0)
 		{
-			DG::EffectState().param.light[0].range -= 2;
+			DG::EffectState().param.light[0].range += 2;
 		}
 		else
 		{
-			DG::EffectState().param.light[0].range += 2;
+			DG::EffectState().param.light[0].range -= 2;
 		}
 		
 		auto in = DI::GPad_GetState(ge->controllerName);
@@ -164,7 +164,7 @@ namespace  Title
 		//アニメーション更新
 		this->eneBone->UpDate();
 		//時間カウンタが10秒かつスタートしてないとき
-		if (this->timeCnt == 60 * 10 && !this->pushSon)
+		if (this->timeCnt == 60 * 10000 && !this->pushSon)
 		{
 			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
@@ -211,7 +211,10 @@ namespace  Title
 	{
 		//タイトルロゴ描画
 		ML::Box2D draw(100, 200, 1300, 300);
-		ML::Box2D src(0, 0, 1300, 300);
+		// (0, 0, 1300, 300);
+
+		POINT sizelg = DG::Image_Size(this->res->loImgName);
+		ML::Box2D src(0, 0, sizelg.x, sizelg.y);
 		DG::Image_Draw(this->res->loImgName, draw, src);
 		//状態を判断して
 		if (this->LogoAnim())
