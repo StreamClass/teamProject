@@ -20,25 +20,32 @@ private:
 	std::vector<Door*> door;
 	//タブレットのアドレス値
 	Tablet* tab;
-	//
+	//ルーチンワークシステムのアドレス値
 	Routine* rou;
 
 
 	//最初のブレーカーの初期化
+	//引数 : (ブレーカーの位置,ブレーカーの表示向き)
 	void Init_First_Doors_Breaker(ML::Vec3, int);
 	//ブレーカーの初期化
+	//引数 : (ブレーカーの位置,ブレーカーの表示向き)
 	void Init_Doors_Breaker(ML::Vec3, int);
 
 	//最初のドアの初期化
+	//引数 : (ドアの位置,ドアが開く向き)
 	void Init_First_Door(ML::Vec3, LR);
 	//ドアの初期化
+	//引数 : (ドアの位置,ドアが開く向き)
 	void Init_Door(ML::Vec3, LR);
 public:
 	//ブレーカーを作る
+	//引数 : (ブレーカーの位置,ブレーカーの表示向き)
 	void Create_Breaker(ML::Vec3, Type);
 	//ドアを作る
+	//引数 : (ドアの位置,ドアが開く向き)
 	void Create_Door(ML::Vec3, LR);
 	//カメラの生成
+	//引数 : (カメラの位置,カメラが向いている向き)
 	void Create_Camera(ML::Vec3, Type);
 	//ランプの生成
 	void Create_Lamp(ML::Vec3, ML::Box3D);
@@ -47,6 +54,7 @@ public:
 	//ルーチンワークシステム生成
 	Routine* Create_Routine();
 	//ルーチンワークシステムに各コーナーを登録
+	//引数 : (コーナーの位置,コーナーの番号)
 	void Push_Back_Conner(const ML::Vec3&, const int&);
 	//コーナー同士の関係性を構築
 	void Set_Relationship();

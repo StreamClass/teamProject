@@ -86,7 +86,7 @@ void Tablet::Is_Select_Range_Over()
 
 bool Tablet::Update_On_Demo()
 {
-	//エネミータスクの座用をとる
+	//エネミータスクの座標をとる
 	ML::Vec3 epos = ge->GetTask_One_G<Enemy::Object>("エネミー")->Get_Pos();
 	//判別する距離
 	const float to_Length = 1200.0f;

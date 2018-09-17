@@ -83,7 +83,7 @@ public:
 		this->next.clear();
 		this->mesh_Name = "";
 	}
-	//引数 : (関節の位置、回転量の限界X-,X+,Y-,Y+,Z-,Z+,つながっている骨のアドレス値,メッシュ名)
+	//引数 : (関節の位置,つながっている骨のアドレス値,メッシュ名)
 	Joint(const ML::Vec3& p, Shape* bone,const string& name) 
 		/*:, const float& xm, const float& xp, const float& ym, const float& yp, const float& zm, const float& zp
 		limit_X_Minus(xm),

@@ -15,7 +15,8 @@ private:
 	bool active_Falg;
 
 public:
-	//プレイヤとのあたり判定 引数 : (プレイヤのあたり判定範囲)
+	//プレイヤとのあたり判定
+	//引数 : (プレイヤのあたり判定範囲)
 	bool Player_Touch_Breaker(const ML::Box3D& hit) const;
 	//ブレーカーを起動
 	void Activate_Breaker();
@@ -27,7 +28,7 @@ public:
 	//コンストラクタ・デストラクタ
 	//ゼロクリア
 	Breaker();
-	//位置指定
+	//位置指定コンストラクタ
 	Breaker(ML::Vec3 pos);
 
 	~Breaker() {}

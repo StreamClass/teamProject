@@ -100,7 +100,7 @@ public:
 		this->next_Motion = "";
 		this->repeat_Flag = false;
 	}
-	//引数 : (身長)
+	//引数 : (身長,メッシュのフォルダー名)
 	Bone(const float& tall, const string& owner);
 
 	//デストラクタ

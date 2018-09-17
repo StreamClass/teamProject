@@ -48,14 +48,19 @@ public:
 
 	//仮想関数
 	//継承先の回転
+	//引数 : (回転行列)
 	virtual void Rotate(ML::Mat4x4*) = 0;
 	//継承先の移動
+	//引数 : (移動ベクトル)
 	virtual void Move(const ML::Vec3&) = 0;
 	//頂点で分割する
+	//引数 : (結果を格納するヴェクター)
 	virtual void Get_All_Points(std::vector<ML::Vec3>*) = 0;
 	//三角形で分割する
+	//引数 : (結果を格納するヴェクター)
 	virtual void Get_All_Triangle(std::vector<Triangle>*) = 0;
-	//継承先のパラメータのコピーをもらう	
+	//継承先のパラメータのコピーをもらう
+	//引数 : (パラメータ識別用キーデータ,結果を格納する変数)
 	virtual void Get_Parameter(const string, ML::Vec3&) = 0;
 	//空間図形のタイプをもらう
 	virtual Shape_Type Get_Type() = 0;
@@ -66,7 +71,7 @@ public:
 	{
 		this->center = ML::Vec3(0, 0, 0);
 	}
-	
+	//中心点を指定したコンストラクタ
 	Shape(const ML::Vec3& c)
 	{
 		this->center = c;
