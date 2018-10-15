@@ -12,6 +12,7 @@ namespace Task_Breaker
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//メッシュ・音源の読み込み
 		this->meshName = "Breaker_Mesh";
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/BreakerBase.SOB");
 		this->buttonMeshName = "ButtonMesh";
@@ -40,10 +41,10 @@ namespace Task_Breaker
 
 		//★データ初期化
 		this->circuit = b;
-
 		this->angle = angle;
 		this->pushedButton = false;
 		this->pos = this->circuit->Get_Pos();
+
 		//★タスクの生成
 
 		return  true;
@@ -102,7 +103,6 @@ namespace Task_Breaker
 	void Object::ActivateBreaker()
 	{
 		this->circuit->Activate_Breaker();
-		//DM::Sound_Play(this->res->soundName,false);
 
 		//起動したらエネミーの目的地を設定するようにする
 		this->Now_Be_Pushed();
@@ -112,12 +112,15 @@ namespace Task_Breaker
 	float Object::RotationY_Angle(int& angle)
 	{
 		float angle_;
+		//正面が-Zなら
 		if (this->angle == 2)
 		{
 			angle_= ML::ToRadian(0);
 		}
+		//正面が+Zなら
 		else if (this->angle == 3)
 		{
+			//180度回転させる
 			angle_ = ML::ToRadian(180);
 		}
 		return angle_;
@@ -126,29 +129,42 @@ namespace Task_Breaker
 	//ボタンの移動
 	ML::Vec3 Object::Move_Button()
 	{
+		//ブレーカーの状態から判断
 		if (this->circuit->Get_Now_State())
 		{
+			//正面が-Zなら
 			if (this->angle == 2)
 			{
+				//ボタンを+Z方向に1ずつ移動
 				this->pos.z += 1.0f;
+				//トータルで15移動したら
 				if (this->pos.z > this->circuit->Get_Pos().z + 15.0f)
 				{
+					//初期座標から15移動した位置に固定
 					this->pos.z = this->circuit->Get_Pos().z + 15.0f;
+					//初めて押されたなら
 					if (!this->pushedButton)
 					{
+						//プッシュ音を鳴らす
 						DM::Sound_Play(this->res->soundName, false);
 						this->pushedButton = true;
 					}
 				}
 			}
+			//正面が+Zなら
 			else
 			{
+				//ボタンを-Z方向に1ずつ移動
 				this->pos.z -= 1.0f;
+				//トータルで15移動したら
 				if (this->pos.z < this->circuit->Get_Pos().z - 15.0f)
 				{
+					//初期座標から15移動した位置に固定
 					this->pos.z = this->circuit->Get_Pos().z - 15.0f;
+					//初めて押されたなら
 					if (!this->pushedButton)
 					{
+						//プッシュ音を鳴らす
 						DM::Sound_Play(this->res->soundName, false);
 						this->pushedButton = true;
 					}
@@ -158,7 +174,7 @@ namespace Task_Breaker
 		}
 		return this->pos;
 	}
-	//
+	//今のブレーカーの状態をもらう
 	bool Object::Get_Now_State()
 	{
 		return this->circuit->Get_Now_State();

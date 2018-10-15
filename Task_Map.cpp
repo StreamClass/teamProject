@@ -155,13 +155,6 @@ namespace  Map
 
 		//ライト０番のライティングを有効化
 		DG::EffectState().param.light[0].enable = true;
-
-		//ゴール位置確認用
-		//ML::Mat4x4 gT, gS;
-		//gS.Scaling(this->goal.Get_Scaling());
-		//gT.Translation(this->goal.Get_Pos());
-		//DG::EffectState().param.matWorld = gS * gT;
-		//DG::Mesh_Draw(this->chipName);
 	}
 	//-------------------------------------------------------------------
 	//マップの読み込み
@@ -440,12 +433,13 @@ namespace  Map
 		for (int z = sz; z <= ez; ++z) {
 			for (int x = sx; x <= ex; ++x) {
 				if (this->arr[z][x].Get_Type() == Type::box) 
-				{
+				{//壁ならtrueを返す
 					return true;
 				}
 				else if (this->arr[z][x].Get_Type() == Type::door)
-				{
+				{//ドアなら
 					auto d = ge->GetTask_Group_G<Task_Door::Object>("ドア");
+					//すべてと接触判定を行う
 					for (auto it = d->begin(); it != d->end(); it++)
 					{
 						if ((*it)->Hit_Check(pHit))
@@ -454,10 +448,11 @@ namespace  Map
 						}
 					}
 				}
+				//クリア判定処理
 				pl->Check_Clear();
 			}
 		}
-		
+		//各静的オブジェクトとの接触判定
 		for (auto obj : this->mapObjects)
 		{
 			if (obj->HitCheck(pHit))

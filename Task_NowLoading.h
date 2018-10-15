@@ -54,8 +54,9 @@ namespace Loading
 		float alpha;
 		//RGBの値(一括)
 		float rgb;
-		//
+		//現在のタスク名
 		string nowTask;
+		//次のタスク名
 		string nextTask;
 	public:
 		//メソッド

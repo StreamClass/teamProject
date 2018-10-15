@@ -32,8 +32,9 @@ namespace Over
 		//ゲームオーバーロゴのイメージ名
 		string lImgName;
 
-		//
+		//足音
 		string footSoundName;
+		//BGM
 		string gameOver_Bgm;
 	};
 	//-------------------------------------------------------------------
@@ -62,18 +63,17 @@ namespace Over
 		float al;
 		//フレーム数カウント
 		int timeCnt;
-		//
+		//エネミーのボーン情報
 		Bone* enBone;
+		//エネミーのモーション名
 		string motionName;
-		//
+		//座標
 		ML::Vec3 pos;
 		//エフェクトが出てロゴが出きっているか判断用
 		bool endFlag;
 		//endFlagがtrueになってからのフレーム数カウント
 		int endCnt;
-		//
+		//エネミーのアニメーション初めのフレームか判断
 		bool iniFlag;
-	public:
-		void Set_Bone_Ptr(Bone*);
 	};
 }

@@ -49,10 +49,11 @@ namespace JecLogo
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
 		//時間カウント
 		int timeCnt; 
-		//
+		//ボタンを押したか判断
 		bool pushButton;
 	public:
 		//追加したい変数・メソッドはここに追加する
+		//ある一定のボタンを押すとtrueを返す
 		bool PushAnyButton();
 	};
 }

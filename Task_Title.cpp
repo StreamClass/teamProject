@@ -52,9 +52,7 @@ namespace  Title
 		//★データ初期化
 		srand((unsigned int)time(NULL));
 		this->render2D_Priority[1] = 0.5f;
-		//ボタン用カウント
 		this->sTimeCnt = 0;
-		//
 		this->timeCnt = 0;
 		//Startボタンを押したか判断
 		this->pushSon = false;
@@ -83,17 +81,8 @@ namespace  Title
 		}
 		//ランダムで0～2を指定
 		int ran = rand() % 2;
-		//2以外なら
-		//2ならアニメーションをしない
-		/*
-		常に画面が動いているようにとのことで2種類に変更
-		2018/08/20
-		*/
-		//if (ran != 2)
-		//{
-			//対応するアニメーションの呼び出し
-			this->eneBone->Set_Next_Motion(this->motionName[ran]);
-		//}
+		//対応するアニメーションの呼び出し
+		this->eneBone->Set_Next_Motion(this->motionName[ran]);
 
 		//カメラの設定
 		ge->camera[0] = MyPG::Camera::Create(
@@ -113,11 +102,6 @@ namespace  Title
 		DG::EffectState().param.light[0].attenuation = (1 / 350.0f)*(1 / 350.0f);
 		DG::EffectState().param.light[0].pos = ML::Vec3(-130, 90, 180);
 		DG::EffectState().param.light[0].color = ML::Color(1, 1.0f, 1.0f, 1.0f);//色と強さ
-
-		//DG::EffectState().param.light[1].enable = true;
-		//DG::EffectState().param.light[1].kind = DG_::Light::Directional;//光源の種類
-		//DG::EffectState().param.light[1].direction = ML::Vec3(1, 0, 0).Normalize();//照射方向
-		//DG::EffectState().param.light[1].color = ML::Color(1, 0.8f, 0.2f, 0.2f);//色と強さ
 
 		//BGMを再生
 		DM::Sound_Play(this->res->bgmName, true);
@@ -140,7 +124,6 @@ namespace  Title
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
-			//auto nextTask = Game::Object::Create(true);
 		}
 
 		return  true;
@@ -149,12 +132,15 @@ namespace  Title
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//50フレームごとにポイントライトの拡大縮小の切り替え
 		if (this->timeCnt % 100 / 50 == 0)
 		{
+			//ポイントライトの大きさを2ずつ大きくする
 			DG::EffectState().param.light[0].range += 2;
 		}
 		else
 		{
+			//ポイントライトの大きさを2ずつ小さくする
 			DG::EffectState().param.light[0].range -= 2;
 		}
 		
@@ -164,7 +150,7 @@ namespace  Title
 		//アニメーション更新
 		this->eneBone->UpDate();
 		//時間カウンタが10秒かつスタートしてないとき
-		if (this->timeCnt == 60 * 10000 && !this->pushSon)
+		if (this->timeCnt == 60 * 12 && !this->pushSon)
 		{
 			//フェードインアウト
 			auto lo = Loading::Object::Create(true);
@@ -211,7 +197,6 @@ namespace  Title
 	{
 		//タイトルロゴ描画
 		ML::Box2D draw(100, 200, 1300, 300);
-		// (0, 0, 1300, 300);
 
 		POINT sizelg = DG::Image_Size(this->res->loImgName);
 		ML::Box2D src(0, 0, sizelg.x, sizelg.y);
@@ -225,7 +210,8 @@ namespace  Title
 			DG::Image_Draw(this->res->sbImgName, draw, src);
 		}
 	}
-	//
+	//-------------------------------------------------------------------
+	//「３描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
 		//背景描画

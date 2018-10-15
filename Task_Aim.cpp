@@ -81,7 +81,6 @@ namespace  Aiming
 		this->pos = ML::Vec3(0, 0, 0);
 		this->aimMoveSpeed = 0;
 		this->aimMovetremor = 5.0f;
-		//DG::Mesh_CreateFromSOBFile("t", "./data/mesh/box1.sob");
 		//★タスクの生成
 
 		return  true;
@@ -91,7 +90,6 @@ namespace  Aiming
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
-		//DG::Mesh_Erase("t");
 
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -125,7 +123,7 @@ namespace  Aiming
 			this->aimPosB.y =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DHeight / 2.0f + (15 + this->aimMovetremor));
 			this->aimPosL.x = -sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f - (15 + this->aimMovetremor));
 			this->aimPosR.x =  sin(ML::ToRadian(this->moveCnt)) * this->aimMovetremor + (ge->screen2DWidth / 2.0f + (15 + this->aimMovetremor));
-			//プレイヤが疲労状態ではなく移動量がほぼ無い時
+			//プレイヤが疲労状態でなく移動量がほぼ無い時
 			if (pl->Get_MoveSpeed() >= -1.0f && pl->Get_MoveSpeed() <= 1.0f && !pl->Is_Tired())
 			{
 				//sinの時間軸を初期化
@@ -167,12 +165,7 @@ namespace  Aiming
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
-		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
-		//ML::Mat4x4 matT, matS;
-		//matT.Translation(this->pos + ML::Vec3(pl->Get_Pos().x,0,pl->Get_Pos().z));
-		//matS.Scaling(ML::Vec3(this->hitBase.w / 100, this->hitBase.h / 100, this->hitBase.d / 100));
-		//DG::EffectState().param.matWorld = matS * matT;
-		//DG::Mesh_Draw("t");
+
 	}
 	//-------------------------------------------------------------------
 	//通常時の操作説明描画処理
@@ -222,8 +215,10 @@ namespace  Aiming
 	//ブレーカーが押せる時にボタンを描画処理
 	void Object::BreakerTouchRender()
 	{
+		//30フレーム中20フレームごと
 		if ((this->timeCnt / 10) % 3 >= 1)
 		{
+			//Aボタンの画像を描画
 			ML::Box2D draw(ge->screen2DWidth / 2 + 100, ge->screen2DHeight / 2 + 100, 100, 100);
 			ML::Box2D src(0, 0, 200, 200);
 			DG::Image_Draw(this->res->pushButtonImg, draw, src);
@@ -233,12 +228,16 @@ namespace  Aiming
 	//スタミナの描画処理
 	void Object::StaminaRender()
 	{
+		//プレイヤの情報取得
 		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");
 		
+		//スタミナの枠を描画
 		ML::Box2D draw(ge->screen2DWidth - 100, ge->screen2DHeight - 300, 50, 240);
 		ML::Box2D src(0, 0, 200, 500);
 		DG::Image_Draw(this->res->staminaImgName[0], draw, src);
 
+		//スタミナゲージの描画
+		//プレイヤのスタミナ残量から縦幅を伸縮させる
 		draw = ML::Box2D(int(ge->screen2DWidth) - 100, int(ge->screen2DHeight) - 300 + (MAX_STAMINA -  int(pl->Get_Stamina())), 50, int(pl->Get_Stamina()));
 		DG::Image_Draw(this->res->staminaImgName[1], draw, src);
 	}

@@ -25,6 +25,7 @@ namespace Clear
 		//共有する変数はここに追加する
 		//画像の名前４つ分
 		string imageName[4];
+		//BGMの名前
 		string clearBgm;
 	};
 	//-------------------------------------------------------------------
@@ -56,7 +57,7 @@ namespace Clear
 		ML::Vec2 cloud01pos;
 		//テキストの不透明度
 		float alpha;
-		//
+		//Loadingを呼び出しているか判断
 		bool endflag;
 	public:
 	};

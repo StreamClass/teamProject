@@ -64,10 +64,6 @@ namespace Title
 		int timeCnt;
 		//Startボタンを押したか判断
 		bool pushSon;
-		//BGM名
-		string titleBGM;
-		//スタート時SE名
-		string startSE;
 		//エネミーのボーン用ポインタ
 		Bone* eneBone;
 		//アニメーション名保存用

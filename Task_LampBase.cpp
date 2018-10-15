@@ -60,15 +60,21 @@ namespace  LampBase
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
+		//ドアの出口を呼び出し
 		auto door = ge->GetTask_One_GN<Task_Door::Object>("ドア", "出口");
 		auto lamps = ge->GetTask_Group_G<LampGlass::Object>("ランプ");
+		//ランプの数を初期化
 		int lampNum = 0;
+		//ランプの数をイテレーターで回す
 		for (auto it = lamps->begin(); it != lamps->end(); ++it,++lampNum)
 		{
+			//出口用のブレーカーの起動した数以上になったら
 			if (lampNum >= door->How_Many_Breaker_Be_Cunnected())
 			{
+				//ループを終了
 				break;
 			}
+			//ランプの色を変える
 			(*it)->Set_Color(this->color);
 		}
 	}

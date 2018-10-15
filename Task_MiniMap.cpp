@@ -156,13 +156,6 @@ namespace  MiniMap
 			//描画位置をプレイヤの座標を参照して描画
 			pdraw.Offset(this->plpos);
 			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
-			////
-			//if (this->tab_use_now)
-			//{
-			//	//
-			//	cdraw.Offset(this->capos);
-			//	DG::Image_Draw(this->res->caImgName, cdraw, src, ML::Color(alpha, 1, 1, 1));
-			//}
 			//描画位置をエネミーの座標を参照
 			edraw.Offset(this->epos);
 			//デバッグモードなら

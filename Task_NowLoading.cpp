@@ -191,7 +191,7 @@ namespace  Loading
 	//フェードインアウト時の画像の不透明度の指定
 	void Object::FadeInOut()
 	{
-		//タスク生成から2秒間かけて
+		//タスク生成から1秒間かけて
 		if (this->timeCnt < 60 * 1)
 		{
 			//不透明度を1に
@@ -202,7 +202,7 @@ namespace  Loading
 				this->alpha = 1.0f;
 			}
 		}
-		//2~4秒の2秒間かけて
+		//1~2秒の1秒間かけて
 		else if (this->timeCnt < 60 * 2)
 		{
 			//不透明度を0に

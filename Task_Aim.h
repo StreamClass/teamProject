@@ -31,6 +31,7 @@ namespace Aiming
 		string tabletModeImg[2];
 		//スタミナ残量描画用画像名
 		string staminaImgName[2];
+		//Aボタンの画像名
 		string pushButtonImg;
 	};
 	//-------------------------------------------------------------------
@@ -79,7 +80,7 @@ namespace Aiming
 		void NormalModeRrender();
 		//エイムのアニメーション
 		void AimingRender();
-		//
+		//ブレーカーを押せる時の描画処理
 		void BreakerTouchRender();
 		//スタミナの描画
 		void StaminaRender();

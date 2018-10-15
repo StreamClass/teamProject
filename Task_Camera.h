@@ -66,7 +66,7 @@ namespace Camera
 		//追加メソッド
 		//
 		void Noise_Reset();
-		//
+		//心音の大きさを調整
 		void Change_Volume_Hearts_Sound();
 	};
 }

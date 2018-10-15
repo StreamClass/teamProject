@@ -154,9 +154,13 @@ void ObjManeger::Create_Camera(ML::Vec3 pos, Type angle)
 	}
 }
 
+//ランプの生成
+//引数 : (座標, あたり判定矩形)
 void ObjManeger::Create_Lamp(ML::Vec3 pos, ML::Box3D hitBase)
 {
+	//ランプの基盤を生成
 	auto lb = LampBase::Object::Create(true);
+	//引数から座標とあたり判定矩形を指定
 	lb->Set_Lamp(pos, hitBase);
 }
 

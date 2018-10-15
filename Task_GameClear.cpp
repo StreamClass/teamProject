@@ -84,19 +84,21 @@ namespace  Clear
 	void  Object::UpDate()
 	{
 		auto in = DI::GPad_GetState(ge->controllerName);
-		//startボタンを押すと解放
+		//startボタンを押す
+		//もしくは
 		//タスク生成から17秒後にローディング画面を呼び出し
 		if ((this->timeCnt == 60 * 17.0f || in.ST.down) && !this->endflag)
 		{
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
+			//次のタスクを"電子ロゴ"に
 			lo->Set_NextTask("日電ロゴ");
 			//ローディングの色を白に指定
 			lo->Set_Color(1);
 			this->endflag = true;
 			DM::Sound_FadeOut(this->res->clearBgm);
 		}
-		/*画面が見えてから2秒後(タスク生成から4秒後)
+		/*画面が見えてから3秒後(タスク生成から4秒後)
 		から3秒かけてゲームクリアのロゴを表示*/
 		if (this->timeCnt > 60 * 4 && this->timeCnt < 60 * 7 )
 		{

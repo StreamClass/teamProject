@@ -69,7 +69,7 @@ namespace  Camera
 
 		this->test_flag = false;
 
-		//
+		//心音を常に再生
 		DM::Sound_Play(this->res->hearts_Sound_Name, true);
 
 		//★タスクの生成
@@ -81,7 +81,9 @@ namespace  Camera
 	bool  Object::Finalize()
 	{
 		//★データ＆タスク解放
+		//フォグを無効化
 		DG::EffectState().param.fogEnable = false;
+		//心音を止める
 		DM::Sound_Stop(this->res->hearts_Sound_Name);
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
@@ -95,7 +97,7 @@ namespace  Camera
 	//「更新」１フレーム毎に行う処理
 	void  Object::UpDate()
 	{
-		//
+		//心音の大きさを調整
 		this->Change_Volume_Hearts_Sound();
 
 		easing::UpDate();
@@ -180,7 +182,7 @@ namespace  Camera
 		easing::Reset("disp_Noise_Alpha");
 		easing::Start("disp_Noise_Alpha");
 	}
-	//
+	//心音の大きさを調整
 	void Object::Change_Volume_Hearts_Sound()
 	{
 		auto ene = ge->GetTask_One_G<Enemy::Object>("エネミー");

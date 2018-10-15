@@ -11,6 +11,7 @@ namespace  LampGlass
 	//リソースの初期化
 	bool  Resource::Initialize()
 	{
+		//メッシュ読み込み
 		this->meshName = "LampGlass";
 		DG::Mesh_CreateFromSOBFile(this->meshName, "./data/mesh/LampGlass00.SOB");
 		return true;
@@ -67,8 +68,12 @@ namespace  LampGlass
 	//「3Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
+		//ランプの描画
+		//平行移動の行列とサイズの行列を生成
 		ML::Mat4x4 matT, matS;
+		//目的地までを行列に変換
 		matT.Translation(this->pos);
+		//等倍
 		matS.Scaling(100);
 		DG::EffectState().param.matWorld = matS * matT;
 		DG::EffectState().param.objectColor = this->color;

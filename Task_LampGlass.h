@@ -46,8 +46,11 @@ namespace LampGlass
 		bool  Finalize();		//「終了」タスク消滅時に１回だけ行う処理
 		void  Render3D_L0();
 		//変更可◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇◇
+		//座標
 		ML::Vec3 pos;
+		//あたり判定
 		ML::Box3D hitBase;
+		//色
 		ML::Color color;
 	public:
 		//追加したい変数・メソッドはここに追加する

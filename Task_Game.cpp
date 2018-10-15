@@ -78,14 +78,12 @@ namespace  Game
 		map->Load_Map();
 		map->Load_Objects();
 
-		//DG::Mesh_CreateFromSOBFile("bbb", "./data/mesh/.SOB");
 		return  true;
 	}
 	//-------------------------------------------------------------------
 	//「終了」タスク消滅時に１回だけ行う処理
 	bool  Object::Finalize()
 	{
-		//DG::Mesh_Erase("bbb");
 		//★データ＆タスク解放
 		ge->KillAll_G("フィールド");
 		ge->KillAll_G("カメラマン");
@@ -144,10 +142,16 @@ namespace  Game
 			this->Start();
 		}
 		//スタートとセレクトを押すと
-		if (in.ST.down && in.SE.down)
+		if (in.ST.on && in.SE.on && !this->pushButton)
 		{
-			//ゲームオーバーに
-			ge->state = ge->over;
+			//フェードインアウト
+			auto lo = Loading::Object::Create(true);
+			lo->Set_NowTask(defGroupName);
+			lo->Set_NextTask("日電ロゴ");
+			lo->Set_Color(0);
+			//状態遷移待機状態へ
+			this->pushButton = true;
+			DM::Sound_FadeOut(this->res->bgmName);
 		}
 		//クリア状態で初めてのフレームなら
 		if (ge->state == ge->clear && !this->pushButton)
@@ -196,11 +200,7 @@ namespace  Game
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		//ML::Mat4x4 matT, matS;
-		//matT.Translation(ML::Vec3(825, 1, 825));
-		//matS.Scaling(100);
-		//DG::EffectState().param.matWorld = matS * matT;
-		//DG::Mesh_Draw("bbb");
+
 	}
 	//-------------------------------------------------------------------
 	//ゲーム開始処理

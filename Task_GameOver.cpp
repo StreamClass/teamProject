@@ -19,11 +19,9 @@ namespace  Over
 		DG::Image_Create(this->eImgName, "./data/image/OverEffect.png");
 		this->lImgName = "LgImg";
 		DG::Image_Create(this->lImgName, "./data/image/OverLogo.png");
-		//this->bgMeshName = "EndingBG";
-		//DG::Mesh_CreateFromSOBFile(this->bgMeshName, "");
+		//音源の読み込み
 		this->footSoundName = "FootsSound";
 		DM::Sound_CreateSE(this->footSoundName, "./data/sound/foot00.wav");
-		
 		this->gameOver_Bgm = "GameOver_Bgm";
 		DM::Sound_CreateStream(this->gameOver_Bgm, "./data/sound/GameOver_BGM.wav");
 
@@ -36,7 +34,6 @@ namespace  Over
 		//画像をすべて解放
 		DG::Image_Erase(this->eImgName);
 		DG::Image_Erase(this->lImgName);
-		//DG::Mesh_Erase(this->bgMeshName);
 		DM::Sound_Erase(this->footSoundName);
 		DM::Sound_Erase(this->gameOver_Bgm);
 		return true;
@@ -56,23 +53,31 @@ namespace  Over
 		this->timeCnt = 0;
 		this->endCnt = 0;
 		this->endFlag = false;
-		//
 		this->iniFlag = false;
 
 		//bgm再生
 		DM::Sound_Play(this->res->gameOver_Bgm, true);
 
+		//エネミーの情報の初期化
+		//エネミーのサイズ(身長)を指定して生成
 		this->enBone = new Bone(180, "Enemy");
+		//座標の設定
 		ML::Vec3 pos(200, -90, 0);
 		this->enBone->Moving(pos);
+		//向きを-90度(+Zへ)回転
 		float radi = ML::ToRadian(-90);
 		this->enBone->Bone_RotateY_All(radi);
+		//Runningのアニメーション設定
 		this->motionName = "Running";
 		{
+			//各回転量の入れ物
 			std::vector<Motion::Motion_Data> running;
+			//入れ物にテキストから回転量を保存
 			Motion::Make_Motion(&running, this->motionName);
+			//エネミー自身にアニメーションデータを持たせる
 			this->enBone->Registrate_Motion(running, this->motionName);
 		}
+		//次に行うモーションを設定
 		this->enBone->Set_Next_Motion(this->motionName);
 
 		//カメラの設定
@@ -86,7 +91,8 @@ namespace  Over
 		//ライティング有効化
 		DG::EffectState().param.lightsEnable = true;
 		DG::EffectState().param.lightAmbient = ML::Color(1, 0.5f, 0.5f, 0.5f);
-		//
+
+		//平方光源の設定
 		DG::EffectState().param.light[0].enable = true;
 		DG::EffectState().param.light[0].kind = DG_::Light::Directional;//光源の種類
 		DG::EffectState().param.light[0].direction = ML::Vec3(1, 0, 1).Normalize();//照射方向
@@ -123,32 +129,39 @@ namespace  Over
 		{
 			auto lo = Loading::Object::Create(true);
 			lo->Set_NowTask(defGroupName);
+			//次のタスクを"電子ロゴ"に
 			lo->Set_NextTask("日電ロゴ");
 			//ローディング画面の色を黒に指定
 			lo->Set_Color(0);
 			this->endFlag = true;
+			//BGMをフェードアウトさせる
 			DM::Sound_FadeOut(this->res->gameOver_Bgm);
 		}
 		//2秒後から
 		if (this->timeCnt > 60 * 2)
 		{
+			//エネミーにモーションをリピートさせる
 			this->enBone->Repeat_Now_Motioin();
+			//エネミーのアニメーションの更新開始
 			this->enBone->UpDate();
+			//毎フレーム左に1ずつ移動
 			this->pos.x -= 1;
 			this->enBone->Moving(this->pos);
+			//エネミーのアニメーション初めのフレームなら
 			if (!this->iniFlag)
 			{
+				//足音の音源の再生
 				DM::Sound_Play(this->res->footSoundName, true);
 				this->iniFlag = true;
 			}
 		}
-		//5秒後から
+		//4秒後から
 		if (this->timeCnt > 60 * 4)
 		{
 			//3秒かけて不透明度を1に
 			this->al = (this->timeCnt - 60 * 4) / 60.0f * 3.0f;
 		}
-		//15秒後(ロゴがすべて出てから7秒後)かつendFlagがfalseなら
+		//14秒後(ロゴがすべて出てから7秒後)かつendFlagがfalseなら
 		if (this->timeCnt > 60 * 14 && this->endFlag == false)
 		{
 			//ローディングを呼び出し
@@ -167,12 +180,6 @@ namespace  Over
 		{
 			//カウント開始
 			this->endCnt++;
-		}
-		//endCntが2秒分数えたら
-		if (this->endCnt > 60 * 2)
-		{
-			//タスクを解放
-			//this->Kill();
 		}
 		//ロゴの不透明度の上限を指定
 		if (this->al > 1.0f)
@@ -202,15 +209,12 @@ namespace  Over
 		//														 不透明度
 		DG::Image_Draw(this->res->lImgName, draw, src, ML::Color(this->al, 1, 1, 1));
 	}
-
+	//-------------------------------------------------------------------
+	//「３Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render3D_L0()
 	{
+		//エネミー描画
 		this->enBone->Render();
-	}
-
-	void Object::Set_Bone_Ptr(Bone* bone)
-	{
-		this->enBone = bone;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド
