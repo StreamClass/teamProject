@@ -1,0 +1,16 @@
+Waist: 0 0 0
+Neck:  0 0 0
+LSholder: 30 0 0
+LElbow: 0 0 0
+LWrist: 0 0 0
+LHip: -15 0 0
+LKnee: 30 0 0
+LAnkle: 0 0 0
+RSholder: -70 0 0
+RElbow: 0 0 0
+RWrist: 0 0 0
+RHip: 25 0 0
+RKnee: -45 0 0
+RAnkle: 0 0 0
+Duration: 10
+False
