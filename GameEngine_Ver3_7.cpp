@@ -9,12 +9,12 @@ DWORD BTask::uKeyManager = 10000;
 //｜ゲーム環境の初期化																	　｜
 //｜履歴		：2013/02/25	須賀康之	作成										　｜
 //└───────────────────────────────────────────┘
-bool GameEngine::B_Initialize(HWND wnd_)
+bool GameEngine::B_Initialize(HWND wnd_, IDXGIAdapter* adp)
 {
 //	タイマー分解能を1ミリ秒に設定
 	timeBeginPeriod(1);
 	debugMode = false;
-	Initialize(wnd_);
+	Initialize(wnd_,adp);
 	return true;
 }
 //┌───────────────────────────────────────────┐
@@ -298,8 +298,9 @@ GameEngine::~GameEngine( )
   DG::Font_Erase("Debug");
 //	タイマー分解能の設定（1ミリ秒単位）を解除する
 	timeEndPeriod(1);
-////	サウンド環境の開放
-//	dm.reset( );
+//	サウンド環境の開放
+	//dm.reset( );
+	DM::Finalize();
 //	入力機器環境の解放
 	DI::Finalize();
 //	画像処理環境の解放
