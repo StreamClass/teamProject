@@ -127,48 +127,48 @@ Bone::Bone(const float& tall, const string& owner)
 	//, ML::ToRadian(-30), ML::ToRadian(5), ML::ToRadian(0), ML::ToRadian(0), ML::ToRadian(-90), ML::ToRadian(90)
 
 	//メンバーに割り当てる
-	this->joint[0] = Waist;
-	this->joint[1] = tmpneck;
+	this->joint[Motion::Joint_Name::Waist] = Waist;
+	this->joint[Motion::Joint_Name::Neck] = tmpneck;
 
-	this->joint[2] = left_sholder;
-	this->joint[3] = left_elbow;
-	this->joint[4] = left_wrist;
+	this->joint[Motion::Joint_Name::Left_Sholder] = left_sholder;
+	this->joint[Motion::Joint_Name::Left_Elbow] = left_elbow;
+	this->joint[Motion::Joint_Name::Left_Wrist] = left_wrist;
 
-	this->joint[5] = right_sholder;
-	this->joint[6] = right_elbow;
-	this->joint[7] = right_wrist;
+	this->joint[Motion::Joint_Name::Right_Sholder] = right_sholder;
+	this->joint[Motion::Joint_Name::Right_Elbow] = right_elbow;
+	this->joint[Motion::Joint_Name::Right_Wrist] = right_wrist;
 
-	this->joint[8] = left_hip;
-	this->joint[9] = left_knee;
-	this->joint[10] = left_ankle;
+	this->joint[Motion::Joint_Name::Left_Hip] = left_hip;
+	this->joint[Motion::Joint_Name::Left_Knee] = left_knee;
+	this->joint[Motion::Joint_Name::Left_Ankle] = left_ankle;
 
-	this->joint[11] = right_hip;
-	this->joint[12] = right_knee;
-	this->joint[13] = right_ankle;	
+	this->joint[Motion::Joint_Name::Right_Hip] = right_hip;
+	this->joint[Motion::Joint_Name::Right_Knee] = right_knee;
+	this->joint[Motion::Joint_Name::Right_Ankle] = right_ankle;
 	
 	
 	//関係性指定
 	//腰からのど
-	this->joint[0]->Set_Next_Joint(this->joint[1]);
+	this->joint[Motion::Joint_Name::Waist]->Set_Next_Joint(this->joint[Motion::Joint_Name::Neck]);
 	//腰から両肩
-	this->joint[0]->Set_Next_Joint(this->joint[2]);
-	this->joint[0]->Set_Next_Joint(this->joint[5]);
+	this->joint[Motion::Joint_Name::Waist]->Set_Next_Joint(this->joint[Motion::Joint_Name::Left_Sholder]);
+	this->joint[Motion::Joint_Name::Waist]->Set_Next_Joint(this->joint[Motion::Joint_Name::Right_Sholder]);
 
 	//肩から手首
 	//左
-	this->joint[2]->Set_Next_Joint(this->joint[3]);
-	this->joint[3]->Set_Next_Joint(this->joint[4]);
+	this->joint[Motion::Joint_Name::Left_Sholder]->Set_Next_Joint(this->joint[Motion::Joint_Name::Left_Elbow]);
+	this->joint[Motion::Joint_Name::Left_Elbow]->Set_Next_Joint(this->joint[Motion::Joint_Name::Left_Wrist]);
 	//右
-	this->joint[5]->Set_Next_Joint(this->joint[6]);
-	this->joint[6]->Set_Next_Joint(this->joint[7]);
+	this->joint[Motion::Joint_Name::Right_Sholder]->Set_Next_Joint(this->joint[Motion::Joint_Name::Right_Elbow]);
+	this->joint[Motion::Joint_Name::Right_Elbow]->Set_Next_Joint(this->joint[Motion::Joint_Name::Right_Wrist]);
 
 	//お尻から足首
 	//左
-	this->joint[8]->Set_Next_Joint(this->joint[9]);
-	this->joint[9]->Set_Next_Joint(this->joint[10]);
+	this->joint[Motion::Joint_Name::Left_Hip]->Set_Next_Joint(this->joint[Motion::Joint_Name::Left_Knee]);
+	this->joint[Motion::Joint_Name::Left_Knee]->Set_Next_Joint(this->joint[Motion::Joint_Name::Left_Ankle]);
 	//右
-	this->joint[11]->Set_Next_Joint(this->joint[12]);
-	this->joint[12]->Set_Next_Joint(this->joint[13]);
+	this->joint[Motion::Joint_Name::Right_Hip]->Set_Next_Joint(this->joint[Motion::Joint_Name::Right_Knee]);
+	this->joint[Motion::Joint_Name::Right_Knee]->Set_Next_Joint(this->joint[Motion::Joint_Name::Right_Ankle]);
 
 	//モーション関係変数初期化
 	this->motions.clear();
@@ -204,11 +204,11 @@ void Bone::Bone_RotateY_All(const float& radian)
 		//正面ベクトル回転
 		this->front_Vec = matR.TransformNormal(this->front_Vec);
 		//関節全体を回転させる
-		this->joint[0]->Rotated_by_Prev_Joint(&matR,qtY);
+		this->joint[Motion::Joint_Name::Waist]->Rotated_by_Prev_Joint(&matR,qtY);
 		/*this->joint[2]->Rotated_by_Prev_Joint(&matR, qtY);
 		this->joint[5]->Rotated_by_Prev_Joint(&matR, qtY);*/
-		this->joint[8]->Rotated_by_Prev_Joint(&matR, qtY);
-		this->joint[11]->Rotated_by_Prev_Joint(&matR, qtY);
+		this->joint[Motion::Joint_Name::Left_Hip]->Rotated_by_Prev_Joint(&matR, qtY);
+		this->joint[Motion::Joint_Name::Right_Hip]->Rotated_by_Prev_Joint(&matR, qtY);
 
 	}
 	
