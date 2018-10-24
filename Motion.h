@@ -6,25 +6,42 @@
 
 namespace Motion
 {
-	struct Motion_Data
+	/*
+	各関節に番号を割り当てて管理する
+	0 = 腰
+	1 = 首
+	2 = 左肩
+	3 = 左肘
+	4 = 左手首
+	5 = 右肩
+	6 = 右肘
+	7 =  右手首
+	8 = 左お尻
+	9 = 左膝
+	10 = 左足首
+	11 = 右お尻
+	12 = 右膝
+	13 = 右足首
+	*/
+	enum Joint_Name
 	{
-		/*
-		各関節に番号を割り当てて管理する
-		0 = 腰
-		1 = 首
-		2 = 左肩
-		3 = 左肘
-		4 = 左手首
-		5 = 右肩
-		6 = 右肘
-		7 =  右手首
-		8 = 左お尻
-		9 = 左膝
-		10 = 左足首
-		11 = 右お尻
-		12 = 右膝
-		13 = 右足首
-		*/
+		Waist			= 0,
+		Neck			= 1,
+		Left_Sholder	= 2,
+		Left_Elbow		=3,
+		Left_Wrist		=4,
+		Right_Sholder	=5,
+		Right_Elbow		=6,
+		Right_Wrist		=7,
+		Left_Hip		=8,
+		Left_Knee		= 9,
+		Left_Ankle		= 10,
+		Right_Hip		= 11,
+		Right_Knee		= 12,
+		Right_Ankle		= 13,
+	};
+	struct Motion_Data
+	{		
 		//各軸の回転データをベクトルに宣言
 		ML::Vec3 joint[JOINT_ON_HUMAN];
 		
@@ -50,24 +67,24 @@ namespace Motion
 			: duration(du),
 			repeat_Point(r)
 		{
-			this->joint[0] = waist;
-			this->joint[1] = neck;
+			this->joint[Joint_Name::Waist] = waist;
+			this->joint[Joint_Name::Neck] = neck;
 
-			this->joint[2] = l_sholder;
-			this->joint[3] = l_elbow;
-			this->joint[4] = l_wrist;
+			this->joint[Joint_Name::Left_Sholder] = l_sholder;
+			this->joint[Joint_Name::Left_Elbow] = l_elbow;
+			this->joint[Joint_Name::Left_Wrist] = l_wrist;
 
-			this->joint[5] = r_sholder;
-			this->joint[6] = r_elbow;
-			this->joint[7] = r_wrist;
+			this->joint[Joint_Name::Right_Sholder] = r_sholder;
+			this->joint[Joint_Name::Right_Elbow] = r_elbow;
+			this->joint[Joint_Name::Right_Wrist] = r_wrist;
 
-			this->joint[8] = l_hip;
-			this->joint[9] = l_knee;
-			this->joint[10] = l_ankle;
+			this->joint[Joint_Name::Left_Hip] = l_hip;
+			this->joint[Joint_Name::Left_Knee] = l_knee;
+			this->joint[Joint_Name::Left_Ankle] = l_ankle;
 
-			this->joint[11] = r_hip;
-			this->joint[12] = r_knee;
-			this->joint[13] = r_ankle;
+			this->joint[Joint_Name::Right_Hip] = r_hip;
+			this->joint[Joint_Name::Right_Knee] = r_knee;
+			this->joint[Joint_Name::Right_Ankle] = r_ankle;
 		}
 
 		//ゼロクリア
@@ -116,22 +133,22 @@ namespace Motion
 			return this->duration == 0 ? true : false;
 		}
 	}; 
-	const std::map<string,int> motion_Data_Key = 
+	const std::map<string,Joint_Name> motion_Data_Key = 
 	{
-		{"waist",0},
-		{"neck",1},
-		{"lsholder",2},
-		{"lelbow",3},
-		{"lwrist",4},
-		{"rsholder",5},
-		{"relbow",6},
-		{"rwrist",7},
-		{"lhip",8},
-		{"lknee",9},
-		{"lankle",10},
-		{"rhip",11},
-		{"rknee",12},
-		{"rankle",13}
+		{"waist",	Waist },
+		{ "neck",	Neck },
+		{ "lsholder",Left_Sholder },
+		{ "lelbow",	Left_Elbow },
+		{ "lwrist",	Left_Wrist },
+		{ "rsholder",Right_Sholder },
+		{ "relbow",	Right_Elbow },
+		{ "rwrist",	Right_Wrist },
+		{ "lhip",	Left_Hip },
+		{ "lknee",	Left_Knee },
+		{ "lankle",	Left_Ankle },
+		{ "rhip",	Right_Hip },
+		{ "rknee",	Right_Knee },
+		{ "rankle",	Right_Ankle }
 	};
 	//外部ファイルからのモーションデータ生成
 	//引数 : (ファイル名 + .txt)

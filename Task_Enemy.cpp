@@ -250,7 +250,7 @@ namespace  Enemy
 	void  Object::Render3D_L0()
 	{
 		//エネミーのメッシュを表示		
-		this->ebone->Render();
+		this->ebone->Render();		
 	}
 
 	//プレイヤとのあたり判定

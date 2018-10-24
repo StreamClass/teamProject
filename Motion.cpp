@@ -57,11 +57,11 @@ Motion::Motion_Data Motion::Create_Step_From_File(const string& fn)
 	file.close();
 
 	//–ß‚è’l‚ğì¬‚µ‚Ä•Ô‚·
-	return Motion_Data(md[0], md[1],
-		md[2], md[3], md[4],
-		md[5], md[6], md[7],
-		md[8], md[9], md[10],
-		md[11], md[12], md[13],
+	return Motion_Data(md[Joint_Name::Waist], md[Joint_Name::Neck],
+		md[Joint_Name::Left_Sholder], md[Joint_Name::Left_Elbow], md[Joint_Name::Left_Wrist],
+		md[Joint_Name::Right_Sholder], md[Joint_Name::Right_Elbow], md[Joint_Name::Right_Wrist],
+		md[Joint_Name::Left_Hip], md[Joint_Name::Left_Knee], md[Joint_Name::Left_Ankle],
+		md[Joint_Name::Right_Hip], md[Joint_Name::Right_Knee], md[Joint_Name::Right_Ankle],
 		du, flag);
 }
 
