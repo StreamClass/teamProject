@@ -260,7 +260,7 @@ namespace  Enemy
 		{
 			auto bs = DG::EffectState().BS_Get();
 			//DG::EffectState().BS_AlphaAdd();
-			DG::EffectState().param.objectColor = ML::Color(1, 0.88f, 0, 0.3f);
+			DG::EffectState().param.objectColor = ML::Color(1, 3, 3, 0);
 			//シルエット描画
 			silhouette->Render();
 			DG::EffectState().param.objectColor = ML::Color(1, 0.2f, 0.81f, 0.2f);
@@ -334,7 +334,7 @@ namespace  Enemy
 		camera_To_Enemy = camera_To_Enemy.Normalize();
 		camera_To_Enemy *= cte_Length;
 		//シルエット移動
-		this->silhouette->Moving(ge->camera[0]->pos + camera_To_Enemy);
+		this->silhouette->Moving(ge->camera[0]->pos + camera_To_Enemy + ML::Vec3(0,10,0));
 
 		//ボーンアップデート
 		this->silhouette->Bone_RotateY_All(this->ebone->Get_Roated_Y());

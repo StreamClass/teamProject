@@ -61,7 +61,7 @@ namespace  Camera
 		DG::EffectState().param.fogNear = RENDERRENGE * chipX - chipX * 3;
 
 		//タブレット使用中のeasingをセット
-		easing::Set("disp_Noise_Alpha", easing::CUBICOUT, 1.0f, 0.03f, 30);
+		easing::Set("disp_Noise_Alpha", easing::CUBICOUT, 1.0f, 0.05f, 30);
 		easing::Start("disp_Noise_Alpha");
 		
 		//ノイズのスクロールカウント

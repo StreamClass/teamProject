@@ -64,9 +64,9 @@ namespace  Game
 		//大きかったため音量を少し下げる(800 / 1000)
 		DM::Sound_Volume(this->res->bgmName, 800);
 
-		//★タスクの生成
-		auto pl = Player::Object::Create(true);
+		//★タスクの生成		
 		auto cam = Camera::Object::Create(true);
+		auto pl = Player::Object::Create(true);
 		auto en = Enemy::Object::Create(true);
 		auto map = Map::Object::Create(true);
 		auto mm = MiniMap::Object::Create(true);
