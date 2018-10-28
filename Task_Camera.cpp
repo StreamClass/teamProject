@@ -50,7 +50,7 @@ namespace  Camera
 			ML::Vec3(0.0f, 0.0f, 0.0f),				//	ターゲット位置
 			ML::Vec3(0.0f, 500.0f, -500.0f),			//	カメラ位置
 			ML::Vec3(0.0f, 1.0f, 0.0f),					//	カメラの上方向ベクトル
-			ML::ToRadian(35), 15.0f, 8000.0f,	//	視野角・視野距離
+			ML::ToRadian(35), 15.0f, RENDERRENGE * (chipX - 3),	//	視野角・視野距離
 			(float)ge->screenWidth / (float)ge->screenHeight);		//	画面比率		
 		
 		//フォグ(霧)の設定
@@ -144,10 +144,10 @@ namespace  Camera
 	//「２Ｄ描画」１フレーム毎に行う処理
 	void  Object::Render2D_AF()
 	{
-		auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
+		//auto pl = ge->GetTask_One_G<Player::Object>("プレイヤ");//[180517-持丸]カメラマンの向きをプレイヤと同期する
 
 		//タブレットが使用中ならノイズとタブレット枠を描画する
-		if (pl->Is_Used_Tablet())
+		if (ge->OM.Get_Tablet()->Is_Used_Now())
 		{
 			//ノイズ描画
 			ML::Box2D noise_Draw0(0, 0, ge->screenWidth, ge->screenHeight);
@@ -173,7 +173,14 @@ namespace  Camera
 	//-------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
-		
+		if (ge->OM.Get_Tablet()->Is_Used_Now())
+		{
+			DG::EffectState().param.objectColor = ML::Color(1, 0.2f, 0.81f, 0.2f);
+		}
+		else
+		{
+			DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+		}
 	}
 	//-------------------------------------------------------------------
 	//ノイズeasingリセット(タブレットクラスで呼ぶ処理)

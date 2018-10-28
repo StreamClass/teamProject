@@ -188,6 +188,17 @@ ML::Vec3 Bone::Get_Center() const
 	return this->center_of_Body;
 }
 
+float Bone::Get_Roated_Y() const
+{
+	return this->All_RotY;
+}
+
+string Bone::Get_Now_Motions_Name() const
+{
+	return this->now_Motion;
+}
+
+//引数の向きまで回転する
 void Bone::Bone_RotateY_All(const float& radian)
 {
 	//全体回転値との差分だけ回転する
@@ -453,13 +464,22 @@ void Bone::To_Standing(bool ASAP) const
 		}
 	}
 }
-
+//レンダリング
 void Bone::Render() const
 {
 	//関節全体にレンダリング命令する
 	for (int i = 0; i < JOINT_ON_HUMAN; i++)
 	{
 		this->joint[i]->Render(this->tall);
+	}
+}
+//異なるサイズでのレンダリング
+void Bone::Render(const float& size) const
+{
+	//関節全体にレンダリング命令する
+	for (int i = 0; i < JOINT_ON_HUMAN; i++)
+	{
+		this->joint[i]->Render(size);
 	}
 }
 

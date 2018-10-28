@@ -38,6 +38,7 @@ namespace  Enemy
 		this->render2D_Priority[1] = 0.1f;
 		this->rou = ge->OM.Create_Routine();
 		this->demo = false;
+		this->silhouette_Rendering_Judge = false;
 		this->pos = ML::Vec3(chipX * 5, 20, chipZ * 13);
 		this->speed = 10.0f;
 		this->hitBase = ML::Box3D(-100, 0, -100, 200, 200, 200);
@@ -46,6 +47,7 @@ namespace  Enemy
 		this->final_Phase_Speed = 13.0f;
 		this->timeCnt = 0;
 		this->ebone = new Bone(180, "Enemy");
+		this->silhouette = new Bone(33, "Enemy");
 		this->ebone->Moving(this->pos);
 		this->ebone->Bone_RotateY_All(this->angle.y + ML::ToRadian(-90));
 		this->Init_Enemys_Animations();
@@ -78,8 +80,9 @@ namespace  Enemy
 	{
 		//★データ＆タスク解放
 		delete this->ebone;
+		delete this->silhouette;
 		this->ebone = nullptr;
-
+		this->silhouette = nullptr;
 		if (!ge->QuitFlag() && this->nextTaskCreate)
 		{
 			//★引き継ぎタスクの生成
@@ -229,7 +232,8 @@ namespace  Enemy
 			if (!pl->Get_DebugOnOff())
 				this->Player_HitCheck();
 		}
-		
+
+		this->Silhouette_Update();
 	}
 	//-------------------------------------------------------------------
 	//「２Ｄ描画」１フレーム毎に行う処理
@@ -247,8 +251,22 @@ namespace  Enemy
 			DG::Image_Draw(this->res->chasing_BG, draw, src,ML::Color(0.4f,1,1,1));
 		}
 	}
+
+	//----------------------------------------------------------------------------------------------
 	void  Object::Render3D_L0()
 	{
+		//シルエットを描画するかを確認
+		if (this->silhouette_Rendering_Judge && ge->OM.Get_Tablet()->Is_Used_Now())
+		{
+			auto bs = DG::EffectState().BS_Get();
+			//DG::EffectState().BS_AlphaAdd();
+			DG::EffectState().param.objectColor = ML::Color(1, 0.88f, 0, 0.3f);
+			//シルエット描画
+			silhouette->Render();
+			DG::EffectState().param.objectColor = ML::Color(1, 0.2f, 0.81f, 0.2f);
+			//DG::EffectState().BS_Set(bs);
+		}			
+		
 		//エネミーのメッシュを表示		
 		this->ebone->Render();		
 	}
@@ -281,11 +299,13 @@ namespace  Enemy
 		std::vector<Motion::Motion_Data> running;
 		Motion::Make_Motion(&running, this->animations_Name[0]);
 		this->ebone->Registrate_Motion(running, this->animations_Name[0]);
+		this->silhouette->Registrate_Motion(running, this->animations_Name[0]);
 		//歩くアニメーション
 		this->animations_Name.push_back("Walking");
 		std::vector<Motion::Motion_Data> walking;
 		Motion::Make_Motion(&walking, this->animations_Name[1]);
 		this->ebone->Registrate_Motion(walking, this->animations_Name[1]);
+		this->silhouette->Registrate_Motion(walking, this->animations_Name[1]);
 	}
 	//--------------------------------------------------------------------------------
 	//向かわせる場所を設定する処理
@@ -294,6 +314,33 @@ namespace  Enemy
 		//ルーチンシステムとエネミ－本人の目的地を設定
 		this->rou->Set_Priority_Position(des);
 		this->priority_Position = des;
+	}
+	//---------------------------------------------------------------------------
+	//シルエットの動き
+	void Object::Silhouette_Update()
+	{
+		//カメラからエネミーまでの距離
+		ML::Vec3 camera_To_Enemy = this->pos - ge->camera[0]->pos;
+
+		//位置を原点にしておく
+		this->silhouette->Moving(-this->silhouette->Get_Center());
+
+		//シルエット描画する位置計算
+		float cte_Length = camera_To_Enemy.Length();
+		//forePlaneの外の時だけレンダリングする		
+		this->silhouette_Rendering_Judge = cte_Length > ge->camera[0]->forePlane;
+		
+		cte_Length *= 0.15f;
+		camera_To_Enemy = camera_To_Enemy.Normalize();
+		camera_To_Enemy *= cte_Length;
+		//シルエット移動
+		this->silhouette->Moving(ge->camera[0]->pos + camera_To_Enemy);
+
+		//ボーンアップデート
+		this->silhouette->Bone_RotateY_All(this->ebone->Get_Roated_Y());
+		this->silhouette->Set_Next_Motion(this->ebone->Get_Now_Motions_Name());
+		this->silhouette->Repeat_Now_Motioin();
+		this->silhouette->UpDate();
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

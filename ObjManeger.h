@@ -61,6 +61,9 @@ public:
 	//エネミーを最終フェーズにする
 	void Game_Be_Final_Phase();
 
+	//ほかのタスクからタブレットにアクセスするためにアドレスを返すメソッド
+	const Tablet* Get_Tablet() const;
+
 	//ファイナライズ,本編が終了する時絶対呼び出すこと
 	//ヒープから解放処理をやる
 	void Finalize();

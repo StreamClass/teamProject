@@ -53,6 +53,8 @@ namespace Enemy
 		//追加変数
 		//デモフラグ
 		bool demo;
+		//シルエット描画用フラグ
+		bool silhouette_Rendering_Judge;
 		//デモ用移動先コーナー配列
 		int demoCorner[9];
 		//デモ用今のコーナーを保持
@@ -78,6 +80,7 @@ namespace Enemy
 
 		//ボーンアニメ用ボーン
 		Bone* ebone;
+		Bone* silhouette;
 		//アニメーションの名前を保存するベクター
 		std::vector<string> animations_Name;
 		//アニメーション生成メソッド
@@ -100,5 +103,8 @@ namespace Enemy
 
 		//向かわせる場所を設定する処理
 		void Set_Destination(const ML::Vec3&);
+
+		//シルエットの動き
+		void Silhouette_Update();
 	};
 }

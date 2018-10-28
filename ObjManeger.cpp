@@ -195,3 +195,9 @@ void ObjManeger::Game_Be_Final_Phase()
 {
 	this->rou->Set_Final_Phase();
 }
+
+//ほかのタスクからタブレットにアクセスするためにアドレスを返すメソッド
+const Tablet* ObjManeger::Get_Tablet() const
+{
+	return this->tab;
+}

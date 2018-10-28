@@ -54,6 +54,8 @@ private:
 public:
 	//ゲッター
 	ML::Vec3 Get_Center() const;
+	float Get_Roated_Y() const;
+	string Get_Now_Motions_Name() const;
 
 	//座標移動
 	//引数 : (移動するベクトル)
@@ -75,7 +77,9 @@ public:
 	//アニメーションアップデート
 	void UpDate();
 	//アニメーションレンダリング
-	void Render() const;	
+	void Render() const;
+	//異なるサイズでのレンダリング
+	void Render(const float& size) const;
 
 
 	//コンストラクタ

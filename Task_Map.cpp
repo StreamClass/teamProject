@@ -125,6 +125,13 @@ namespace  Map
 		ex = min(this->maxSizeX, int(ge->camera[0]->pos.x / chipX) + RENDERRENGE);
 		sz = max(0, int(ge->camera[0]->pos.z / chipZ) - RENDERRENGE);
 		ez = min(this->maxSizeZ, int(ge->camera[0]->pos.z / chipZ) + RENDERRENGE);
+		
+		//タブレット使用中ならば透視鏡みたいな色にする
+		if (ge->OM.Get_Tablet()->Is_Used_Now())
+		{
+			//透明レンダリング			
+			DG::EffectState().param.objectColor = ML::Color(0.95f,0.2f,1,0.2f);			
+		}
 
 		//指定した範囲の壁のみを描画
 		for (int z = ez - 1; z >= sz; --z)
@@ -152,7 +159,11 @@ namespace  Map
 				obj->Render3D();
 			}
 		}
-
+		//元道理に戻す
+		if (ge->OM.Get_Tablet()->Is_Used_Now())
+		{	
+			DG::EffectState().param.objectColor = ML::Color(1,1,1,1);			
+		}
 		//ライト０番のライティングを有効化
 		DG::EffectState().param.light[0].enable = true;
 	}
