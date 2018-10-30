@@ -30,7 +30,7 @@ public:
 	//使用フラグを反転させる関数
 	void Open_or_Close_Tablet();
 	//入力反応
-	void Select_Camera();
+	void Select_Camera(const unsigned int& );
 
 	//使用されているかを返す関数
 	bool Is_Used_Now() const;

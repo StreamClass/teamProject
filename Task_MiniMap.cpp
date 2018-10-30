@@ -18,11 +18,13 @@ namespace  MiniMap
 		this->plImgName = "PlayerImg";
 		this->caImgName = "CameraImg";
 		this->anImgName = "Chara_Angle";
+		this->cursor_Image_Name = "Cursor";
 		//各画像の読み込み
 		DG::Image_Create(this->imageName, "./data/image/マップ00.png");
 		DG::Image_Create(this->plImgName, "./data/image/Player_MiniMap.png");
 		DG::Image_Create(this->caImgName, "./data/image/Camera_MiniMap.png");
 		DG::Image_Create(this->anImgName, "./data/image/Chara_Angle.png");
+		DG::Image_Create(this->cursor_Image_Name, "./data/image/camera_Cursor.png");
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -33,6 +35,7 @@ namespace  MiniMap
 		DG::Image_Erase(this->plImgName);
 		DG::Image_Erase(this->caImgName);
 		DG::Image_Erase(this->anImgName);
+		DG::Image_Erase(this->cursor_Image_Name);
 		return true;
 	}
 	//-------------------------------------------------------------------
@@ -66,6 +69,11 @@ namespace  MiniMap
 		this->epos = ML::Vec2(0, 0);
 		//エネミーの向き
 		this->eangle = 0;
+		//カーソル初期座標
+		this->cursor_Pos = ML::Vec2(30, 700);
+		//カーソル及びカメラアイコン矩形
+		this->cursor_Box = ML::Box2D(-32+60, -32+60, 64, 64);
+
 		//★タスクの生成
 
 		return  true;
@@ -184,16 +192,19 @@ namespace  MiniMap
 			ML::Box2D mapDraw(60, 60, this->mapSize, this->mapSize);
 			DG::Image_Draw(this->res->imageName, mapDraw, mapSrc, ML::Color(alpha, 1, 1, 1));
 			//監視カメラの座標を参照して描画
-			for (ML::Vec2 scpos : this->stanbyCamera)
+			for (auto& scpos : this->stanbyCamera)
 			{
 				ML::Box2D draw(-10 + 60, -10 + 60, 20, 20);
-				draw.Offset(scpos);
+				draw.Offset(scpos.first);
 				DG::Image_Draw(this->res->caImgName, draw, src, ML::Color(alpha, 1, 0.5f, 0.5f));
 			}
-			//カメラの向きと座標を参照して描画
-			aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
-			DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
-			DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
+			if (ge->state != ge->demo)
+			{
+				//カメラの向きと座標を参照して描画
+				aDraw.Offset(this->capos - ML::Vec2(0, float(aDraw.h)));
+				DG::Image_Rotation(this->res->anImgName, this->caAngle, cen);
+				DG::Image_Draw(this->res->anImgName, aDraw, aSrc, ML::Color(0.3f, 1, 1, 1));
+			}
 			//プレイヤの座標を参照して描画
 			pdraw.Offset(this->plpos);
 			DG::Image_Draw(this->res->plImgName, pdraw, src, ML::Color(alpha, 1, 1, 1));
@@ -208,6 +219,12 @@ namespace  MiniMap
 				//エネミーを描画
 				DG::Image_Draw(this->res->plImgName, edraw, src, ML::Color(alpha, 1, 1, 0));
 			}
+			//カメラ選択カーソル描画
+			POINT cursor_image_size = DG::Image_Size(this->res->cursor_Image_Name);
+			ML::Box2D src_Cursor = ML::Box2D(0, 0, cursor_image_size.x, cursor_image_size.y);
+			ML::Box2D draw_Cursor = this->cursor_Box.OffsetCopy(this->cursor_Pos);
+
+			DG::Image_Draw(this->res->cursor_Image_Name, draw_Cursor, src_Cursor);
 		}
 	}
 	//-------------------------------------------------------------------
@@ -237,13 +254,38 @@ namespace  MiniMap
 		DG::Image_Draw(this->res->imageName, draw, src);
 	}
 	//
-	void Object::Set_StanbyCameraPos(const ML::Vec3& pos)
+	void Object::Set_StanbyCameraPos(const ML::Vec3& pos, unsigned int& camera_Num)
 	{
 		if (pos.x < 0 || pos.x > chipX * 100 || pos.z < 0 || pos.z > chipZ * 100)
 		{
 			return;
 		}
-		this->stanbyCamera.push_back(ML::Vec2(pos.x / (float(chipX) / TABLETMAGNI), TABLETMAPSIZE - pos.z / (float(chipX) / TABLETMAGNI)));
+		this->stanbyCamera.insert(pair<ML::Vec2,unsigned int>( ML::Vec2(pos.x / (float(chipX) / TABLETMAGNI), TABLETMAPSIZE - pos.z / (float(chipX) / TABLETMAGNI)),camera_Num ));
+	}
+
+	//-------------------------------------------------------------------------------------------
+	//カーソル移動
+	int Object::Cursor_Move()
+	{
+		auto in1 = DI::GPad_GetState(ge->controllerName);
+		//カーソルの移動速度
+		const float cursor_Speed = 8.0f;		
+
+		//カーソルの移動
+		this->cursor_Pos += in1.LStick.axis * cursor_Speed;
+
+		//カーソルとのあたり判定
+		for (auto& standby : this->stanbyCamera)
+		{
+			//あたったら
+			if (this->cursor_Box.OffsetCopy(standby.first).Hit(this->cursor_Box.OffsetCopy(this->cursor_Pos)))
+			{
+				//そのまま値を返す
+				return standby.second;
+			}
+		}
+		//あたらなかったら-値を返す
+		return -1;
 	}
 	//★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★★
 	//以下は基本的に変更不要なメソッド

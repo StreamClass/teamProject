@@ -173,6 +173,7 @@ namespace  Map
 	{
 		int x = 0, z = 0;
 		int num = 0;
+		unsigned int camera_Num = 0;
 
 		struct BreakerData
 		{
@@ -274,7 +275,8 @@ namespace  Map
 						//オブジェクトマネージャで監視カメラを生成
 						//						座標					  ,	タイプ
 						ge->OM.Create_Camera(pos + ML::Vec3(0, 100, 0), (Type)in);
-						ge->GetTask_One_G<MiniMap::Object>("ミニマップ")->Set_StanbyCameraPos(pos);
+						ge->GetTask_One_G<MiniMap::Object>("ミニマップ")->Set_StanbyCameraPos(pos,camera_Num);
+						camera_Num++;
 						break;
 
 					//曲がり角なら

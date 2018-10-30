@@ -34,6 +34,7 @@ namespace MiniMap
 		string plImgName;
 		string caImgName;
 		string anImgName;
+		string cursor_Image_Name;
 	};
 	//-------------------------------------------------------------------
 	class  Object : public  BTask
@@ -67,7 +68,8 @@ namespace MiniMap
 		//座標
 		ML::Vec2 capos;
 		//使用されていないカメラの座標
-		std::vector<ML::Vec2> stanbyCamera;
+		//std::vector<ML::Vec2> stanbyCamera;
+		std::map<ML::Vec2,unsigned int>stanbyCamera;
 		//向き
 		float caAngle;
 		//ミニマップを表示するか
@@ -80,6 +82,12 @@ namespace MiniMap
 		int mapSize;
 		//デバックモードの有無
 		bool debugMode;
+
+		//タブレットモードでカメラ選択用カーソル
+		//座標
+		ML::Vec2 cursor_Pos;
+		//あたり判定用矩形
+		ML::Box2D cursor_Box;
 	public:
 
 		//メソッド
@@ -90,7 +98,10 @@ namespace MiniMap
 		//ミニマップ描画用
 		void MiniMap_Render();
 		//監視カメラをミニマップ表示用に座標を取得
-		void Set_StanbyCameraPos(const ML::Vec3&);
+		void Set_StanbyCameraPos(const ML::Vec3&, unsigned int&);
+
+		//カーソル移動
+		int Cursor_Move();		
 
 		//デバッグ時用変数
 		//エネミーの座標

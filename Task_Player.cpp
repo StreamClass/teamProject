@@ -90,6 +90,7 @@ namespace  Player
 		this->tiredSoundFlag = false;
 
 		this->tab = ge->OM.Create_Tablet();
+		
 		//通常時音声を再生
 		DM::Sound_Play("standsound",true);
 		//★タスクの生成
@@ -318,9 +319,17 @@ namespace  Player
 				mm->Set_MiniMap_View();
 			}
 		}
+		//タブレットモード
 		else
 		{
-			this->tab->Select_Camera();
+			//ミニマップタスクでカメラ選択
+			auto mini = ge->GetTask_One_G<MiniMap::Object>("ミニマップ");
+			//正しい値が返された時だけカメラを変える
+			int index = mini->Cursor_Move();
+			if (index >= 0)
+			{
+				this->tab->Select_Camera((unsigned int)index);
+			}
 		}
 		//デモ画面以外の時Yボタンでタブレットオンオフ
 		if (in.B4.down && ge->state != ge->demo)

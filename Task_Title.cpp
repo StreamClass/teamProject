@@ -219,9 +219,14 @@ namespace  Title
 		matT.Translation(ML::Vec3(0, 0, 200));
 		matS.Scaling(100 << 3);
 		DG::EffectState().param.matWorld = matS * matT;
-		DG::Mesh_Draw(this->res->bgMeshName);
+		DG::Mesh_Draw(this->res->bgMeshName);		
+
+		DG::EffectState().param.objectColor = ML::Color(0.8f, 1, 1, 1);
 		//エネミー描画
 		this->eneBone->Render();
+
+		DG::EffectState().param.objectColor = ML::Color(1, 1, 1, 1);
+
 	}
 
 	//メソッド

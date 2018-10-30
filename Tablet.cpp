@@ -2,6 +2,7 @@
 #include "Task_Camera.h"
 #include "MyPG.h"
 #include "Task_Enemy.h"
+#include "Task_MiniMap.h"
 
 Tablet::Tablet()
 {
@@ -11,7 +12,7 @@ Tablet::Tablet()
 	this->target_Pos.clear();
 }
 
-void Tablet::Select_Camera()
+void Tablet::Select_Camera(const unsigned int& index)
 {
 	auto in1 = DI::GPad_GetState(ge->controllerName);
 	auto cm = ge->GetTask_One_G<Camera::Object>("カメラマン");
@@ -23,10 +24,10 @@ void Tablet::Select_Camera()
 			cm->Noise_Reset();
 		}
 	}
-	else
+	else if(index != this->Select)
 	{
 		//入力で選択番号更新
-		if (in1.HL.down || in1.LStick.L.down)
+		/*if (in1.HL.down || in1.LStick.L.down)
 		{
 			this->Select--;
 			cm->Noise_Reset();
@@ -35,8 +36,11 @@ void Tablet::Select_Camera()
 		{
 			this->Select++;
 			cm->Noise_Reset();
-		}
+		}*/
+		cm->Noise_Reset();
+		this->Select = index;
 	}
+
 	//範囲を超えないようにする処理
 	this->Is_Select_Range_Over();
 	//カメラ変更
@@ -66,9 +70,11 @@ bool Tablet::Is_Used_Now() const
 void Tablet::Open_or_Close_Tablet()
 {
 	this->be_used_now ? this->be_used_now = false : this->be_used_now = true;
+	//カメラ変更
+	this->Change_Camera();
 	//ノイずリセット
 	auto cm = ge->GetTask_One_G<Camera::Object>("カメラマン");
-	cm->Noise_Reset();
+	cm->Noise_Reset();	
 }
 
 void Tablet::Is_Select_Range_Over()

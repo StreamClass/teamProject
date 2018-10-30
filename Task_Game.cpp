@@ -65,8 +65,8 @@ namespace  Game
 		DM::Sound_Volume(this->res->bgmName, 800);
 
 		//šƒ^ƒXƒN‚Ì¶¬		
-		auto cam = Camera::Object::Create(true);
 		auto pl = Player::Object::Create(true);
+		auto cam = Camera::Object::Create(true);		
 		auto en = Enemy::Object::Create(true);
 		auto map = Map::Object::Create(true);
 		auto mm = MiniMap::Object::Create(true);
