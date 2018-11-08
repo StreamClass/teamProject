@@ -130,7 +130,7 @@ namespace Motion
 		{
 			//ゼロフレーム行動なら
 			//無効データと認識する
-			return this->duration == 0 ? true : false;
+			return this->duration == 0;
 		}
 	}; 
 	const std::map<string,Joint_Name> motion_Data_Key = 

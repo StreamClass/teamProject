@@ -254,21 +254,18 @@ namespace  Enemy
 
 	//----------------------------------------------------------------------------------------------
 	void  Object::Render3D_L0()
-	{
+	{		
 		//シルエットを描画するかを確認
 		if (this->silhouette_Rendering_Judge && ge->OM.Get_Tablet()->Is_Used_Now())
 		{
-			auto bs = DG::EffectState().BS_Get();
-			//DG::EffectState().BS_AlphaAdd();
 			DG::EffectState().param.objectColor = ML::Color(1, 3, 3, 0);
 			//シルエット描画
 			silhouette->Render();
-			DG::EffectState().param.objectColor = ML::Color(1, 0.2f, 0.81f, 0.2f);
-			//DG::EffectState().BS_Set(bs);
+			DG::EffectState().param.objectColor = ML::Color(1, 0.2f, 0.81f, 0.2f);			
 		}			
 		
 		//エネミーのメッシュを表示		
-		this->ebone->Render();		
+		this->ebone->Render();			
 	}
 
 	//プレイヤとのあたり判定
